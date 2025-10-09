@@ -35,6 +35,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;
 
+	// Turret Shooting
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float ShootCooldown = 1.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	float ShootTimer = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float FacingTargetThreshold = 0.98f;
+
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretForward;
@@ -79,4 +89,12 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
 	void RotateTowardsEnemy(const float& DeltaTime);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
+	void ShootCheck(const float& DeltaTime);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Shoots the enemy"))
+	void Shoot();
 };

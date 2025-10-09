@@ -35,6 +35,8 @@ void ATurret::Tick(float DeltaTime)
     UpdateTurretValues();
 
     RotateTowardsEnemy(DeltaTime);
+
+    ShootCheck(DeltaTime);
 }
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -130,5 +132,26 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
 
     float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
     SetActorRotation(FRotator(0, NewYawRotation, 0));
+}
+
+void ATurret::ShootCheck(const float& DeltaTime)
+{
+    ShootTimer = ShootTimer - DeltaTime;
+
+    if (!CurrentClosestEnemy)
+    {
+        return;
+    }
+
+    if (ShootTimer <= 0.f && ClosestEnemyDotProduct >= FacingTargetThreshold)
+    {
+        Shoot();
+    }
+}
+
+void ATurret::Shoot()
+{
+    ShootTimer = ShootCooldown;
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Shoot")));
 }
 
