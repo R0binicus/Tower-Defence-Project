@@ -18,12 +18,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	USphereComponent* RangeSphere;
 
-	
-
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	float TurretRange = 3000.f;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
 
@@ -32,6 +27,26 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<AActor> CurrentClosestEnemy;
+
+	// Editable from inspector
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret")
+	float TurretRange = 3000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	float TurretTurnSpeed = 2.f;
+
+	// Update Turret Values
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FVector TurretForward;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FVector ClosestEnemyLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FVector ClosestEnemyDirection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	float ClosestEnemyDotProduct;
 
 	virtual void BeginPlay() override;
 
@@ -43,7 +58,25 @@ protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION(BlueprintCallable, Category = "Turret",
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();
+
+	void UpdateTurretValues();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
+		meta = (ToolTip = "Returns the direction from the turret to the enemy location"))
+	FVector GetDirectionToEnemy(const FVector& EnemyPosition);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
+		meta = (ToolTip = "Gets the dot product of two vectors after normalizing them"))
+	float GetNormalizedDotProduct(FVector VectorA, FVector VectorB);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
+		meta = (ToolTip = "Gets the cross product of two vectors after normalizing them"))
+	FVector GetNormalizedCrossProduct(FVector VectorA, FVector VectorB);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
+	void RotateTowardsEnemy(const float& DeltaTime);
 };

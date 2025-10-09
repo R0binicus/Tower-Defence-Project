@@ -32,11 +32,9 @@ void ATurret::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
     CurrentClosestEnemy = GetClosestEnemy();
 
-    if (CurrentClosestEnemy)
-    {
+    UpdateTurretValues();
 
-    }
-    
+    RotateTowardsEnemy(DeltaTime);
 }
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -83,5 +81,54 @@ AActor* ATurret::GetClosestEnemy()
     }
 
     return PotentialClosestEnemy;
+}
+
+void ATurret::UpdateTurretValues()
+{
+    TurretForward = GetActorForwardVector();
+    if (CurrentClosestEnemy)
+    {
+        ClosestEnemyLocation = CurrentClosestEnemy->GetActorLocation();
+        ClosestEnemyDirection = GetDirectionToEnemy(ClosestEnemyLocation);
+        ClosestEnemyDotProduct = GetNormalizedDotProduct(TurretForward, ClosestEnemyDirection);
+    }
+}
+
+FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
+{
+    FVector Direction = EnemyPosition - TurretLocation;
+    Direction.Normalize();
+
+    return Direction;
+}
+
+float ATurret::GetNormalizedDotProduct(FVector VectorA, FVector VectorB)
+{
+    VectorA.Normalize();
+    VectorB.Normalize();
+    return FVector::DotProduct(VectorA, VectorB);
+}
+
+FVector ATurret::GetNormalizedCrossProduct(FVector VectorA, FVector VectorB)
+{
+    VectorA.Normalize();
+    VectorB.Normalize();
+    return FVector::CrossProduct(VectorA, VectorB);
+}
+
+void ATurret::RotateTowardsEnemy(const float& DeltaTime)
+{
+    if (!CurrentClosestEnemy)
+    {
+        return;
+    }
+
+    float TurretCurrentYaw = GetActorRotation().Yaw;
+    float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(ClosestEnemyDotProduct));
+    float CrossProductSign = GetNormalizedCrossProduct(TurretForward, ClosestEnemyDirection).GetSignVector().Z;
+    float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy*CrossProductSign);
+
+    float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
+    SetActorRotation(FRotator(0, NewYawRotation, 0));
 }
 
