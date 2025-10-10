@@ -99,7 +99,7 @@ void ATurret::UpdateTurretValues()
 FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
 {
     FVector Direction = EnemyPosition - TurretLocation;
-    Direction.Normalize();
+    Direction.Z = 0.f;
 
     return Direction;
 }
