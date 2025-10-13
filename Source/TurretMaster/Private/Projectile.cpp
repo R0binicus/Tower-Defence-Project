@@ -38,9 +38,12 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 	if (OtherCompName != "Pawn")
 	{
+		Destroy();
+
 		return;
 	}
 
+	// Do something else
 	Destroy();
 }
 

@@ -182,6 +182,5 @@ void ATurret::Shoot()
 
     AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
     ShootTimer = ShootCooldown;
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Shoot")));
 }
 
