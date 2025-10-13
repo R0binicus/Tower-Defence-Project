@@ -60,7 +60,7 @@ protected:
 
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TurretForward;
+	FVector MuzzleForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector ClosestEnemyLocation;

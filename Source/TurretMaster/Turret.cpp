@@ -98,12 +98,12 @@ AActor* ATurret::GetClosestEnemy()
 
 void ATurret::UpdateTurretValues()
 {
-    TurretForward = GetActorForwardVector();
+    MuzzleForward = MuzzleSocket->GetForwardVector();
     if (CurrentClosestEnemy)
     {
         ClosestEnemyLocation = CurrentClosestEnemy->GetActorLocation();
         ClosestEnemyDirection = GetDirectionToEnemy(ClosestEnemyLocation);
-        ClosestEnemyDotProduct = GetNormalizedDotProduct(TurretForward, ClosestEnemyDirection);
+        ClosestEnemyDotProduct = GetNormalizedDotProduct(MuzzleForward, ClosestEnemyDirection);
     }
 }
 
@@ -136,13 +136,35 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
         return;
     }
 
+    // Yaw rotation
     float TurretCurrentYaw = GetActorRotation().Yaw;
     float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(ClosestEnemyDotProduct));
-    float CrossProductSign = GetNormalizedCrossProduct(TurretForward, ClosestEnemyDirection).GetSignVector().Z;
+    float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, ClosestEnemyDirection).GetSignVector().Z;
     float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy*CrossProductSign);
 
+    FVector DirectionZ = ClosestEnemyLocation - MuzzleSocket->GetComponentLocation();
+
+    FVector MuzzleForwardZ = MuzzleForward;
+    MuzzleForwardZ.X = DirectionZ.X;
+    MuzzleForwardZ.Y = DirectionZ.Y;
+
     float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
-    SetActorRotation(FRotator(0, NewYawRotation, 0));
+
+
+    // Pitch rotation
+
+    float TurretCurrentPitch = GetActorRotation().Pitch;
+
+    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardZ, DirectionZ)));
+
+    CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, DirectionZ).GetSignVector().Y;
+    float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * -CrossProductSign);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("TurretDesiredPitch: %f"), TurretDesiredPitch));
+
+
+
+    float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
+    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, 0));
 }
 
 void ATurret::ShootCheck(const float& DeltaTime)
