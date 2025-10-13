@@ -3,8 +3,6 @@
 
 AProjectile::AProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshCollider"));
 	CollisionMesh->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
@@ -21,12 +19,6 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(Lifetime);
-}
-
-void AProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

@@ -98,24 +98,34 @@ AActor* ATurret::GetClosestEnemy()
 
 void ATurret::UpdateTurretValues()
 {
-    if (CurrentClosestEnemy)
+    if (!CurrentClosestEnemy)
     {
-        MuzzleForward = MuzzleSocket->GetForwardVector();
-        MuzzleForward.Normalize();
-
-        TargetLocation = CurrentClosestEnemy->GetActorLocation();
-        TargetDirection = GetDirectionToEnemy(TargetLocation);
-
-        TargetDirection2D = TargetDirection;
-        //TargetDirection2D.Z = 0.f;
-
-        Target2DDotProduct = GetNormalizedDotProduct(MuzzleForward, TargetDirection2D);
+        return;
     }
+
+    if (!MuzzleSocket)
+    {
+        return;
+    }
+
+    MuzzleLocation = MuzzleSocket->GetComponentLocation();
+
+    MuzzleForward = MuzzleSocket->GetForwardVector();
+    MuzzleForward.Normalize();
+
+    TargetLocation = CurrentClosestEnemy->GetActorLocation();
+    TargetDirection = GetDirectionToEnemy(TargetLocation);
+
+    TargetDirection2D = TargetDirection;
+    // We need to discuss this and figure out what is going on here
+    //TargetDirection2D.Z = 0.f;
+
+    Target2DDotProduct = GetNormalizedDotProduct(MuzzleForward, TargetDirection2D);
 }
 
 FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
 {
-    FVector Direction = EnemyPosition - TurretLocation;
+    FVector Direction = EnemyPosition - MuzzleLocation;
     Direction.Normalize();
 
     return Direction;
@@ -142,11 +152,6 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
         return;
     }
 
-    if (GetNormalizedDotProduct(MuzzleForward, TargetLocation - TurretLocation) > 0.999)
-    {
-        //return;
-    }
-
     // Yaw rotation
     float TurretCurrentYaw = GetActorRotation().Yaw;
     float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
@@ -157,15 +162,14 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
 
 
     // Pitch rotation
-    FVector TargetDirectionVertical = TargetLocation - TurretLocation;
-    TargetDirectionVertical.Normalize();
 
-    FVector MuzzleForwardVertical = TargetDirectionVertical;
-    MuzzleForwardVertical.Z = MuzzleForward.Z;
+    // Get dot product, ignoring X and Y
+    // Can't this be simplified??? it's basically just a float
+    FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
 
     float TurretCurrentPitch = GetActorRotation().Pitch;
-    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirectionVertical)));
-    CrossProductSign = GetNormalizedCrossProduct(TargetDirectionVertical, MuzzleForward).GetSignVector().Y;
+    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
+    CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
     float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
 
     float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
@@ -205,9 +209,8 @@ void ATurret::Shoot()
     }
 
     const FRotator SpawnRotation = MuzzleSocket->GetComponentRotation();
-    const FVector SpawnLocation = MuzzleSocket->GetComponentLocation();
 
-    AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+    AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, SpawnRotation);
     ShootTimer = ShootCooldown;
 }
 
