@@ -110,6 +110,7 @@ void ATurret::UpdateTurretValues()
 FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
 {
     FVector Direction = EnemyPosition - TurretLocation;
+    Direction.Normalize();
     Direction.Z = 0.f;
 
     return Direction;
@@ -136,32 +137,33 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
         return;
     }
 
+    if (GetNormalizedDotProduct(MuzzleForward, ClosestEnemyLocation - TurretLocation) > 0.999)
+    {
+        //return;
+    }
+
     // Yaw rotation
     float TurretCurrentYaw = GetActorRotation().Yaw;
     float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(ClosestEnemyDotProduct));
     float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, ClosestEnemyDirection).GetSignVector().Z;
-    float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy*CrossProductSign);
-
-    FVector DirectionZ = ClosestEnemyLocation - MuzzleSocket->GetComponentLocation();
-
-    FVector MuzzleForwardZ = MuzzleForward;
-    MuzzleForwardZ.X = DirectionZ.X;
-    MuzzleForwardZ.Y = DirectionZ.Y;
+    float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy * CrossProductSign);
 
     float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
 
 
     // Pitch rotation
+    FVector EnemyDirectionWithZ = ClosestEnemyLocation - TurretLocation;
+    EnemyDirectionWithZ.Normalize();
+
+    FVector MuzzleForwardPitchOnly = EnemyDirectionWithZ;
+    MuzzleForwardPitchOnly.Z = MuzzleForward.Z;
 
     float TurretCurrentPitch = GetActorRotation().Pitch;
 
-    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardZ, DirectionZ)));
+    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardPitchOnly, EnemyDirectionWithZ)));
 
-    CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, DirectionZ).GetSignVector().Y;
-    float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * -CrossProductSign);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("TurretDesiredPitch: %f"), TurretDesiredPitch));
-
-
+    CrossProductSign = GetNormalizedCrossProduct(EnemyDirectionWithZ, MuzzleForward).GetSignVector().Y;
+    float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
 
     float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
     SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, 0));
