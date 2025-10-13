@@ -9,14 +9,15 @@ ATurret::ATurret()
 	PrimaryActorTick.bCanEverTick = true;
 
     RangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("RangeSphere"));
-
     RangeSphere->SetCollisionProfileName(TEXT("EnemyDetection"));
     RangeSphere->SetGenerateOverlapEvents(true);
     RangeSphere->SetSphereRadius(TurretRange);
-
-
     RangeSphere->OnComponentBeginOverlap.AddDynamic(this, &ATurret::OnOverlapBegin);
     RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATurret::OnOverlapEnd);
+    RootComponent = RangeSphere;
+
+    MuzzleSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSocket"));
+    MuzzleSocket->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +25,8 @@ void ATurret::BeginPlay()
 {
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
+
+    World = GetWorld();
 }
 
 // Called every frame
@@ -151,6 +154,25 @@ void ATurret::ShootCheck(const float& DeltaTime)
 
 void ATurret::Shoot()
 {
+    if (!ProjectileClass)
+    {
+        return;
+    }
+
+    if (!World)
+    {
+        return;
+    }
+
+    if (!MuzzleSocket)
+    {
+        return;
+    }
+
+    const FRotator SpawnRotation = MuzzleSocket->GetComponentRotation();
+    const FVector SpawnLocation = MuzzleSocket->GetComponentLocation();
+
+    AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
     ShootTimer = ShootCooldown;
     GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Shoot")));
 }

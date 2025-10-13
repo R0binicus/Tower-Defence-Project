@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "Projectile.h"
 #include "Turret.generated.h"
 
 UCLASS()
@@ -19,8 +20,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	USphereComponent* RangeSphere;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	USceneComponent* MuzzleSocket;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	TSubclassOf<class AProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	FName EnemyTagName = "Enemy";
+
+	UPROPERTY()
+	UWorld* World;
 
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
