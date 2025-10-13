@@ -44,14 +44,22 @@ void ATurret::Tick(float DeltaTime)
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    
+    if (!OtherActor->ActorHasTag(EnemyTagName))
+    {
+        return;
+    }
+
     EnemyRefArray.Add(OtherActor);
 }
 
 void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    EnemyRefArray.Remove(OtherActor);
+    if (OtherActor->ActorHasTag(EnemyTagName))
+    {
+        return;
+    }
 
+    EnemyRefArray.Remove(OtherActor);
 }
 
 AActor* ATurret::GetClosestEnemy()
