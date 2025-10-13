@@ -98,19 +98,25 @@ AActor* ATurret::GetClosestEnemy()
 
 void ATurret::UpdateTurretValues()
 {
-    TurretForward = GetActorForwardVector();
     if (CurrentClosestEnemy)
     {
-        ClosestEnemyLocation = CurrentClosestEnemy->GetActorLocation();
-        ClosestEnemyDirection = GetDirectionToEnemy(ClosestEnemyLocation);
-        ClosestEnemyDotProduct = GetNormalizedDotProduct(TurretForward, ClosestEnemyDirection);
+        TurretForward = GetActorForwardVector();
+        TurretForward.Normalize();
+
+        TargetLocation = CurrentClosestEnemy->GetActorLocation();
+        TargetDirection = GetDirectionToEnemy(TargetLocation);
+
+        TargetDirection2D = TargetDirection;
+        TargetDirection2D.Z = 0.f;
+
+        Target2DDotProduct = GetNormalizedDotProduct(TurretForward, TargetDirection2D);
     }
 }
 
 FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
 {
     FVector Direction = EnemyPosition - TurretLocation;
-    Direction.Z = 0.f;
+    Direction.Normalize();
 
     return Direction;
 }
@@ -137,8 +143,8 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     }
 
     float TurretCurrentYaw = GetActorRotation().Yaw;
-    float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(ClosestEnemyDotProduct));
-    float CrossProductSign = GetNormalizedCrossProduct(TurretForward, ClosestEnemyDirection).GetSignVector().Z;
+    float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
+    float CrossProductSign = GetNormalizedCrossProduct(TurretForward, TargetDirection2D).GetSignVector().Z;
     float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy*CrossProductSign);
 
     float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
@@ -154,7 +160,7 @@ void ATurret::ShootCheck(const float& DeltaTime)
         return;
     }
 
-    if (ShootTimer <= 0.f && ClosestEnemyDotProduct >= FacingTargetThreshold)
+    if (ShootTimer <= 0.f && Target2DDotProduct >= FacingTargetThreshold)
     {
         Shoot();
     }

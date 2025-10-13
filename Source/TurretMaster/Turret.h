@@ -63,13 +63,16 @@ protected:
 	FVector TurretForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector ClosestEnemyLocation;
+	FVector TargetLocation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector ClosestEnemyDirection;
+	FVector TargetDirection;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	float ClosestEnemyDotProduct;
+	FVector TargetDirection2D;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	float Target2DDotProduct;
 
 	virtual void BeginPlay() override;
 
