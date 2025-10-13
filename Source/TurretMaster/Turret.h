@@ -15,10 +15,10 @@ class TURRETMASTER_API ATurret : public AActor
 public:	
 	ATurret();
 
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	USphereComponent* RangeSphere;
 
-protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
 
