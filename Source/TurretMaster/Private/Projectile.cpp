@@ -1,27 +1,46 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.h"
 
-// Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshCollider"));
+	CollisionMesh->BodyInstance.SetCollisionProfileName("Projectile");
+	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	RootComponent = CollisionMesh;
+
+	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
+	MovementComponent->UpdatedComponent = CollisionMesh;
+	MovementComponent->InitialSpeed = 3000.f;
+	MovementComponent->MaxSpeed = 3000.f;
+	MovementComponent->bRotationFollowsVelocity = true;
 }
 
-// Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetLifeSpan(Lifetime);
 }
 
-// Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor == nullptr) return;
+	if (OtherComp == nullptr) return;
+
+	FName OtherCompName = OtherComp->GetCollisionProfileName();
+
+	if (OtherCompName != "Pawn")
+	{
+		return;
+	}
+
+	Destroy();
 }
 

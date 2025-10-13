@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
+
+class UStaticMeshComponent;
+class UProjectileMovementComponent;
 
 UCLASS()
 class TURRETMASTER_API AProjectile : public AActor
@@ -12,15 +13,28 @@ class TURRETMASTER_API AProjectile : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AProjectile();
 
+	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	float GetProjectileDamage() const { return Damage; }
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
+	UStaticMeshComponent* CollisionMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
+	UProjectileMovementComponent* MovementComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float Damage = 25.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float Lifetime = 10.0f;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
