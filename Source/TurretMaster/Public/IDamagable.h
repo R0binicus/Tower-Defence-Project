@@ -20,4 +20,7 @@ class TURRETMASTER_API IIDamagable
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
 	void TakeDamage(float DamageTaken);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
+	bool IsDead();
 };

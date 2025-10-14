@@ -1,7 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Turret.h"
+#include "IDamagable.h"
 
 // Sets default values
 ATurret::ATurret()
@@ -77,6 +75,11 @@ AActor* ATurret::GetClosestEnemy()
 
         if (!PotentialClosestEnemy)
         {
+            // What will happen if it doesn't implement IIDamagable??
+            if (IIDamagable::Execute_IsDead(EnemyRefArray[i]))
+            {
+                continue;
+            }
             CurrentClosestDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretLocation);
             PotentialClosestEnemy = EnemyRefArray[i];
         }
