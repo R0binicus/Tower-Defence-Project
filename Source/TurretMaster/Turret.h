@@ -126,7 +126,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
-	void ShootCheck(const float& DeltaTime);
+	bool CanShoot();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))

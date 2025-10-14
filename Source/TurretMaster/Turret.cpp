@@ -38,7 +38,12 @@ void ATurret::Tick(float DeltaTime)
 
     RotateTowardsEnemy(DeltaTime);
 
-    ShootCheck(DeltaTime);
+    ShootTimer = ShootTimer - DeltaTime;
+
+    if (CanShoot())
+    {
+        Shoot();
+    }
 }
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -203,19 +208,24 @@ float ATurret::FindNewPitchRotation(const float& DeltaTime)
     return FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
 }
 
-void ATurret::ShootCheck(const float& DeltaTime)
+bool ATurret::CanShoot()
 {
-    ShootTimer = ShootTimer - DeltaTime;
-
     if (!CurrentClosestEnemy)
     {
-        return;
+        return false;
     }
 
-    if (ShootTimer <= 0.f && Target2DDotProduct >= FacingTargetThreshold)
+    if (ShootTimer > 0.f)
     {
-        Shoot();
+        return false;
     }
+
+    if (Target2DDotProduct >= FacingTargetThreshold)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void ATurret::Shoot()
