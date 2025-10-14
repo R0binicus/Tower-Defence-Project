@@ -151,11 +151,6 @@ FVector ATurret::GetNormalizedCrossProduct(FVector VectorA, FVector VectorB)
 
 void ATurret::RotateTowardsEnemy(const float& DeltaTime)
 {
-    if (!CurrentClosestEnemy)
-    {
-        return;
-    }
-
     if (!MuzzleSocket)
     {
         return;
@@ -168,27 +163,34 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
 
 float ATurret::FindNewYawRotation(const float& DeltaTime)
 {
+    float TurretDesiredYaw = InitialRotation.Yaw;
     float TurretCurrentYaw = GetActorRotation().Yaw;
-    float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
-    float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
-    float TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
+
+    // Reset to initial rotation if there is no closest enemy
+    if (CurrentClosestEnemy)
+    {
+        float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
+        float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
+        TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
+    }
 
     return FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
 }
 
 float ATurret::FindNewPitchRotation(const float& DeltaTime)
 {
-    // Get dot product, ignoring X and Y
-    // Can't this be simplified??? it's basically just a float
-    FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
-
-    float TurretCurrentPitch = GetActorRotation().Pitch;
     float TurretDesiredPitch = InitialRotation.Pitch;
+    float TurretCurrentPitch = GetActorRotation().Pitch;
 
-    // Prevent turret aiming from freaking out if the enemy 
+    // Reset to initial rotation if there is no closest enemy
+    // Also prevent turret aiming from freaking out if the enemy 
     // is too close or is behind the turret's muzzle
-    if (GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
+    if (CurrentClosestEnemy && GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
     {
+        // Get dot product, ignoring X and Y
+        // Can't this be simplified??? it's basically just a float
+        FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
+
         float VerticalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
         float CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
         TurretDesiredPitch = TurretCurrentPitch + (VerticalDegreesToEnemy * CrossProductSign);
