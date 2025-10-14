@@ -25,6 +25,7 @@ void ATurret::BeginPlay()
 {
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
+    InitialRotation = GetActorRotation();
 
     World = GetWorld();
 }
@@ -170,7 +171,7 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
 
     float TurretCurrentPitch = GetActorRotation().Pitch;
-    float TurretDesiredPitch = 0.f;
+    float TurretDesiredPitch = InitialRotation.Pitch;
 
     // Prevent turret aiming from freaking out if the enemy 
     // is too close or is behind the turret's muzzle
@@ -188,7 +189,7 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     // Set rotation
     float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
     float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
-    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, 0));
+    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, InitialRotation.Roll));
 }
 
 void ATurret::ShootCheck(const float& DeltaTime)

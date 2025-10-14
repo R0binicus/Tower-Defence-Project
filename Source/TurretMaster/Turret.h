@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FRotator InitialRotation;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
