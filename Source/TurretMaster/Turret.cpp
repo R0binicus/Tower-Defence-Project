@@ -163,43 +163,31 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
     float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy * CrossProductSign);
 
-    float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
-
-
     // Pitch rotation
-    FVector DirectionFromTurretBase = TargetLocation - TurretLocation;
-    DirectionFromTurretBase.Normalize();
 
     // Get dot product, ignoring X and Y
     // Can't this be simplified??? it's basically just a float
     FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
 
     float TurretCurrentPitch = GetActorRotation().Pitch;
+    float TurretDesiredPitch = 0.f;
 
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("DirectionFromTurretBase: %f"), DirectionFromTurretBase.Z));
-
-    /*if (DirectionFromTurretBase.Z > AimVerticalUpperBound)
+    // Prevent turret aiming from freaking out if the enemy 
+    // is too close or is behind the turret's muzzle
+    if (GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
     {
-        TurretDesiredPitch = AimVerticalUpperBound * 100;
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Upper Bound")));
+        DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
+        CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
+        TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
+
+        // Used to make the turret face the enemy, when it is only just
+        // outside it's aiming bounds
+        TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
     }
-    else if (DirectionFromTurretBase.Z < AimVerticalLowerBound)
-    {
-        TurretDesiredPitch = AimVerticalLowerBound * 100;
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Lower Bound")));
-    }
-    else
-    {
-        
-    }*/
-
-    DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
-    CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
-    float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
-    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
-    float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
 
     // Set rotation
+    float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
+    float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
     SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, 0));
 }
 

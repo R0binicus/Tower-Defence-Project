@@ -60,6 +60,9 @@ protected:
 
 	// Turret Aim Restrictions
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float GiveUpVerticalAimThreshold = 0.3;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float AimVerticalUpperBound = 30.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
