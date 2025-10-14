@@ -192,13 +192,7 @@ float ATurret::FindNewPitchRotation(const float DeltaTime)
     // is too close or is behind the turret's muzzle
     if (CurrentClosestEnemy && GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
     {
-        // Get dot product, ignoring X and Y
-        // Can't this be simplified??? it's basically just a float
-        FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
-
-        float VerticalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
-        float CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
-        TurretDesiredPitch = TurretCurrentPitch + (VerticalDegreesToEnemy * CrossProductSign);
+        TurretDesiredPitch = TurretCurrentPitch + FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
 
         // Used to make the turret face the enemy, when it is only just
         // outside it's aiming bounds
