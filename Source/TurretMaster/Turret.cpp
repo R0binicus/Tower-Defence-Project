@@ -158,14 +158,23 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
         return;
     }
 
-    // Yaw rotation
+    float NewYawRotation = FindNewYawRotation(DeltaTime);
+    float NewPitchRotation = FindNewPitchRotation(DeltaTime);
+    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, InitialRotation.Roll));
+}
+
+float ATurret::FindNewYawRotation(const float& DeltaTime)
+{
     float TurretCurrentYaw = GetActorRotation().Yaw;
-    float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
+    float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
     float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
-    float TurretDesiredYaw = TurretCurrentYaw + (DegreesToEnemy * CrossProductSign);
+    float TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
 
-    // Pitch rotation
+    return FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
+}
 
+float ATurret::FindNewPitchRotation(const float& DeltaTime)
+{
     // Get dot product, ignoring X and Y
     // Can't this be simplified??? it's basically just a float
     FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
@@ -177,19 +186,16 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     // is too close or is behind the turret's muzzle
     if (GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
     {
-        DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
-        CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
-        TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
+        float VerticalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
+        float CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
+        TurretDesiredPitch = TurretCurrentPitch + (VerticalDegreesToEnemy * CrossProductSign);
 
         // Used to make the turret face the enemy, when it is only just
         // outside it's aiming bounds
         TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
     }
 
-    // Set rotation
-    float NewYawRotation = FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
-    float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
-    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, InitialRotation.Roll));
+    return FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
 }
 
 void ATurret::ShootCheck(const float& DeltaTime)

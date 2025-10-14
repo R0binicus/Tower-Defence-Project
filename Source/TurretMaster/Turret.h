@@ -122,6 +122,10 @@ protected:
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
 	void RotateTowardsEnemy(const float& DeltaTime);
 
+	float FindNewYawRotation(const float& DeltaTime);
+
+	float FindNewPitchRotation(const float& DeltaTime);
+
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
 	void ShootCheck(const float& DeltaTime);
