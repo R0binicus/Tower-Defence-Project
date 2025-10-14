@@ -1,6 +1,6 @@
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "IDamagable.h"
 #include "Projectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Damageable.h"
 
 AProjectile::AProjectile()
 {
@@ -35,7 +35,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		return;
 	}
 
-	IIDamagable::Execute_TakeDamage(OtherActor, Damage);
+	IDamageable::Execute_TakeDamage(OtherActor, Damage);
 	Destroy();
 }
 

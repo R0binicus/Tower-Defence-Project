@@ -1,5 +1,5 @@
 #include "Turret.h"
-#include "IDamagable.h"
+#include "Damageable.h"
 
 // Sets default values
 ATurret::ATurret()
@@ -76,7 +76,7 @@ AActor* ATurret::GetClosestEnemy()
         if (!PotentialClosestEnemy)
         {
             // What will happen if it doesn't implement IIDamagable??
-            if (IIDamagable::Execute_IsDead(EnemyRefArray[i]))
+            if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
             {
                 continue;
             }

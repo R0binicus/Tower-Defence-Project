@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "IDamagable.generated.h"
+#include "Damageable.generated.h"
 
 UINTERFACE(MinimalAPI, Blueprintable)
-class UIDamagable : public UInterface
+class UDamageable : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -13,7 +13,7 @@ class UIDamagable : public UInterface
 /**
  * 
  */
-class TURRETMASTER_API IIDamagable
+class TURRETMASTER_API IDamageable
 {
 	GENERATED_BODY()
 
