@@ -154,7 +154,7 @@ FVector ATurret::GetNormalizedCrossProduct(FVector VectorA, FVector VectorB)
     return FVector::CrossProduct(VectorA, VectorB);
 }
 
-void ATurret::RotateTowardsEnemy(const float& DeltaTime)
+void ATurret::RotateTowardsEnemy(const float DeltaTime)
 {
     if (!MuzzleSocket)
     {
@@ -166,7 +166,7 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
     SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, InitialRotation.Roll));
 }
 
-float ATurret::FindNewYawRotation(const float& DeltaTime)
+float ATurret::FindNewYawRotation(const float DeltaTime)
 {
     float TurretDesiredYaw = InitialRotation.Yaw;
     float TurretCurrentYaw = GetActorRotation().Yaw;
@@ -182,7 +182,7 @@ float ATurret::FindNewYawRotation(const float& DeltaTime)
     return FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
 }
 
-float ATurret::FindNewPitchRotation(const float& DeltaTime)
+float ATurret::FindNewPitchRotation(const float DeltaTime)
 {
     float TurretDesiredPitch = InitialRotation.Pitch;
     float TurretCurrentPitch = GetActorRotation().Pitch;
