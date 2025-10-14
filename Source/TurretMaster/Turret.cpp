@@ -53,7 +53,7 @@ void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 
 void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    if (OtherActor->ActorHasTag(EnemyTagName))
+    if (!OtherActor->ActorHasTag(EnemyTagName))
     {
         return;
     }
