@@ -1,4 +1,5 @@
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "IDamagable.h"
 #include "Projectile.h"
 
 AProjectile::AProjectile()
@@ -31,11 +32,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	if (OtherCompName != "Pawn")
 	{
 		Destroy();
-
 		return;
 	}
 
-	// Do something else
+	IIDamagable::Execute_TakeDamage(OtherActor, Damage);
 	Destroy();
 }
 
