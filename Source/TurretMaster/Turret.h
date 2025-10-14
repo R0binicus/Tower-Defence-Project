@@ -16,10 +16,10 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	USphereComponent* RangeSphere;
+	TObjectPtr<USphereComponent> RangeSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	USceneComponent* MuzzleSocket;
+	TObjectPtr<USceneComponent> MuzzleSocket;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
@@ -34,7 +34,7 @@ protected:
 	FName EnemyTagName = "Enemy";
 
 	UPROPERTY()
-	UWorld* World;
+	TObjectPtr<UWorld> World;
 
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;

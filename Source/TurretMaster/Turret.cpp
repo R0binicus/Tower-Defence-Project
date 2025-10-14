@@ -247,7 +247,7 @@ void ATurret::Shoot()
 
     const FRotator SpawnRotation = MuzzleSocket->GetComponentRotation();
 
-    AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, SpawnRotation);
+    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, SpawnRotation);
     ShootTimer = ShootCooldown;
 }
 

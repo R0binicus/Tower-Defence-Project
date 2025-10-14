@@ -22,10 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
-	UStaticMeshComponent* CollisionMesh;
+	TObjectPtr<UStaticMeshComponent> CollisionMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
-	UProjectileMovementComponent* MovementComponent;
+	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
 	float Damage = 25.0f;
