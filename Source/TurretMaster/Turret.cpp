@@ -152,6 +152,11 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
         return;
     }
 
+    if (!MuzzleSocket)
+    {
+        return;
+    }
+
     // Yaw rotation
     float TurretCurrentYaw = GetActorRotation().Yaw;
     float DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
@@ -162,17 +167,39 @@ void ATurret::RotateTowardsEnemy(const float& DeltaTime)
 
 
     // Pitch rotation
+    FVector DirectionFromTurretBase = TargetLocation - TurretLocation;
+    DirectionFromTurretBase.Normalize();
 
     // Get dot product, ignoring X and Y
     // Can't this be simplified??? it's basically just a float
     FVector MuzzleForwardVertical = FVector(TargetDirection.X, TargetDirection.Y, MuzzleForward.Z);
 
     float TurretCurrentPitch = GetActorRotation().Pitch;
+
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("DirectionFromTurretBase: %f"), DirectionFromTurretBase.Z));
+
+    /*if (DirectionFromTurretBase.Z > AimVerticalUpperBound)
+    {
+        TurretDesiredPitch = AimVerticalUpperBound * 100;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Upper Bound")));
+    }
+    else if (DirectionFromTurretBase.Z < AimVerticalLowerBound)
+    {
+        TurretDesiredPitch = AimVerticalLowerBound * 100;
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Lower Bound")));
+    }
+    else
+    {
+        
+    }*/
+
     DegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(GetNormalizedDotProduct(MuzzleForwardVertical, TargetDirection)));
     CrossProductSign = GetNormalizedCrossProduct(TargetDirection, MuzzleForward).GetSignVector().Y;
     float TurretDesiredPitch = TurretCurrentPitch + (DegreesToEnemy * CrossProductSign);
-
+    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
     float NewPitchRotation = FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
+
+    // Set rotation
     SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, 0));
 }
 

@@ -58,6 +58,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float FacingTargetThreshold = 0.98f;
 
+	// Turret Aim Restrictions
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float AimVerticalUpperBound = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float AimVerticalLowerBound = -40.f;
+
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector MuzzleForward;
