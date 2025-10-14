@@ -84,7 +84,7 @@ AActor* ATurret::GetClosestEnemy()
         {
             float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretLocation);
 
-            if (EnemyDistance <= CurrentClosestDistance)
+            if (EnemyDistance >= CurrentClosestDistance)
             {
                 continue;
             }
