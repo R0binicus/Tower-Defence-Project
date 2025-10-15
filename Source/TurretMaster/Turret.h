@@ -111,14 +111,6 @@ protected:
 		meta = (ToolTip = "Returns the direction from the turret to the enemy location"))
 	FVector GetDirectionToEnemy(const FVector& EnemyPosition);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
-		meta = (ToolTip = "Gets the dot product of two vectors after normalizing them"))
-	float GetNormalizedDotProduct(FVector VectorA, FVector VectorB);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
-		meta = (ToolTip = "Gets the cross product of two vectors after normalizing them"))
-	FVector GetNormalizedCrossProduct(FVector VectorA, FVector VectorB);
-
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
 	void RotateTowardsEnemy(const float DeltaTime);

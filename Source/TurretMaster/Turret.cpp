@@ -131,7 +131,7 @@ void ATurret::UpdateTurretValues()
     // We need to discuss this and figure out what is going on here
     //TargetDirection2D.Z = 0.f;
 
-    Target2DDotProduct = GetNormalizedDotProduct(MuzzleForward, TargetDirection2D);
+    Target2DDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection2D);
 }
 
 FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
@@ -140,20 +140,6 @@ FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
     Direction.Normalize();
 
     return Direction;
-}
-
-float ATurret::GetNormalizedDotProduct(FVector VectorA, FVector VectorB)
-{
-    VectorA.Normalize();
-    VectorB.Normalize();
-    return FVector::DotProduct(VectorA, VectorB);
-}
-
-FVector ATurret::GetNormalizedCrossProduct(FVector VectorA, FVector VectorB)
-{
-    VectorA.Normalize();
-    VectorB.Normalize();
-    return FVector::CrossProduct(VectorA, VectorB);
 }
 
 void ATurret::RotateTowardsEnemy(const float DeltaTime)
@@ -180,7 +166,7 @@ float ATurret::FindNewYawRotation(const float DeltaTime)
     if (CurrentClosestEnemy)
     {
         float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
-        float CrossProductSign = GetNormalizedCrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
+        float CrossProductSign = FVector::CrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
         TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
     }
 
@@ -195,7 +181,7 @@ float ATurret::FindNewPitchRotation(const float DeltaTime)
     // Reset to initial rotation if there is no closest enemy
     // Also prevent turret aiming from freaking out if the enemy 
     // is too close or is behind the turret's muzzle
-    if (CurrentClosestEnemy && GetNormalizedDotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
+    if (CurrentClosestEnemy && FVector::DotProduct(TargetDirection, GetActorForwardVector()) >= GiveUpVerticalAimThreshold)
     {
         TurretDesiredPitch = TurretCurrentPitch + FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
 
