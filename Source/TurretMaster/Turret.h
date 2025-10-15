@@ -60,7 +60,7 @@ protected:
 	float ShootTimer = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float FacingTargetThreshold = 0.98f;
+	float FacingTargetThreshold = 0.999f;
 
 	// Turret Aim Restrictions
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
