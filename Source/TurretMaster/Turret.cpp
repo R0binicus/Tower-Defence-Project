@@ -121,18 +121,13 @@ void ATurret::UpdateTurretValues()
     }
 
     MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
-    MuzzleForward.Normalize();
 
     TargetLocation = CurrentClosestEnemy->GetActorLocation();
     TryGetDirectionToEnemy(TargetLocation, TargetDirection);
 
     CurrentTurretRotation = GetActorRotation();
 
-    TargetDirection2D = TargetDirection;
-    // We need to discuss this and figure out what is going on here
-    //TargetDirection2D.Z = 0.f;
-
-    Target2DDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection2D);
+    TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
 }
 
 bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut)
@@ -173,8 +168,8 @@ float ATurret::FindNewYawRotation(const float DeltaTime)
     // Reset to initial rotation if there is no closest enemy
     if (CurrentClosestEnemy)
     {
-        float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
-        FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection2D);
+        float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(TargetDotProduct));
+        FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection);
         float CrossProductSign = FMath::Sign(CrossProduct.Z);
         TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
     }
@@ -214,7 +209,7 @@ bool ATurret::CanShoot()
         return false;
     }
 
-    if (Target2DDotProduct >= FacingTargetThreshold)
+    if (TargetDotProduct >= FacingTargetThreshold)
     {
         return true;
     }
