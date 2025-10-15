@@ -110,6 +110,8 @@ AActor* ATurret::GetClosestEnemy()
 
 void ATurret::UpdateTurretValues()
 {
+    CurrentTurretRotation = GetActorRotation();
+
     if (!CurrentClosestEnemy)
     {
         return;
@@ -124,8 +126,6 @@ void ATurret::UpdateTurretValues()
 
     TargetLocation = CurrentClosestEnemy->GetActorLocation();
     TryGetDirectionToEnemy(TargetLocation, TargetDirection);
-
-    CurrentTurretRotation = GetActorRotation();
 
     TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
 }
