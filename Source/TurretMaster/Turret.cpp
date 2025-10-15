@@ -14,8 +14,11 @@ ATurret::ATurret()
     RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATurret::OnOverlapEnd);
     RootComponent = RangeSphere;
 
-    MuzzleSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSocket"));
-    MuzzleSocket->SetupAttachment(RootComponent);
+    BulletSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("BulletSpawnPoint"));
+    BulletSpawnPoint->SetupAttachment(RootComponent);
+
+    MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
+    MuzzleDirectionSocket->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -112,18 +115,16 @@ void ATurret::UpdateTurretValues()
         return;
     }
 
-    if (!MuzzleSocket)
+    if (!MuzzleDirectionSocket)
     {
         return;
     }
 
-    MuzzleLocation = MuzzleSocket->GetComponentLocation();
-
-    MuzzleForward = MuzzleSocket->GetForwardVector();
+    MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
     MuzzleForward.Normalize();
 
     TargetLocation = CurrentClosestEnemy->GetActorLocation();
-    TargetDirection = GetDirectionToEnemy(TargetLocation);
+    TryGetDirectionToEnemy(TargetLocation, TargetDirection);
 
     CurrentTurretRotation = GetActorRotation();
 
@@ -134,17 +135,24 @@ void ATurret::UpdateTurretValues()
     Target2DDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection2D);
 }
 
-FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition)
+bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut)
 {
-    FVector Direction = EnemyPosition - MuzzleLocation;
-    Direction.Normalize();
+    DirectionOut = FVector::ZeroVector;
 
-    return Direction;
+    if (!MuzzleDirectionSocket)
+    {
+        return true;
+    }
+
+    DirectionOut = EnemyPosition - MuzzleDirectionSocket->GetComponentLocation();
+    DirectionOut.Normalize();
+
+    return true;
 }
 
 void ATurret::RotateTowardsEnemy(const float DeltaTime)
 {
-    if (!MuzzleSocket)
+    if (!MuzzleDirectionSocket)
     {
         return;
     }
@@ -225,14 +233,15 @@ void ATurret::Shoot()
         return;
     }
 
-    if (!MuzzleSocket)
+    if (!BulletSpawnPoint)
     {
         return;
     }
 
-    const FRotator SpawnRotation = MuzzleSocket->GetComponentRotation();
+    const FRotator SpawnRotation = BulletSpawnPoint->GetComponentRotation();
+    const FVector SpawnLocation = BulletSpawnPoint->GetComponentLocation();
 
-    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, MuzzleLocation, SpawnRotation);
+    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
     ShootTimer = ShootCooldown;
 }
 

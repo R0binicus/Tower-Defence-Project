@@ -19,7 +19,10 @@ protected:
 	TObjectPtr<USphereComponent> RangeSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	TObjectPtr<USceneComponent> MuzzleSocket;
+	TObjectPtr<USceneComponent> BulletSpawnPoint;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TurretLocation;
@@ -61,20 +64,17 @@ protected:
 
 	// Turret Aim Restrictions
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float GiveUpVerticalAimThreshold = 0.3;
+	float GiveUpVerticalAimThreshold = 0.8f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float AimVerticalUpperBound = 30.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float AimVerticalLowerBound = -40.f;
+	float AimVerticalLowerBound = -35.f;
 
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector MuzzleForward;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector MuzzleLocation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector TargetLocation;
@@ -108,8 +108,8 @@ protected:
 	void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
-		meta = (ToolTip = "Returns the direction from the turret to the enemy location"))
-	FVector GetDirectionToEnemy(const FVector& EnemyPosition);
+		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
+	bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
