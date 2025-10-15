@@ -15,11 +15,19 @@ class TURRETMASTER_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
 	float GetProjectileDamage() const { return Damage; }
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Sets the projectile's initial values"))
+	void SetProjectileValues(AActor* Target);
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	TWeakObjectPtr<AActor> TargetActor = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	TObjectPtr<UStaticMeshComponent> CollisionMesh;

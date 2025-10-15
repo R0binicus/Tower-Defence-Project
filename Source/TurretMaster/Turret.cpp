@@ -243,6 +243,11 @@ void ATurret::Shoot()
     const FVector SpawnLocation = BulletSpawnPoint->GetComponentLocation();
 
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+    if (Projectile)
+    {
+        Projectile->SetProjectileValues(CurrentClosestEnemy);
+    }
     ShootTimer = ShootCooldown;
+
 }
 

@@ -16,6 +16,11 @@ AProjectile::AProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 }
 
+void AProjectile::SetProjectileValues(AActor* Target)
+{
+	TargetActor = Target;
+}
+
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
