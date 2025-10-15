@@ -125,6 +125,8 @@ void ATurret::UpdateTurretValues()
     TargetLocation = CurrentClosestEnemy->GetActorLocation();
     TargetDirection = GetDirectionToEnemy(TargetLocation);
 
+    CurrentTurretRotation = GetActorRotation();
+
     TargetDirection2D = TargetDirection;
     // We need to discuss this and figure out what is going on here
     //TargetDirection2D.Z = 0.f;
@@ -161,15 +163,18 @@ void ATurret::RotateTowardsEnemy(const float DeltaTime)
         return;
     }
 
-    float NewYawRotation = FindNewYawRotation(DeltaTime);
-    float NewPitchRotation = FindNewPitchRotation(DeltaTime);
-    SetActorRotation(FRotator(NewPitchRotation, NewYawRotation, InitialRotation.Roll));
+    float TurretDesiredYaw = FindNewYawRotation(DeltaTime);
+    float TurretDesiredPitch = FindNewPitchRotation(DeltaTime);
+
+    FRotator DesiredRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredRotation, DeltaTime, TurretTurnSpeed);
+    SetActorRotation(NewRotation);
 }
 
 float ATurret::FindNewYawRotation(const float DeltaTime)
 {
     float TurretDesiredYaw = InitialRotation.Yaw;
-    float TurretCurrentYaw = GetActorRotation().Yaw;
+    float TurretCurrentYaw = CurrentTurretRotation.Yaw;
 
     // Reset to initial rotation if there is no closest enemy
     if (CurrentClosestEnemy)
@@ -179,13 +184,13 @@ float ATurret::FindNewYawRotation(const float DeltaTime)
         TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
     }
 
-    return FMath::Lerp(TurretCurrentYaw, TurretDesiredYaw, DeltaTime * TurretTurnSpeed);
+    return TurretDesiredYaw;
 }
 
 float ATurret::FindNewPitchRotation(const float DeltaTime)
 {
     float TurretDesiredPitch = InitialRotation.Pitch;
-    float TurretCurrentPitch = GetActorRotation().Pitch;
+    float TurretCurrentPitch = CurrentTurretRotation.Pitch;
 
     // Reset to initial rotation if there is no closest enemy
     // Also prevent turret aiming from freaking out if the enemy 
@@ -199,7 +204,7 @@ float ATurret::FindNewPitchRotation(const float DeltaTime)
         TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
     }
 
-    return FMath::Lerp(TurretCurrentPitch, TurretDesiredPitch, DeltaTime * TurretTurnSpeed);
+    return TurretDesiredPitch;
 }
 
 bool ATurret::CanShoot()

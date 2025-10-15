@@ -86,6 +86,9 @@ protected:
 	FVector TargetDirection2D;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FRotator CurrentTurretRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float Target2DDotProduct;
 
 	virtual void BeginPlay() override;
