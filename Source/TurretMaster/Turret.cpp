@@ -174,7 +174,8 @@ float ATurret::FindNewYawRotation(const float DeltaTime)
     if (CurrentClosestEnemy)
     {
         float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(Target2DDotProduct));
-        float CrossProductSign = FVector::CrossProduct(MuzzleForward, TargetDirection2D).GetSignVector().Z;
+        FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection2D);
+        float CrossProductSign = FMath::Sign(CrossProduct.Z);
         TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
     }
 
