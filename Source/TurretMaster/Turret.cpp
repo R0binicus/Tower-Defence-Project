@@ -132,11 +132,10 @@ void ATurret::UpdateTurretValues()
 
 bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut)
 {
-    DirectionOut = FVector::ZeroVector;
-
     if (!MuzzleDirectionSocket)
     {
-        return true;
+        DirectionOut = FVector::ZeroVector;
+        return false;
     }
 
     DirectionOut = EnemyPosition - MuzzleDirectionSocket->GetComponentLocation();
@@ -152,15 +151,15 @@ void ATurret::RotateTowardsEnemy(const float DeltaTime)
         return;
     }
 
-    float TurretDesiredYaw = FindNewYawRotation(DeltaTime);
-    float TurretDesiredPitch = FindNewPitchRotation(DeltaTime);
+    float TurretDesiredYaw = FindDesiredYaw();
+    float TurretDesiredPitch = FindDesiredPitch();
 
     FRotator DesiredRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
     FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
-float ATurret::FindNewYawRotation(const float DeltaTime)
+float ATurret::FindDesiredYaw()
 {
     float TurretDesiredYaw = InitialRotation.Yaw;
     float TurretCurrentYaw = CurrentTurretRotation.Yaw;
@@ -168,16 +167,16 @@ float ATurret::FindNewYawRotation(const float DeltaTime)
     // Reset to initial rotation if there is no closest enemy
     if (CurrentClosestEnemy)
     {
-        float HorizontalDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(TargetDotProduct));
+        float YawDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(TargetDotProduct));
         FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection);
         float CrossProductSign = FMath::Sign(CrossProduct.Z);
-        TurretDesiredYaw = TurretCurrentYaw + (HorizontalDegreesToEnemy * CrossProductSign);
+        TurretDesiredYaw = TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
     }
 
     return TurretDesiredYaw;
 }
 
-float ATurret::FindNewPitchRotation(const float DeltaTime)
+float ATurret::FindDesiredPitch()
 {
     float TurretDesiredPitch = InitialRotation.Pitch;
     float TurretCurrentPitch = CurrentTurretRotation.Pitch;
