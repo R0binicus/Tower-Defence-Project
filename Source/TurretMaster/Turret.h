@@ -6,6 +6,9 @@
 #include "Projectile.h"
 #include "Turret.generated.h"
 
+/**
+ *
+ */
 UCLASS()
 class TURRETMASTER_API ATurret : public AActor
 {

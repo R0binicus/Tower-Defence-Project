@@ -7,6 +7,9 @@
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
 
+/**
+ *
+ */
 UCLASS()
 class TURRETMASTER_API AProjectile : public AActor
 {
@@ -25,6 +28,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
+		meta = (ToolTip = "Sets the projectile's initial values"))
+	void MoveToTarget();
+
+	virtual void MoveToTarget_Implementation();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
