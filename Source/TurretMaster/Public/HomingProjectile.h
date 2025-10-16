@@ -17,5 +17,8 @@ public:
 	AHomingProjectile();
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float TurnMultiplier = 1.f;
+
 	virtual void UpdateTargetDest_Implementation() override;
 };
