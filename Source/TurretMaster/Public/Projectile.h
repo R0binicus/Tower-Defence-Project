@@ -8,7 +8,8 @@ class UStaticMeshComponent;
 class UProjectileMovementComponent;
 
 /**
- *
+ * Projectile base class, which moves in the direction it was
+ * fired from at an initial velocity and Expeirences gravity
  */
 UCLASS()
 class TURRETMASTER_API AProjectile : public AActor
@@ -28,6 +29,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
 		meta = (ToolTip = "Sets the projectile's initial values"))

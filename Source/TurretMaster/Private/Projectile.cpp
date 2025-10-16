@@ -29,6 +29,11 @@ void AProjectile::BeginPlay()
 	SetLifeSpan(Lifetime);
 }
 
+void AProjectile::Tick(float DeltaTime)
+{
+	MoveToTarget();
+}
+
 void AProjectile::MoveToTarget_Implementation()
 {
 	// Base projectile has no implementation
