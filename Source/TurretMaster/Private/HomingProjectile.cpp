@@ -18,9 +18,9 @@ void AHomingProjectile::UpdateTargetDest_Implementation()
 	FVector TargetDirection = LockedTarget->GetActorLocation() - GetActorLocation();
 	TargetDirection.Normalize();
 
-	if (TurnMultiplier != 1.f)
+	if (ProjectileValues.TurnMultiplier != 1.f)
 	{
-		TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, TurnMultiplier);
+		TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, ProjectileValues.TurnMultiplier);
 	}
 
 	MovementComponent->Velocity = (TargetDirection * ProjectileValues.Speed);

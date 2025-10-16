@@ -31,6 +31,6 @@ struct FProjectileValues
 	FProjectileValues(float InDamage, float InSpeed, float InLifetime, float InTurnMultiplier) :
 		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), TurnMultiplier(InTurnMultiplier)
 	{
-
+		
 	}
 };

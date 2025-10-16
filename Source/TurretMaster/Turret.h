@@ -50,7 +50,7 @@ protected:
 	TObjectPtr<AActor> CurrentClosestEnemy;
 
 	// Turret Aiming
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
@@ -77,19 +77,23 @@ protected:
 	float FacingTargetThreshold = 0.999f;
 
 	// Projectile Values
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileSpeed = 3000.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileLifetime = 10.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileTurnMultiplier = 1.f;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(BlueprintReadOnly, Category = "Turret")
 	FProjectileValues ProjectileValues;
 
 	// Update Turret Values
