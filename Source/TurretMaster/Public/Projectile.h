@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ProjectileValues.h"
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
@@ -21,11 +22,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
-	float GetProjectileDamage() const { return Damage; }
+	float GetProjectileDamage() const { return ProjectileValues.Damage; }
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Sets the projectile's initial values"))
-	void InitializeProjectile(AActor* Target, float InDamage, float InLifetime, float InSpeed);
+	void InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
 
 protected:
 	virtual void BeginPlay() override;
@@ -47,14 +48,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
 	float Damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
 	float Lifetime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Speed;
+	float Speed;*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	FProjectileValues ProjectileValues;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

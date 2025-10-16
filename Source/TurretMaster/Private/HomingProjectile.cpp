@@ -23,5 +23,5 @@ void AHomingProjectile::UpdateTargetDest_Implementation()
 		TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, TurnMultiplier);
 	}
 
-	MovementComponent->Velocity = (TargetDirection * Speed);
+	MovementComponent->Velocity = (TargetDirection * ProjectileValues.Speed);
 }

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "ProjectileValues.h"
 #include "Projectile.h"
 #include "Turret.generated.h"
 
@@ -33,7 +34,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator InitialRotation;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
@@ -76,14 +77,20 @@ protected:
 	float FacingTargetThreshold = 0.999f;
 
 	// Projectile Values
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
 	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	float ProjectileSpeed = 3000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
 	float ProjectileLifetime = 10.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float ProjectileSpeed = 3000.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Turret")
+	float ProjectileTurnMultiplier = 1.f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	FProjectileValues ProjectileValues;
 
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")

@@ -16,16 +16,15 @@ AProjectile::AProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 }
 
-void AProjectile::InitializeProjectile(AActor* Target, float InDamage, float InLifetime, float InSpeed)
+void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
 {
 	TargetActor = Target;
-	Damage = InDamage;
-	Lifetime = InLifetime;
-	Speed = InSpeed;
 
-	SetLifeSpan(Lifetime);
+	// Discuss: is this copying InProjectileValues?
+	ProjectileValues = InProjectileValues;
 
-	MovementComponent->Velocity = GetActorForwardVector() * Speed;
+	SetLifeSpan(ProjectileValues.Lifetime);
+	MovementComponent->Velocity = GetActorForwardVector() * ProjectileValues.Speed;
 }
 
 void AProjectile::BeginPlay()
@@ -56,7 +55,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		return;
 	}
 
-	IDamageable::Execute_TakeDamage(OtherActor, Damage);
+	IDamageable::Execute_TakeDamage(OtherActor, ProjectileValues.Damage);
 	Destroy();
 }
 

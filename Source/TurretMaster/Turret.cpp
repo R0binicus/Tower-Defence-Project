@@ -19,6 +19,11 @@ ATurret::ATurret()
 
     MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
     MuzzleDirectionSocket->SetupAttachment(RootComponent);
+
+    ProjectileValues.Damage = ProjectileDamage;
+    ProjectileValues.Speed = ProjectileSpeed;
+    ProjectileValues.Lifetime = ProjectileLifetime;
+    ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
 }
 
 // Called when the game starts or when spawned
@@ -245,7 +250,7 @@ void ATurret::Shoot()
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
     if (Projectile)
     {
-        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileDamage, ProjectileLifetime, ProjectileSpeed);
+        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
     }
     ShootTimer = ShootCooldown;
 
