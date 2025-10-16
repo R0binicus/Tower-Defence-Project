@@ -245,7 +245,7 @@ void ATurret::Shoot()
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
     if (Projectile)
     {
-        Projectile->SetProjectileValues(CurrentClosestEnemy);
+        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileDamage, ProjectileLifetime, ProjectileSpeed);
     }
     ShootTimer = ShootCooldown;
 

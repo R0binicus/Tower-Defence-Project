@@ -48,12 +48,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<AActor> CurrentClosestEnemy;
 
-	// Editable from inspector
+	// Turret Aiming
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret")
 	float TurretRange = 3000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;
+
+	// Turret Aim Restrictions
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float GiveUpVerticalAimThreshold = 0.8f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float AimVerticalUpperBound = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	float AimVerticalLowerBound = -35.f;
 
 	// Turret Shooting
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
@@ -65,15 +75,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float FacingTargetThreshold = 0.999f;
 
-	// Turret Aim Restrictions
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float GiveUpVerticalAimThreshold = 0.8f;
+	// Projectile Values
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float AimVerticalUpperBound = 30.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float ProjectileLifetime = 10.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-	float AimVerticalLowerBound = -35.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float ProjectileSpeed = 3000.f;
 
 	// Update Turret Values
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")

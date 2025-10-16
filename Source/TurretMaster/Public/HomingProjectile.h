@@ -17,5 +17,5 @@ public:
 	AHomingProjectile();
 
 protected:
-	virtual void MoveToTarget_Implementation() override;
+	virtual void UpdateTargetDest_Implementation() override;
 };

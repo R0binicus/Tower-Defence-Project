@@ -13,28 +13,32 @@ AProjectile::AProjectile()
 
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
 	MovementComponent->UpdatedComponent = CollisionMesh;
-	MovementComponent->InitialSpeed = 3000.f;
-	MovementComponent->MaxSpeed = 3000.f;
 	MovementComponent->bRotationFollowsVelocity = true;
 }
 
-void AProjectile::SetProjectileValues(AActor* Target)
+void AProjectile::InitializeProjectile(AActor* Target, float InDamage, float InLifetime, float InSpeed)
 {
 	TargetActor = Target;
+	Damage = InDamage;
+	Lifetime = InLifetime;
+	Speed = InSpeed;
+
+	SetLifeSpan(Lifetime);
+
+	MovementComponent->Velocity = GetActorForwardVector() * Speed;
 }
 
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SetLifeSpan(Lifetime);
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
-	MoveToTarget();
+	UpdateTargetDest();
 }
 
-void AProjectile::MoveToTarget_Implementation()
+void AProjectile::UpdateTargetDest_Implementation()
 {
 	// Base projectile has no implementation
 }

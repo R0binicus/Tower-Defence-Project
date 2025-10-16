@@ -25,7 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Sets the projectile's initial values"))
-	void SetProjectileValues(AActor* Target);
+	void InitializeProjectile(AActor* Target, float InDamage, float InLifetime, float InSpeed);
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,10 +33,10 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
-		meta = (ToolTip = "Sets the projectile's initial values"))
-	void MoveToTarget();
+		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
+	void UpdateTargetDest();
 
-	virtual void MoveToTarget_Implementation();
+	virtual void UpdateTargetDest_Implementation();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
@@ -48,10 +48,13 @@ protected:
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Damage = 25.0f;
+	float Damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Lifetime = 10.0f;
+	float Lifetime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float Speed;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
