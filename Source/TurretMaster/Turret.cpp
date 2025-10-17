@@ -88,7 +88,10 @@ AActor* ATurret::GetClosestEnemy()
 
         if (!PotentialClosestEnemy)
         {
-            // What will happen if it doesn't implement IIDamagable??
+            if (!EnemyRefArray[i]->Implements<UDamageable>())
+            {
+                continue;
+            }
             if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
             {
                 continue;
