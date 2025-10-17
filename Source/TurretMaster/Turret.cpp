@@ -171,14 +171,38 @@ float ATurret::FindDesiredYaw()
 {
     float TurretDesiredYaw = InitialRotation.Yaw;
 
+    // Make a 2D dot product, because we don't want the desired yaw to
+    // worry about the pitch of the turret, or the pitch of the target
+    FVector MuzzleForward2D = MuzzleForward;
+    MuzzleForward2D.Z = 0;
+    MuzzleForward2D.Normalize();
+    FVector TargetDirection2D = TargetDirection;
+    TargetDirection2D.Z = 0;
+    TargetDirection2D.Normalize();
+
+    float DotProduct2D = FVector::DotProduct(MuzzleForward2D, TargetDirection2D);
+
     // Reset to initial rotation if there is no closest enemy
     if (CurrentClosestEnemy)
     {
-        float TurretCurrentYaw = CurrentTurretRotation.Yaw;
-        float YawDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(TargetDotProduct));
-        FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection);
-        float CrossProductSign = FMath::Sign(CrossProduct.Z);
-        TurretDesiredYaw = TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
+        const float TurretCurrentYaw = CurrentTurretRotation.Yaw;
+
+        // If DotProduct2D is close to the DotProduct2D, use TurretCurrentYaw,
+        // otherwise floating point inaccuracy will cause the turret to vibrate
+        constexpr float AimTolerance = 0.999;
+        if (DotProduct2D < AimTolerance)
+        {
+            
+            const float YawDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(DotProduct2D));
+            const FVector CrossProduct = FVector::CrossProduct(MuzzleForward2D, TargetDirection2D);
+            const float CrossProductSign = FMath::Sign(CrossProduct.Z);
+
+            TurretDesiredYaw = TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
+        }
+        else
+        {
+            TurretDesiredYaw = TurretCurrentYaw;
+        }
     }
 
     return TurretDesiredYaw;
