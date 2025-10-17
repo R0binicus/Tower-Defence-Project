@@ -77,15 +77,15 @@ protected:
 	float FacingTargetThreshold = 0.999f;
 
 	// Projectile Values
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileSpeed = 3000.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileLifetime = 10.0f;
 
