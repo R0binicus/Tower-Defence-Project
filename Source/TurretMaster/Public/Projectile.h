@@ -48,15 +48,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Damage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Lifetime;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Speed;*/
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;
 

@@ -20,7 +20,6 @@ void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& 
 {
 	TargetActor = Target;
 
-	// Discuss: is this copying InProjectileValues?
 	ProjectileValues = InProjectileValues;
 
 	SetLifeSpan(ProjectileValues.Lifetime);
