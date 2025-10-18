@@ -12,5 +12,9 @@ UCLASS()
 class TURRETMASTER_API AArcTurret : public ATurret
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual float FindDesiredPitch() override;
+
+	virtual bool CanShoot() override;
 };

@@ -117,34 +117,34 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();
 
-	void UpdateTurretValues();
+	virtual void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
-	bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
+	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
-	void RotateTowardsEnemy(const float DeltaTime);
+	virtual void RotateTowardsEnemy(const float DeltaTime);
 
-	float FindDesiredYaw();
+	virtual float FindDesiredYaw();
 
-	float FindDesiredPitch();
+	virtual float FindDesiredPitch();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
-	bool CanShoot();
+	virtual bool CanShoot();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
-	void Shoot();
+	virtual void Shoot();
 };
