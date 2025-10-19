@@ -19,6 +19,7 @@ public:
 	ATurret();
 
 protected:
+	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USphereComponent> RangeSphere;
 
@@ -28,21 +29,27 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TurretLocation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator InitialRotation;
-
+	// 
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FName EnemyTagName = "Enemy";
 
+	// Begin Play Initialize
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	float Gravity = 980.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	FVector TurretLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	FRotator InitialRotation;
+
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
+	// Enemy reference
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 
@@ -77,15 +84,15 @@ protected:
 	float FacingTargetThreshold = 0.999f;
 
 	// Projectile Values
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileSpeed = 3000.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileLifetime = 10.0f;
 
@@ -110,41 +117,47 @@ protected:
 	FRotator CurrentTurretRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FRotator DesiredTurretRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TargetDotProduct;
 
+	// Functions
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();
 
-	void UpdateTurretValues();
+	virtual void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
-	bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
+	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
 
+	// Turret rotation
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
-	void RotateTowardsEnemy(const float DeltaTime);
+	virtual void RotateTowardsEnemy(const float DeltaTime);
 
-	float FindDesiredYaw();
+	virtual float FindDesiredYaw();
 
-	float FindDesiredPitch();
+	virtual float FindDesiredPitch();
 
+	// Shooting
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
-	bool CanShoot();
+	virtual bool CanShoot();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
-	void Shoot();
+	virtual void Shoot();
 };

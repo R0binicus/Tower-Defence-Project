@@ -1,4 +1,5 @@
 #include "Turret.h"
+#include "PhysicsEngine/PhysicsSettings.h"
 #include "Damageable.h"
 
 // Sets default values
@@ -27,13 +28,17 @@ void ATurret::BeginPlay()
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
     InitialRotation = GetActorRotation();
+    World = GetWorld();
+
+    if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+    {
+        Gravity = -Physics->DefaultGravityZ;
+    }
 
     ProjectileValues.Damage = ProjectileDamage;
     ProjectileValues.Speed = ProjectileSpeed;
     ProjectileValues.Lifetime = ProjectileLifetime;
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
-
-    World = GetWorld();
 }
 
 // Called every frame
@@ -88,7 +93,10 @@ AActor* ATurret::GetClosestEnemy()
 
         if (!PotentialClosestEnemy)
         {
-            // What will happen if it doesn't implement IIDamagable??
+            if (!EnemyRefArray[i]->Implements<UDamageable>())
+            {
+                continue;
+            }
             if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
             {
                 continue;
@@ -159,52 +167,61 @@ void ATurret::RotateTowardsEnemy(const float DeltaTime)
     float TurretDesiredYaw = FindDesiredYaw();
     float TurretDesiredPitch = FindDesiredPitch();
 
-    FRotator DesiredRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
-    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredRotation, DeltaTime, TurretTurnSpeed);
+    DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
 float ATurret::FindDesiredYaw()
 {
-    float TurretDesiredYaw = InitialRotation.Yaw;
-
     // Reset to initial rotation if there is no closest enemy
-    if (CurrentClosestEnemy)
+    if (!CurrentClosestEnemy)
     {
-        float TurretCurrentYaw = CurrentTurretRotation.Yaw;
-        float YawDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(TargetDotProduct));
-        FVector CrossProduct = FVector::CrossProduct(MuzzleForward, TargetDirection);
-        float CrossProductSign = FMath::Sign(CrossProduct.Z);
-        TurretDesiredYaw = TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
+        return InitialRotation.Yaw;
     }
 
-    return TurretDesiredYaw;
+    // Make a 2D dot product, because we don't want the desired yaw to
+    // worry about the pitch of the turret, or the pitch of the target
+    FVector MuzzleForward2D = MuzzleForward;
+    MuzzleForward2D.Z = 0;
+    MuzzleForward2D.Normalize();
+    FVector TargetDirection2D = TargetDirection;
+    TargetDirection2D.Z = 0;
+    TargetDirection2D.Normalize();
+
+    const float DotProduct2D = FVector::DotProduct(MuzzleForward2D, TargetDirection2D);
+
+    // Then calculate the degrees to enemy and it's sign
+    const float YawDegreesToEnemy = FMath::RadiansToDegrees(FMath::Acos(DotProduct2D));
+    const FVector CrossProduct = FVector::CrossProduct(MuzzleForward2D, TargetDirection2D);
+    const float CrossProductSign = FMath::Sign(CrossProduct.Z);
+    const float TurretCurrentYaw = CurrentTurretRotation.Yaw;
+
+    return TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
 }
 
 float ATurret::FindDesiredPitch()
 {
-    float TurretDesiredPitch = InitialRotation.Pitch;
-
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
     {
-        return TurretDesiredPitch;
+        return InitialRotation.Pitch;
     }
 
     // Prevent turret from aiming vertically  
     // if the vertical distance is too great
-    if (TargetDotProduct >= GiveUpVerticalAimThreshold)
+    if (TargetDotProduct < GiveUpVerticalAimThreshold)
     {
-        float TurretCurrentPitch = CurrentTurretRotation.Pitch;
-        float TargetPitchDifference = FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
-        TurretDesiredPitch = TurretCurrentPitch + TargetPitchDifference;
-
-        // Used to make the turret face the enemy, when it is only just
-        // outside it's aiming bounds
-        TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
+        return InitialRotation.Pitch;
     }
 
-    return TurretDesiredPitch;
+    const float TurretCurrentPitch = CurrentTurretRotation.Pitch;
+    const float TargetPitchDifference = FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
+    const float TurretDesiredPitch = TurretCurrentPitch + TargetPitchDifference;
+
+    // Used to make the turret continue partially faceing the enemy, 
+    // when the enmy is only just outside the turret's aiming bounds
+    return FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
 }
 
 bool ATurret::CanShoot()
@@ -219,12 +236,14 @@ bool ATurret::CanShoot()
         return false;
     }
 
-    if (TargetDotProduct >= FacingTargetThreshold)
+    float DesiredAngleDotProduct = FVector::DotProduct(MuzzleForward, DesiredTurretRotation.Vector());
+
+    if (DesiredAngleDotProduct < FacingTargetThreshold)
     {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 void ATurret::Shoot()
@@ -253,6 +272,4 @@ void ATurret::Shoot()
         Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
     }
     ShootTimer = ShootCooldown;
-
 }
-
