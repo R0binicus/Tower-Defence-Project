@@ -1,5 +1,27 @@
 #include "ArcTurret.h"
 
+void AArcTurret::RotateTowardsEnemy(const float DeltaTime)
+{
+    if (!MuzzleDirectionSocket)
+    {
+        return;
+    }
+
+    float TurretDesiredYaw = FindDesiredYaw();
+    float TurretDesiredPitch = FindDesiredPitch();
+
+    // Firest set desired rotation variable
+    DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+
+    // Then clamp it if it is not allowed
+    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    FRotator AllowedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+
+    // Then set rotation
+    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, AllowedTurretRotation, DeltaTime, TurretTurnSpeed);
+    SetActorRotation(NewRotation);
+}
+
 float AArcTurret::FindDesiredPitch()
 {
     // Reset to initial rotation if there is no closest enemy

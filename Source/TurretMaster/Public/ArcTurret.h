@@ -14,5 +14,7 @@ class TURRETMASTER_API AArcTurret : public ATurret
 	GENERATED_BODY()
 
 protected:
+	virtual void RotateTowardsEnemy(const float DeltaTime) override;
+	 
 	virtual float FindDesiredPitch() override;
 };
