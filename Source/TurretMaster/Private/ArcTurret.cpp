@@ -15,22 +15,15 @@ float AArcTurret::FindDesiredPitch()
         return InitialRotation.Pitch;
     }*/
 
-    const float TurretCurrentPitch = CurrentTurretRotation.Pitch;
-    const float TargetPitchDifference = FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
-    const float TurretDesiredPitch = TurretCurrentPitch + TargetPitchDifference;
-
-
-
-
-
     const float V = ProjectileSpeed;
-    const float G = 980.f;
+    const float G = Gravity;
     const FVector MuzzleLocation = MuzzleDirectionSocket->GetComponentLocation();
     FVector PlaneTarget = TargetLocation;
     PlaneTarget.Z = MuzzleLocation.Z;
 
     const float X = FVector::Distance(MuzzleLocation, PlaneTarget);
-    const float Y = MuzzleLocation.Z - TargetLocation.Z;
+    const float Y = TargetLocation.Z - MuzzleLocation.Z;
+
 
 
     const float V2 = V * V;
@@ -38,11 +31,9 @@ float AArcTurret::FindDesiredPitch()
     const float X2 = X * X;
     float SQ = (V4 - G * ((G * X2) + (2.0 * Y * V2)));
 
-    SQ = sqrt(SQ);
+    SQ = -sqrt(SQ);
 
     const float Angle = atan2((V*V + SQ), (G * X));
-
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Angle: %f"), FMath::RadiansToDegrees(Angle)));
 
     return FMath::RadiansToDegrees(Angle);
 }

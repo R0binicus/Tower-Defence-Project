@@ -19,6 +19,7 @@ public:
 	ATurret();
 
 protected:
+	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USphereComponent> RangeSphere;
 
@@ -28,21 +29,27 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TurretLocation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator InitialRotation;
-
+	// 
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FName EnemyTagName = "Enemy";
 
+	// Begin Play Initialize
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	float Gravity = 980.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	FVector TurretLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	FRotator InitialRotation;
+
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
+	// Enemy reference
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 
@@ -112,6 +119,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TargetDotProduct;
 
+	// Functions
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
@@ -132,6 +140,7 @@ protected:
 		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
 	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
 
+	// Turret rotation
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
 	virtual void RotateTowardsEnemy(const float DeltaTime);
@@ -140,6 +149,7 @@ protected:
 
 	virtual float FindDesiredPitch();
 
+	// Shooting
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
 	virtual bool CanShoot();

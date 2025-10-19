@@ -1,4 +1,5 @@
 #include "Turret.h"
+#include "PhysicsEngine/PhysicsSettings.h"
 #include "Damageable.h"
 
 // Sets default values
@@ -27,13 +28,17 @@ void ATurret::BeginPlay()
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
     InitialRotation = GetActorRotation();
+    World = GetWorld();
+
+    if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+    {
+        Gravity = -Physics->DefaultGravityZ;
+    }
 
     ProjectileValues.Damage = ProjectileDamage;
     ProjectileValues.Speed = ProjectileSpeed;
     ProjectileValues.Lifetime = ProjectileLifetime;
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
-
-    World = GetWorld();
 }
 
 // Called every frame
