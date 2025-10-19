@@ -167,8 +167,8 @@ void ATurret::RotateTowardsEnemy(const float DeltaTime)
     float TurretDesiredYaw = FindDesiredYaw();
     float TurretDesiredPitch = FindDesiredPitch();
 
-    FRotator DesiredRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
-    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredRotation, DeltaTime, TurretTurnSpeed);
+    DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
@@ -236,12 +236,14 @@ bool ATurret::CanShoot()
         return false;
     }
 
-    if (TargetDotProduct >= FacingTargetThreshold)
+    float DesiredAngleDotProduct = FVector::DotProduct(MuzzleForward, DesiredTurretRotation.Vector());
+
+    if (DesiredAngleDotProduct < FacingTargetThreshold)
     {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 void ATurret::Shoot()

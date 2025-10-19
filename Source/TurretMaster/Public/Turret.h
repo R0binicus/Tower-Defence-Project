@@ -117,6 +117,9 @@ protected:
 	FRotator CurrentTurretRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FRotator DesiredTurretRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TargetDotProduct;
 
 	// Functions

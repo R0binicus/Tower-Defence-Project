@@ -15,6 +15,4 @@ class TURRETMASTER_API AArcTurret : public ATurret
 
 protected:
 	virtual float FindDesiredPitch() override;
-
-	virtual bool CanShoot() override;
 };

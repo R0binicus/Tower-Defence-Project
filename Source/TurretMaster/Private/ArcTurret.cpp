@@ -8,13 +8,6 @@ float AArcTurret::FindDesiredPitch()
         return InitialRotation.Pitch;
     }
 
-    // Prevent turret from aiming vertically  
-    // if the vertical distance is too great
-    /*if (TargetDotProduct < GiveUpVerticalAimThreshold)
-    {
-        return InitialRotation.Pitch;
-    }*/
-
     // Equasion taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
 
     // Get initial values
@@ -35,25 +28,4 @@ float AArcTurret::FindDesiredPitch()
     const float Angle = atan2((Speed2 + SquareRoot), (Gravity * FlatDist));
 
     return FMath::RadiansToDegrees(Angle);
-}
-
-bool AArcTurret::CanShoot()
-{
-    if (!CurrentClosestEnemy)
-    {
-        return false;
-    }
-
-    if (ShootTimer > 0.f)
-    {
-        return false;
-    }
-
-    //if (TargetDotProduct >= FacingTargetThreshold)
-    //{
-        //return true;
-    //}
-
-    return true;
-    //return false;
 }
