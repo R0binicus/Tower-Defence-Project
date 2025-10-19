@@ -30,11 +30,16 @@ float AArcTurret::FindDesiredPitch()
         return InitialRotation.Pitch;
     }
 
+    if (!BulletSpawnPoint)
+    {
+        return InitialRotation.Pitch;
+    }
+
     // Equasion taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
 
     // Get initial values
     const float Speed = ProjectileSpeed;
-    const FVector MuzzleLocation = MuzzleDirectionSocket->GetComponentLocation();
+    const FVector MuzzleLocation = BulletSpawnPoint->GetComponentLocation();
     FVector PlaneTarget = TargetLocation;
     PlaneTarget.Z = MuzzleLocation.Z;
     const float FlatDist = FVector::Distance(MuzzleLocation, PlaneTarget);
