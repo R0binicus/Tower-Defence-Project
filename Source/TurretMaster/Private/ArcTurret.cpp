@@ -15,25 +15,24 @@ float AArcTurret::FindDesiredPitch()
         return InitialRotation.Pitch;
     }*/
 
-    const float V = ProjectileSpeed;
-    const float G = Gravity;
+    // Equasion taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
+
+    // Get initial values
+    const float Speed = ProjectileSpeed;
     const FVector MuzzleLocation = MuzzleDirectionSocket->GetComponentLocation();
     FVector PlaneTarget = TargetLocation;
     PlaneTarget.Z = MuzzleLocation.Z;
+    const float FlatDist = FVector::Distance(MuzzleLocation, PlaneTarget);
+    const float HeightDiff = TargetLocation.Z - MuzzleLocation.Z;
 
-    const float X = FVector::Distance(MuzzleLocation, PlaneTarget);
-    const float Y = TargetLocation.Z - MuzzleLocation.Z;
+    // Calculate the SquareRoot value
+    const float Speed2 = Speed * Speed;
+    const float Speed4 = Speed2 * Speed2;
+    const float FlatDist2 = FlatDist * FlatDist;
+    float SquareRoot = (Speed4 - Gravity * ((Gravity * FlatDist2) + (2 * HeightDiff * Speed2)));
+    SquareRoot = -sqrt(SquareRoot);
 
-
-
-    const float V2 = V * V;
-    const float V4 = V2 * V2;
-    const float X2 = X * X;
-    float SQ = (V4 - G * ((G * X2) + (2.0 * Y * V2)));
-
-    SQ = -sqrt(SQ);
-
-    const float Angle = atan2((V*V + SQ), (G * X));
+    const float Angle = atan2((Speed2 + SquareRoot), (Gravity * FlatDist));
 
     return FMath::RadiansToDegrees(Angle);
 }
