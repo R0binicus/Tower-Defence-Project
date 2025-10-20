@@ -50,9 +50,59 @@ float AArcTurret::FindDesiredPitch()
     const float SpeedPow4 = SpeedPow2 * SpeedPow2;
     const float FlatDist2 = FlatDist * FlatDist;
     float SquareRoot = (SpeedPow4 - Gravity * ((Gravity * FlatDist2) + (2 * HeightDiff * SpeedPow2)));
+
     SquareRoot = -sqrt(SquareRoot);
+
+    AngleIsNAN = FMath::IsNaN(SquareRoot);
+    if (AngleIsNAN)
+    {
+        // Equasion taken from: https://www.youtube.com/watch?v=K3YrIfX4sbY
+        //float NewSpeed = FlatDist / (1.5f * FMath::Cos(BackupAimAngle));
+        //float NewSpeed = ((0.5f * Gravity * 2.f * 2.f) - HeightDiff) * 2.f * FMath::Sin(BackupAimAngle);
+        float NewSpeed = FlatDist * -Gravity;
+        NewSpeed = NewSpeed / (-2 * FMath::Sin(BackupAimAngle) * FMath::Cos(BackupAimAngle));
+        NewSpeed = sqrt(NewSpeed) - 300;
+        ProjectileValues.Speed = NewSpeed;
+
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NewSpeed: %f"), NewSpeed));
+        
+        return(BackupAimAngle);
+    }
+    else
+    {
+        ProjectileValues.Speed = ProjectileSpeed;
+    }
+
 
     const float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
 
     return FMath::RadiansToDegrees(Angle);
+}
+
+void AArcTurret::Shoot()
+{
+    if (!ProjectileClass)
+    {
+        return;
+    }
+
+    if (!World)
+    {
+        return;
+    }
+
+    if (!BulletSpawnPoint)
+    {
+        return;
+    }
+
+    const FRotator SpawnRotation = BulletSpawnPoint->GetComponentRotation();
+    const FVector SpawnLocation = BulletSpawnPoint->GetComponentLocation();
+
+    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+    if (Projectile)
+    {
+        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
+    }
+    ShootTimer = ShootCooldown;
 }
