@@ -15,10 +15,10 @@ void AArcTurret::RotateTowardsEnemy(const float DeltaTime)
 
     // Then clamp it if it is not allowed
     TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
-    FRotator AllowedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
 
     // Then set rotation
-    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, AllowedTurretRotation, DeltaTime, TurretTurnSpeed);
+    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, ClampedTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
@@ -46,13 +46,13 @@ float AArcTurret::FindDesiredPitch()
     const float HeightDiff = TargetLocation.Z - MuzzleLocation.Z;
 
     // Calculate the SquareRoot value
-    const float Speed2 = Speed * Speed;
-    const float Speed4 = Speed2 * Speed2;
+    const float SpeedPow2 = Speed * Speed;
+    const float SpeedPow4 = SpeedPow2 * SpeedPow2;
     const float FlatDist2 = FlatDist * FlatDist;
-    float SquareRoot = (Speed4 - Gravity * ((Gravity * FlatDist2) + (2 * HeightDiff * Speed2)));
+    float SquareRoot = (SpeedPow4 - Gravity * ((Gravity * FlatDist2) + (2 * HeightDiff * SpeedPow2)));
     SquareRoot = -sqrt(SquareRoot);
 
-    const float Angle = atan2((Speed2 + SquareRoot), (Gravity * FlatDist));
+    const float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
 
     return FMath::RadiansToDegrees(Angle);
 }
