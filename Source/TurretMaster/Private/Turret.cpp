@@ -263,7 +263,7 @@ void ATurret::Shoot()
         return;
     }
 
-    const FRotator SpawnRotation = BulletSpawnPoint->GetComponentRotation();
+    const FRotator SpawnRotation = DesiredTurretRotation;
     const FVector SpawnLocation = BulletSpawnPoint->GetComponentLocation();
 
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
