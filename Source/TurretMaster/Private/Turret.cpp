@@ -49,13 +49,22 @@ void ATurret::Tick(float DeltaTime)
 
     UpdateTurretValues();
 
-    RotateTowardsEnemy(DeltaTime);
+    FVector TargetLocation = FVector::ZeroVector;
+    FVector TargetDirection = FVector::ZeroVector;
+
+    if (CurrentClosestEnemy)
+    {
+        TargetLocation = CurrentClosestEnemy->GetActorLocation();
+        TryGetDirectionToEnemy(TargetLocation, TargetDirection);
+    }
+
+    RotateTowardsTarget(DeltaTime, TargetLocation, TargetDirection);
 
     ShootTimer = ShootTimer - DeltaTime;
 
     if (CanShoot())
     {
-        Shoot();
+        Shoot(TargetLocation);
     }
 }
 
@@ -125,22 +134,10 @@ void ATurret::UpdateTurretValues()
 {
     CurrentTurretRotation = GetActorRotation();
 
-    if (!CurrentClosestEnemy)
+    if (MuzzleDirectionSocket)
     {
-        return;
+        MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
     }
-
-    if (!MuzzleDirectionSocket)
-    {
-        return;
-    }
-
-    MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
-
-    TargetLocation = CurrentClosestEnemy->GetActorLocation();
-    TryGetDirectionToEnemy(TargetLocation, TargetDirection);
-
-    TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
 }
 
 bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut)
@@ -157,22 +154,27 @@ bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& Dire
     return true;
 }
 
-void ATurret::RotateTowardsEnemy(const float DeltaTime)
+FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime)
+{
+    return EnemyPosition + (EnemyPosition * ProjectileFlightTime);
+}
+
+void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
 {
     if (!MuzzleDirectionSocket)
     {
         return;
     }
 
-    float TurretDesiredYaw = FindDesiredYaw();
-    float TurretDesiredPitch = FindDesiredPitch();
+    float TurretDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    float TurretDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
 
     DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
     FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
-float ATurret::FindDesiredYaw()
+float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
@@ -200,13 +202,15 @@ float ATurret::FindDesiredYaw()
     return TurretCurrentYaw + (YawDegreesToEnemy * CrossProductSign);
 }
 
-float ATurret::FindDesiredPitch()
+float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
     {
         return InitialRotation.Pitch;
     }
+
+    const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
 
     // Prevent turret from aiming vertically  
     // if the vertical distance is too great
@@ -246,7 +250,7 @@ bool ATurret::CanShoot()
     return true;
 }
 
-void ATurret::Shoot()
+void ATurret::Shoot(const FVector& TargetPosition)
 {
     if (!ProjectileClass)
     {

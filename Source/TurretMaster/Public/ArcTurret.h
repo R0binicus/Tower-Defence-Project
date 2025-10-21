@@ -24,9 +24,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float BackupAimAngle = 20.f;
 
-	virtual void RotateTowardsEnemy(const float DeltaTime) override;
+	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection) override;
 	 
-	virtual float FindDesiredPitch() override;
+	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
 
-	virtual void Shoot() override;
+	virtual void Shoot(const FVector& TargetPosition) override;
 };

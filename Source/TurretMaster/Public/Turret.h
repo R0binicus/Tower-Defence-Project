@@ -108,19 +108,10 @@ protected:
 	FVector MuzzleForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TargetLocation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TargetDirection;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator CurrentTurretRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator DesiredTurretRotation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	float TargetDotProduct;
 
 	// Functions
 	virtual void BeginPlay() override;
@@ -139,18 +130,22 @@ protected:
 
 	virtual void UpdateTurretValues();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
+	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
 	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
 
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Tries to predict the enemy's future location, using its current position and velocity"))
+	virtual FVector PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime);
+
 	// Turret rotation
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
-	virtual void RotateTowardsEnemy(const float DeltaTime);
+		meta = (ToolTip = "Rotates turret actor to face the target using the shortest angle"))
+	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection);
 
-	virtual float FindDesiredYaw();
+	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
 
-	virtual float FindDesiredPitch();
+	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection);
 
 	// Shooting
 	UFUNCTION(BlueprintCallable, Category = "Turret",
@@ -159,7 +154,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
-	virtual void Shoot();
+	virtual void Shoot(const FVector& TargetPosition);
 
 	// Misc Projectile Motion Calculations
 	UFUNCTION(BlueprintCallable, Category = "Turret",

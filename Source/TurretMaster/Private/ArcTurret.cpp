@@ -1,14 +1,14 @@
 #include "ArcTurret.h"
 
-void AArcTurret::RotateTowardsEnemy(const float DeltaTime)
+void AArcTurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
 {
     if (!MuzzleDirectionSocket)
     {
         return;
     }
 
-    float TurretDesiredYaw = FindDesiredYaw();
-    float TurretDesiredPitch = FindDesiredPitch();
+    float TurretDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    float TurretDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
 
     // Firest set desired rotation variable
     DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
@@ -22,7 +22,7 @@ void AArcTurret::RotateTowardsEnemy(const float DeltaTime)
     SetActorRotation(NewRotation);
 }
 
-float AArcTurret::FindDesiredPitch()
+float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
@@ -40,10 +40,10 @@ float AArcTurret::FindDesiredPitch()
     // Get initial values
     const float Speed = ProjectileSpeed;
     const FVector MuzzleLocation = BulletSpawnPoint->GetComponentLocation();
-    FVector PlaneTarget = TargetLocation;
+    FVector PlaneTarget = TargetPosition;
     PlaneTarget.Z = MuzzleLocation.Z;
     const float FlatDist = FVector::Distance(MuzzleLocation, PlaneTarget);
-    const float HeightDiff = TargetLocation.Z - MuzzleLocation.Z;
+    const float HeightDiff = TargetPosition.Z - MuzzleLocation.Z;
 
     // Calculate the SquareRoot value
     const float SpeedPow2 = Speed * Speed;
@@ -66,7 +66,7 @@ float AArcTurret::FindDesiredPitch()
     return FMath::RadiansToDegrees(Angle);
 }
 
-void AArcTurret::Shoot()
+void AArcTurret::Shoot(const FVector& TargetPosition)
 {
     if (!ProjectileClass)
     {
@@ -93,7 +93,7 @@ void AArcTurret::Shoot()
     }
 
     // Equation inputs
-    const float Height = SpawnLocation.Z - TargetLocation.Z;
+    const float Height = SpawnLocation.Z - TargetPosition.Z;
     const float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
 
     // Set custom projectile velocity if turret was not
@@ -101,7 +101,7 @@ void AArcTurret::Shoot()
     if (AngleIsNAN)
     {
         // Function input pre calculations
-        FVector PlaneTarget = TargetLocation;
+        FVector PlaneTarget = TargetPosition;
         PlaneTarget.Z = SpawnLocation.Z;
         const float FlatDistToEnemy = FVector::Distance(SpawnLocation, PlaneTarget);
 
