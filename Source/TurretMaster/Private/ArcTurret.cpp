@@ -56,16 +56,20 @@ float AArcTurret::FindDesiredPitch()
     AngleIsNAN = FMath::IsNaN(SquareRoot);
     if (AngleIsNAN)
     {
-        // Equasion taken from: https://www.youtube.com/watch?v=K3YrIfX4sbY
-        //float NewSpeed = FlatDist / (1.5f * FMath::Cos(BackupAimAngle));
-        //float NewSpeed = ((0.5f * Gravity * 2.f * 2.f) - HeightDiff) * 2.f * FMath::Sin(BackupAimAngle);
-        float NewSpeed = FlatDist * -Gravity;
-        NewSpeed = NewSpeed / (-2 * FMath::Sin(BackupAimAngle) * FMath::Cos(BackupAimAngle));
-        NewSpeed = sqrt(NewSpeed) - 300;
+        float AngleRadians = FMath::DegreesToRadians(BackupAimAngle);
+        
+        float Time = 0.f;
+        
+        // Equasion taken from: https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat
+        float NewSpeed = 0.5 * Gravity * FlatDist * FlatDist;
+        NewSpeed = NewSpeed / (FlatDist * FMath::Tan(AngleRadians) + -HeightDiff);
+        NewSpeed = (1 / FMath::Cos(AngleRadians)) * sqrt(NewSpeed);
+
+        float DeltaX = 67.8;
+        float Grav = -9.8;
+
         ProjectileValues.Speed = NewSpeed;
 
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NewSpeed: %f"), NewSpeed));
-        
         return(BackupAimAngle);
     }
     else
