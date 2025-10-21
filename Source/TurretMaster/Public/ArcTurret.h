@@ -22,7 +22,7 @@ protected:
 	bool AngleIsNAN;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	float BackupAimAngle = 35.f;
+	float BackupAimAngle = 20.f;
 
 	virtual void RotateTowardsEnemy(const float DeltaTime) override;
 	 

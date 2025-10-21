@@ -160,4 +160,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
 	virtual void Shoot();
+
+	// Misc Projectile Motion Calculations
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Tries to calculate the time it will take for the projectile to hit its target. Outputs false and 0 if it fails"))
+	virtual bool TryCalculateProjectileLifetime(float& OutTime);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Tries to calculate the initial velocity to hit its the target, with a given angle. Outputs false and 0 if it fails"))
+	virtual bool TryCalculateRequiredVelocity(float& OutVelocity);
 };

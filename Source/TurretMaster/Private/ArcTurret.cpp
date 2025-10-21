@@ -35,7 +35,7 @@ float AArcTurret::FindDesiredPitch()
         return InitialRotation.Pitch;
     }
 
-    // Equasion taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
+    // Equation taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
 
     // Get initial values
     const float Speed = ProjectileSpeed;
@@ -53,37 +53,15 @@ float AArcTurret::FindDesiredPitch()
 
     SquareRoot = -sqrt(SquareRoot);
 
+    // If the set projectile velocity is too low, the projectile
+    // will be SquareRoot. If so set flag for projectile spawn
     AngleIsNAN = FMath::IsNaN(SquareRoot);
     if (AngleIsNAN)
     {
-        float AngleRadians = FMath::DegreesToRadians(BackupAimAngle);
-        
-        float Time = 0.f;
-        
-        // Equasion taken from: https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat
-        float NewSpeed = 0.5 * Gravity * FlatDist * FlatDist;
-        NewSpeed = NewSpeed / (FlatDist * FMath::Tan(AngleRadians) + -HeightDiff);
-        NewSpeed = (1 / FMath::Cos(AngleRadians)) * sqrt(NewSpeed);
-
-        float DeltaX = 67.8;
-        float Grav = -9.8;
-
-        ProjectileValues.Speed = NewSpeed;
-
         return(BackupAimAngle);
-    }
-    else
-    {
-        ProjectileValues.Speed = ProjectileSpeed;
     }
 
     float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
-
-    // Equasion will not work if the player is above the turret
-    // Equasion taken from: https://www.omnicalculator.com/physics/projectile-motion
-    float Time = (pow(Speed * FMath::Sin(Angle), 2)) + (2 * Gravity * -HeightDiff);
-    Time = Speed * FMath::Sin(Angle) + sqrt(Time);
-    Time = Time / Gravity;
 
     return FMath::RadiansToDegrees(Angle);
 }
@@ -109,9 +87,30 @@ void AArcTurret::Shoot()
     const FVector SpawnLocation = BulletSpawnPoint->GetComponentLocation();
 
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-    if (Projectile)
+    if (!Projectile)
     {
-        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
+        return;
     }
+
+    // Set custom projectile velocity if turret was not
+    // able to find valid angle with current velocity
+    if (AngleIsNAN)
+    {
+        float NewSpeed;
+        TryCalculateRequiredVelocity(NewSpeed);
+        ProjectileValues.Speed = NewSpeed;
+    }
+
+    float Time;
+    TryCalculateProjectileLifetime(Time);
+    ProjectileValues.PredictedLifetime = Time;
+
+    Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
     ShootTimer = ShootCooldown;
+
+    // Reset ProjectileValues if custpm projectile velocity was used
+    if (AngleIsNAN)
+    {
+        ProjectileValues.Speed = ProjectileSpeed;
+    }
 }

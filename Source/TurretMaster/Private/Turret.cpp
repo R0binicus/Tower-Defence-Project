@@ -273,3 +273,58 @@ void ATurret::Shoot()
     }
     ShootTimer = ShootCooldown;
 }
+
+bool ATurret::TryCalculateProjectileLifetime(float& OutTime)
+{
+    if (!BulletSpawnPoint)
+    {
+        OutTime = 0.f;
+        return false;
+    }
+
+    // Equation taken from: https://www.omnicalculator.com/physics/projectile-motion
+    // NOTE: Equation will not work if the player is above the turret
+
+    // Equation inputs
+    const float Speed = ProjectileSpeed;
+    const float Height = BulletSpawnPoint->GetComponentLocation().Z - TargetLocation.Z;
+    const float Angle = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    const float AngleSin = FMath::Sin(Angle);
+    
+    // Time equation
+    float PredictTime = (pow(Speed * AngleSin, 2)) + (2 * Gravity * Height);
+    PredictTime = Speed * AngleSin + sqrt(PredictTime);
+    PredictTime = PredictTime / Gravity;
+
+    OutTime = PredictTime;
+    return true;
+}
+
+bool ATurret::TryCalculateRequiredVelocity(float& OutVelocity)
+{
+    if (!BulletSpawnPoint)
+    {
+        OutVelocity = 0.f;
+        return false;
+    }
+
+    // Equation taken from: https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat
+
+    // Equation input pre calculations
+    const FVector MuzzleLocation = BulletSpawnPoint->GetComponentLocation();
+    FVector PlaneTarget = TargetLocation;
+    PlaneTarget.Z = MuzzleLocation.Z;
+
+    // Equation inputs
+    const float Height = MuzzleLocation.Z - TargetLocation.Z;
+    const float Angle = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    const float FlatDist = FVector::Distance(MuzzleLocation, PlaneTarget);
+
+    // Velocity equation
+    float RequiredVel = 0.5 * Gravity * FlatDist * FlatDist;
+    RequiredVel = RequiredVel / (FlatDist * FMath::Tan(Angle) + Height);
+    RequiredVel = (1 / FMath::Cos(Angle)) * sqrt(RequiredVel);
+
+    OutVelocity = RequiredVel;
+    return true;
+}
