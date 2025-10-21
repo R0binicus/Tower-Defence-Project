@@ -92,18 +92,23 @@ void AArcTurret::Shoot()
         return;
     }
 
+    // Equation inputs
+    const float Height = SpawnLocation.Z - TargetLocation.Z;
+    const float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+
     // Set custom projectile velocity if turret was not
     // able to find valid angle with current velocity
     if (AngleIsNAN)
     {
-        float NewSpeed;
-        TryCalculateRequiredVelocity(NewSpeed);
-        ProjectileValues.Speed = NewSpeed;
+        // Function input pre calculations
+        FVector PlaneTarget = TargetLocation;
+        PlaneTarget.Z = SpawnLocation.Z;
+        const float FlatDistToEnemy = FVector::Distance(SpawnLocation, PlaneTarget);
+
+        ProjectileValues.Speed = CalculateRequiredVelocity(AngleRad, Height, Gravity, FlatDistToEnemy);
     }
 
-    float Time;
-    TryCalculateProjectileLifetime(Time);
-    ProjectileValues.PredictedLifetime = Time;
+    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileSpeed);
 
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
     ShootTimer = ShootCooldown;

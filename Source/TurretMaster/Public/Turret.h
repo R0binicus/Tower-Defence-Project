@@ -163,10 +163,10 @@ protected:
 
 	// Misc Projectile Motion Calculations
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Tries to calculate the time it will take for the projectile to hit its target. Outputs false and 0 if it fails"))
-	virtual bool TryCalculateProjectileLifetime(float& OutTime);
+		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will fail if height is negative. Expectes angle in radians"))
+	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Tries to calculate the initial velocity to hit its the target, with a given angle. Outputs false and 0 if it fails"))
-	virtual bool TryCalculateRequiredVelocity(float& OutVelocity);
+		meta = (ToolTip = "Calculates the initial velocity to hit its the target, with a given angle. Expectes angle in radians"))
+	virtual float CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy);
 };
