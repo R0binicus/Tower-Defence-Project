@@ -73,8 +73,13 @@ float AArcTurret::FindDesiredPitch()
         ProjectileValues.Speed = ProjectileSpeed;
     }
 
+    float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
 
-    const float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
+    // Equasion will not work if the player is above the turret
+    // Equasion taken from: https://www.omnicalculator.com/physics/projectile-motion
+    float Time = (pow(Speed * FMath::Sin(Angle), 2)) + (2 * Gravity * -HeightDiff);
+    Time = Speed * FMath::Sin(Angle) + sqrt(Time);
+    Time = Time / Gravity;
 
     return FMath::RadiansToDegrees(Angle);
 }
