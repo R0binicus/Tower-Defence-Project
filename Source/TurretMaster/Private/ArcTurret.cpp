@@ -108,12 +108,12 @@ void AArcTurret::Shoot()
         ProjectileValues.Speed = CalculateRequiredVelocity(AngleRad, Height, Gravity, FlatDistToEnemy);
     }
 
-    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileSpeed);
+    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
 
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
     ShootTimer = ShootCooldown;
 
-    // Reset ProjectileValues if custpm projectile velocity was used
+    // Reset ProjectileValues if custom projectile velocity was used
     if (AngleIsNAN)
     {
         ProjectileValues.Speed = ProjectileSpeed;
