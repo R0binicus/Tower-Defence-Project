@@ -274,7 +274,7 @@ void ATurret::Shoot()
     ShootTimer = ShootCooldown;
 }
 
-float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)
+float ATurret::CalculateProjectileFlightTime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)
 {
     // Equation taken from: https://www.omnicalculator.com/physics/projectile-motion
     // NOTE: Equation values will not be correct if the player is above the turret muzzle
