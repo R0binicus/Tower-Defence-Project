@@ -108,6 +108,9 @@ protected:
 	FVector MuzzleForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FVector MuzzleBaseLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator CurrentTurretRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
@@ -134,8 +137,8 @@ protected:
 	virtual void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
-	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
+		meta = (ToolTip = "Returns the direction to Location A from location B"))
+	virtual FVector GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Tries to predict the enemy's future location, using its current position and velocity"))

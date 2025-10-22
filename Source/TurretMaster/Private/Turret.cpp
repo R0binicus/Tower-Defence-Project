@@ -45,22 +45,21 @@ void ATurret::BeginPlay()
 void ATurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    ShootTimer = ShootTimer - DeltaTime;
+
     CurrentClosestEnemy = GetClosestEnemy();
 
     UpdateTurretValues();
 
-    FVector TargetLocation = FVector::ZeroVector;
-    FVector TargetDirection = FVector::ZeroVector;
-
-    if (CurrentClosestEnemy)
+    if (!CurrentClosestEnemy)
     {
-        TargetLocation = CurrentClosestEnemy->GetActorLocation();
-        TryGetDirectionToEnemy(TargetLocation, TargetDirection);
+        return;
     }
 
-    RotateTowardsTarget(DeltaTime, TargetLocation, TargetDirection);
+    const FVector TargetLocation = CurrentClosestEnemy->GetActorLocation();
+    const FVector TargetDirection = GetDirectionToEnemy(TargetLocation, MuzzleBaseLocation);
 
-    ShootTimer = ShootTimer - DeltaTime;
+    RotateTowardsTarget(DeltaTime, TargetLocation, TargetDirection);
 
     if (CanShoot())
     {
@@ -137,6 +136,7 @@ void ATurret::UpdateTurretValues()
     if (MuzzleDirectionSocket)
     {
         MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
+        MuzzleBaseLocation = MuzzleDirectionSocket->GetComponentLocation();
     }
 
     if (BulletSpawnPoint)
@@ -145,18 +145,12 @@ void ATurret::UpdateTurretValues()
     }
 }
 
-bool ATurret::TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut)
+FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition)
 {
-    if (!MuzzleDirectionSocket)
-    {
-        DirectionOut = FVector::ZeroVector;
-        return false;
-    }
+    FVector EnemyDirection = EnemyPosition - SourcePosition;
+    EnemyDirection.Normalize();
 
-    DirectionOut = EnemyPosition - MuzzleDirectionSocket->GetComponentLocation();
-    DirectionOut.Normalize();
-
-    return true;
+    return EnemyDirection;
 }
 
 FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime)

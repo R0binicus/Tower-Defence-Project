@@ -122,12 +122,7 @@ void AArcTurret::Shoot(const FVector& TargetPosition)
 void AArcTurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation)
 {
     FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
-    FVector TargetDirection = FVector::ZeroVector;
-
-    if (CurrentClosestEnemy)
-    {
-        TryGetDirectionToEnemy(TargetPosition, TargetDirection);
-    }
+    FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
 
     OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
