@@ -6,7 +6,6 @@
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
-class UProjectileMovementComponent;
 
 /**
  * Projectile base class, which moves in the direction it was
@@ -44,9 +43,6 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	TObjectPtr<UStaticMeshComponent> CollisionMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
-	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;

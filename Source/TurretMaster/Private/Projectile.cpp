@@ -1,5 +1,4 @@
 #include "Projectile.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -9,11 +8,9 @@ AProjectile::AProjectile()
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshCollider"));
 	CollisionMesh->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	CollisionMesh->SetSimulatePhysics(true);
+	CollisionMesh->SetNotifyRigidBodyCollision(true);
 	RootComponent = CollisionMesh;
-
-	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
-	MovementComponent->UpdatedComponent = CollisionMesh;
-	MovementComponent->bRotationFollowsVelocity = true;
 }
 
 void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
@@ -23,7 +20,7 @@ void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& 
 	ProjectileValues = InProjectileValues;
 
 	SetLifeSpan(ProjectileValues.Lifetime);
-	MovementComponent->Velocity = GetActorForwardVector() * ProjectileValues.Speed;
+	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
 
 void AProjectile::BeginPlay()
