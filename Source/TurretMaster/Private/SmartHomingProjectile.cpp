@@ -9,10 +9,10 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 	{
 		LifeCountdown = ProjectileValues.PredictedLifetime;
 		bHasInitialized = true;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("LifeCountdown: %f"), LifeCountdown));
 	}
 
 	LifeCountdown = LifeCountdown - DeltaTime;
+
 	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
 
 	if (!LockedTarget)
@@ -32,9 +32,12 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 	{
 		 float CurveTimeInput = UKismetMathLibrary::NormalizeToRange(ProjectileValues.PredictedLifetime - LifeCountdown, 0, ProjectileValues.PredictedLifetime);
 		 HomingRate = HomingRateCurve->GetFloatValue(CurveTimeInput);
+
+		 if (ProjectileValues.TurnMultiplier == 0.f)
+		 {
+			 return;
+		 }
+		 TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, HomingRate);
+		 MovementComponent->Velocity = (TargetDirection * ProjectileValues.Speed * (1 + HomingRate));
 	}
-
-	TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, HomingRate);
-
-	MovementComponent->Velocity = (TargetDirection * ProjectileValues.Speed);
 }
