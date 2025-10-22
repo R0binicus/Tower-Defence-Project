@@ -39,27 +39,16 @@ float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector&
         return(BackupAimAngle);
     }
 
-    float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
+    const float Angle = atan2((SpeedPow2 + SquareRoot), (Gravity * FlatDist));
 
     return FMath::RadiansToDegrees(Angle);
-}
-
-void AArcTurret::Shoot(const FVector& TargetPosition)
-{
-    ATurret::Shoot(TargetPosition);
-
-    // Reset ProjectileValues if custom projectile speed was changed
-    if (ProjectileValues.Speed != ProjectileSpeed)
-    {
-        ProjectileValues.Speed = ProjectileSpeed;
-    }
 }
 
 void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
 {
     // Equation inputs
-    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
-    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    const float Height = BulletSpawnLocation.Z - TargetPosition.Z;
+    const float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
 
     // Set custom projectile velocity if turret was not
     // able to find valid angle with current velocity

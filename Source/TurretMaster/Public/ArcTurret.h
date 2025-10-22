@@ -22,7 +22,5 @@ protected:
 
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
 
-	virtual void Shoot(const FVector& TargetPosition) override;
-
 	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition) override;
 };
