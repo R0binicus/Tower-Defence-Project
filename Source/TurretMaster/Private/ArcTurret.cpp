@@ -68,18 +68,17 @@ float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector&
 
 void AArcTurret::Shoot(const FVector& TargetPosition)
 {
-    if (!ProjectileClass)
+    ATurret::Shoot(TargetPosition);
+
+    // Reset ProjectileValues if custom projectile speed was changed
+    if (ProjectileValues.Speed != ProjectileSpeed)
     {
-        return;
+        ProjectileValues.Speed = ProjectileSpeed;
     }
+}
 
-    if (!World)
-    {
-        return;
-    }
-
-    FRotator SpawnRotation = DesiredTurretRotation;
-
+void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
+{
     // Equation inputs
     float Height = BulletSpawnLocation.Z - TargetPosition.Z;
     float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
@@ -97,26 +96,6 @@ void AArcTurret::Shoot(const FVector& TargetPosition)
     }
 
     ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
-
-    if (AllowLocationPrediction && CurrentClosestEnemy)
-    {
-        CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
-    }
-
-    ShootTimer = ShootCooldown;
-    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, BulletSpawnLocation, SpawnRotation);
-    if (!Projectile)
-    {
-        return;
-    }
-
-    Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
-
-    // Reset ProjectileValues if custom projectile speed was changed
-    if (ProjectileValues.Speed != ProjectileSpeed)
-    {
-        ProjectileValues.Speed = ProjectileSpeed;
-    }
 }
 
 void AArcTurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation)
@@ -126,21 +105,5 @@ void AArcTurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition
 
     OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
-    // Equation inputs
-    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
-    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
-
-    // Set custom projectile velocity if turret was not
-    // able to find valid angle with current velocity
-    if (AngleIsNAN)
-    {
-        // Function input pre calculations
-        FVector PlaneTarget = TargetPosition;
-        PlaneTarget.Z = BulletSpawnLocation.Z;
-        const float FlatDistToEnemy = FVector::Distance(BulletSpawnLocation, PlaneTarget);
-
-        ProjectileValues.Speed = CalculateRequiredVelocity(AngleRad, Height, Gravity, FlatDistToEnemy);
-    }
-
-    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
+    PreBulletSpawnSetValues(TargetPosition);
 }

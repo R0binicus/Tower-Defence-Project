@@ -268,9 +268,7 @@ void ATurret::Shoot(const FVector& TargetPosition)
 
     FRotator SpawnRotation = DesiredTurretRotation;
     
-    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
-    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
-    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
+    PreBulletSpawnSetValues(TargetPosition);
 
     if (AllowLocationPrediction && CurrentClosestEnemy)
     {
@@ -287,6 +285,13 @@ void ATurret::Shoot(const FVector& TargetPosition)
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
 }
 
+void ATurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
+{
+    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
+    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
+}
+
 void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation)
 {
     FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
@@ -294,11 +299,7 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
 
     OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
-    // Equation inputs
-    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
-    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
-
-    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
+    PreBulletSpawnSetValues(TargetPosition);
 }
 
 float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)

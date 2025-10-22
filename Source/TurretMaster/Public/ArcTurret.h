@@ -14,12 +14,6 @@ class TURRETMASTER_API AArcTurret : public ATurret
 	GENERATED_BODY()
 
 protected:
-	float TurretTurnSpeed = 5.f;
-
-	float AimVerticalUpperBound = 45.f;
-
-	float AimVerticalLowerBound = -35.f;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	bool AngleIsNAN;
 
@@ -31,6 +25,8 @@ protected:
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
 
 	virtual void Shoot(const FVector& TargetPosition) override;
+
+	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition) override;
 
 	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation) override;
 };

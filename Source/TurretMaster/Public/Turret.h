@@ -170,6 +170,8 @@ protected:
 		meta = (ToolTip = "Shoots the enemy"))
 	virtual void Shoot(const FVector& TargetPosition);
 
+	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition);
+
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Calculates the predicted future location of the enemy, and returns the angle needed to hit the future location"))
 	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation);
