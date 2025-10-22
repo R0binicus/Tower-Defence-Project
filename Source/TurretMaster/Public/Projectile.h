@@ -35,9 +35,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
 		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
-	void UpdateTargetDest();
+	void UpdateTargetDest(float DeltaTime);
 
-	virtual void UpdateTargetDest_Implementation();
+	virtual void UpdateTargetDest_Implementation(float DeltaTime);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
