@@ -33,10 +33,10 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(float DeltaTime)
 {
-	UpdateTargetDest();
+	UpdateTargetDest(DeltaTime);
 }
 
-void AProjectile::UpdateTargetDest_Implementation()
+void AProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 {
 	// Base projectile has no implementation
 }

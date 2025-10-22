@@ -56,6 +56,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<AActor> CurrentClosestEnemy;
 
+	// Turret Settings
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	bool AllowLocationPrediction = true;
+
 	// Turret Aiming
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
@@ -108,10 +112,7 @@ protected:
 	FVector MuzzleForward;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TargetLocation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FVector TargetDirection;
+	FVector MuzzleBaseLocation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator CurrentTurretRotation;
@@ -120,7 +121,7 @@ protected:
 	FRotator DesiredTurretRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	float TargetDotProduct;
+	FVector BulletSpawnLocation;
 
 	// Functions
 	virtual void BeginPlay() override;
@@ -139,18 +140,26 @@ protected:
 
 	virtual void UpdateTurretValues();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
-		meta = (ToolTip = "Modifies DirectionOut Vector parameter and tries to return the direction from the turret to the enemy, returns false and ZeroVector if fails"))
-	virtual bool TryGetDirectionToEnemy(const FVector& EnemyPosition, FVector& DirectionOut);
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Returns the direction to Location A from location B"))
+	virtual FVector GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Tries to predict the enemy's future location, using its current position and velocity"))
+	virtual FVector PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime);
 
 	// Turret rotation
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Rotates turret actor to face the enemy using the shortest angle"))
-	virtual void RotateTowardsEnemy(const float DeltaTime);
+		meta = (ToolTip = "Rotates turret actor to face the target using the shortest angle"))
+	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection);
 
-	virtual float FindDesiredYaw();
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
+	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, float& OutDesiredYaw, float& OutDesiredPitch);
 
-	virtual float FindDesiredPitch();
+	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
+
+	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection);
 
 	// Shooting
 	UFUNCTION(BlueprintCallable, Category = "Turret",
@@ -159,5 +168,20 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
-	virtual void Shoot();
+	virtual void Shoot(const FVector& TargetPosition);
+
+	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Calculates the predicted future location of the enemy, and returns the angle needed to hit the future location"))
+	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation);
+
+	// Misc Projectile Motion Calculations
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will fail if height is negative. Expectes angle in radians"))
+	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Calculates the initial velocity to hit its the target, with a given angle. Expectes angle in radians"))
+	virtual float CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy);
 };

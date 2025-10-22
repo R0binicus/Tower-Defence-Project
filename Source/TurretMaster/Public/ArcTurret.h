@@ -14,7 +14,13 @@ class TURRETMASTER_API AArcTurret : public ATurret
 	GENERATED_BODY()
 
 protected:
-	virtual void RotateTowardsEnemy(const float DeltaTime) override;
-	 
-	virtual float FindDesiredPitch() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	bool AngleIsNAN;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	float BackupAimAngle = 20.f;
+
+	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
+
+	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition) override;
 };

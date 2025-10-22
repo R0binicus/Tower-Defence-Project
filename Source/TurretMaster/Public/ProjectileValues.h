@@ -23,13 +23,16 @@ struct FProjectileValues
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
 	float TurnMultiplier;
 
-	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), TurnMultiplier(1.f)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
+	float PredictedLifetime;
+
+	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), TurnMultiplier(1.f), PredictedLifetime(2.f)
 	{
 
 	}
 
-	FProjectileValues(float InDamage, float InSpeed, float InLifetime, float InTurnMultiplier) :
-		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), TurnMultiplier(InTurnMultiplier)
+	FProjectileValues(float InDamage, float InSpeed, float InLifetime, float InTurnMultiplier, float InPredictedLifetime) :
+		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), TurnMultiplier(InTurnMultiplier), PredictedLifetime(InPredictedLifetime)
 	{
 		
 	}

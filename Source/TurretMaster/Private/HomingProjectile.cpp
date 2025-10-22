@@ -6,7 +6,7 @@ AHomingProjectile::AHomingProjectile() : AProjectile()
 	MovementComponent->ProjectileGravityScale = 0.f;
 }
 
-void AHomingProjectile::UpdateTargetDest_Implementation()
+void AHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 {
 	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
 
@@ -17,6 +17,11 @@ void AHomingProjectile::UpdateTargetDest_Implementation()
 
 	FVector TargetDirection = LockedTarget->GetActorLocation() - GetActorLocation();
 	TargetDirection.Normalize();
+
+	if (!MovementComponent)
+	{
+		return;
+	}
 
 	if (ProjectileValues.TurnMultiplier != 1.f)
 	{
