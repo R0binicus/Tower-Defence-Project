@@ -155,7 +155,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
-	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection);
+	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, float& OutDesiredYaw, float& OutDesiredPitch);
 
 	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
 

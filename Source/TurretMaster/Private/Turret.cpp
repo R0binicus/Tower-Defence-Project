@@ -165,17 +165,26 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
         return;
     }
 
-    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection);
+    // First set desired rotation variable
+    float TurretDesiredYaw;
+    float TurretDesiredPitch;
+    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, TurretDesiredYaw, TurretDesiredPitch);
+
+    // Then clamp it if it is not allowed
+    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+
+    // Then set rotation
     FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, DesiredTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
-FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection)
+FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, float& OutDesiredYaw, float& OutDesiredPitch)
 {
-    float TurretDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
-    float TurretDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
+    OutDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    OutDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
 
-    return FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    return FRotator(OutDesiredPitch, OutDesiredYaw, InitialRotation.Roll);
 }
 
 float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
@@ -227,9 +236,7 @@ float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& Ta
     const float TargetPitchDifference = FMath::RadiansToDegrees(TargetDirection.Z - MuzzleForward.Z);
     const float TurretDesiredPitch = TurretCurrentPitch + TargetPitchDifference;
 
-    // Used to make the turret continue partially faceing the enemy, 
-    // when the enmy is only just outside the turret's aiming bounds
-    return FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    return TurretDesiredPitch;
 }
 
 bool ATurret::CanShoot()
@@ -297,7 +304,9 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
     FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
     FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
 
-    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
+    float DummyYaw;
+    float DummyPitch;
+    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection, DummyYaw, DummyPitch);
 
     PreBulletSpawnSetValues(TargetPosition);
 }

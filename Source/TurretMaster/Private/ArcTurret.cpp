@@ -1,27 +1,5 @@
 #include "ArcTurret.h"
 
-void AArcTurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
-{
-    if (!MuzzleDirectionSocket)
-    {
-        return;
-    }
-
-    float TurretDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
-    float TurretDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
-
-    // Firest set desired rotation variable
-    DesiredTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
-
-    // Then clamp it if it is not allowed
-    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
-    FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
-
-    // Then set rotation
-    FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, ClampedTurretRotation, DeltaTime, TurretTurnSpeed);
-    SetActorRotation(NewRotation);
-}
-
 float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
@@ -96,14 +74,4 @@ void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
     }
 
     ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
-}
-
-void AArcTurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation)
-{
-    FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
-    FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
-
-    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
-
-    PreBulletSpawnSetValues(TargetPosition);
 }

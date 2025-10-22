@@ -20,13 +20,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float BackupAimAngle = 20.f;
 
-	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection) override;
-	 
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
 
 	virtual void Shoot(const FVector& TargetPosition) override;
 
 	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition) override;
-
-	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation) override;
 };
