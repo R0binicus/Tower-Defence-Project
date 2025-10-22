@@ -266,19 +266,39 @@ void ATurret::Shoot(const FVector& TargetPosition)
         return;
     }
 
-    const FRotator SpawnRotation = DesiredTurretRotation;
+    FRotator SpawnRotation = DesiredTurretRotation;
+    
+    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
+    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
 
-    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, BulletSpawnLocation, SpawnRotation);
-    if (Projectile)
+    if (AllowLocationPrediction && CurrentClosestEnemy)
     {
-        Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
+        CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
+
     ShootTimer = ShootCooldown;
+    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, BulletSpawnLocation, SpawnRotation);
+    if (!Projectile)
+    {
+        return;
+    }
+
+    Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
 }
 
 void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation)
 {
-    
+    FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
+    FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
+
+    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
+
+    // Equation inputs
+    float Height = BulletSpawnLocation.Z - TargetPosition.Z;
+    float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+
+    ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
 }
 
 float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)

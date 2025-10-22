@@ -58,7 +58,7 @@ protected:
 
 	// Turret Settings
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	bool AllowLocationPrediction = false;
+	bool AllowLocationPrediction = true;
 
 	// Turret Aiming
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")

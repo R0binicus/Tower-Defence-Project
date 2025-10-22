@@ -14,6 +14,8 @@ class TURRETMASTER_API AArcTurret : public ATurret
 	GENERATED_BODY()
 
 protected:
+	float TurretTurnSpeed = 5.f;
+
 	float AimVerticalUpperBound = 45.f;
 
 	float AimVerticalLowerBound = -35.f;

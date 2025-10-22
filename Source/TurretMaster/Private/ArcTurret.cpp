@@ -98,11 +98,12 @@ void AArcTurret::Shoot(const FVector& TargetPosition)
 
     ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
 
-    if (CurrentClosestEnemy && AllowLocationPrediction)
+    if (AllowLocationPrediction && CurrentClosestEnemy)
     {
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
 
+    ShootTimer = ShootCooldown;
     TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, BulletSpawnLocation, SpawnRotation);
     if (!Projectile)
     {
@@ -110,7 +111,6 @@ void AArcTurret::Shoot(const FVector& TargetPosition)
     }
 
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
-    ShootTimer = ShootCooldown;
 
     // Reset ProjectileValues if custom projectile speed was changed
     if (ProjectileValues.Speed != ProjectileSpeed)
