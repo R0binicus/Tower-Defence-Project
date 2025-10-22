@@ -56,6 +56,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<AActor> CurrentClosestEnemy;
 
+	// Turret Settings
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	bool AllowLocationPrediction = false;
+
 	// Turret Aiming
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;

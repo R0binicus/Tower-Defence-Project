@@ -98,7 +98,7 @@ void AArcTurret::Shoot(const FVector& TargetPosition)
 
     ProjectileValues.PredictedLifetime = CalculateProjectileLifetime(AngleRad, Height, Gravity, ProjectileValues.Speed);
 
-    if (CurrentClosestEnemy)
+    if (CurrentClosestEnemy && AllowLocationPrediction)
     {
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
