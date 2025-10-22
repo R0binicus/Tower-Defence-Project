@@ -113,6 +113,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FRotator DesiredTurretRotation;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	FVector BulletSpawnLocation;
+
 	// Functions
 	virtual void BeginPlay() override;
 
@@ -143,6 +146,10 @@ protected:
 		meta = (ToolTip = "Rotates turret actor to face the target using the shortest angle"))
 	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection);
 
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
+	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection);
+
 	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
 
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection);
@@ -155,6 +162,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
 	virtual void Shoot(const FVector& TargetPosition);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Calculates the predicted future location of the enemy, and returns the angle needed to hit the future location"))
+	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation);
 
 	// Misc Projectile Motion Calculations
 	UFUNCTION(BlueprintCallable, Category = "Turret",

@@ -29,4 +29,6 @@ protected:
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection) override;
 
 	virtual void Shoot(const FVector& TargetPosition) override;
+
+	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation) override;
 };
