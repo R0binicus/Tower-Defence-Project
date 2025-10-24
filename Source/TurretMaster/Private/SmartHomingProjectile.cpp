@@ -31,10 +31,11 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 		return;
 	}
 
+	FVector CurrentVelocity = CollisionMesh->GetPhysicsLinearVelocity();
 	FVector TargetDirection = LockedTarget->GetActorLocation() - GetActorLocation();
 	TargetDirection.Normalize();
-	FVector CurrentVelocity = CollisionMesh->GetPhysicsLinearVelocity();
+	FVector NewVelocity = TargetDirection * (CurrentVelocity.Length() + Gravity * DeltaTime);
 
-	TargetDirection = FMath::Lerp(CurrentVelocity, TargetDirection * CurrentVelocity.Length(), HomingRate * ProjectileValues.TurnMultiplier);
-	CollisionMesh->SetPhysicsLinearVelocity(TargetDirection, false);
+	NewVelocity = FMath::Lerp(CurrentVelocity, NewVelocity, HomingRate * ProjectileValues.TurnMultiplier);
+	CollisionMesh->SetPhysicsLinearVelocity(NewVelocity, false);
 }

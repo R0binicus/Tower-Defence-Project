@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include "PhysicsEngine/PhysicsSettings.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -26,6 +27,11 @@ void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& 
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+	{
+		Gravity = -Physics->DefaultGravityZ;
+	}
 }
 
 void AProjectile::Tick(float DeltaTime)

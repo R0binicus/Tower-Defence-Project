@@ -78,13 +78,13 @@ protected:
 	float AimVerticalLowerBound = -35.f;
 
 	// Turret Shooting
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float ShootCooldown = 1.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float ShootTimer = 0.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float FacingTargetThreshold = 0.999f;
 
 	// Projectile Values
