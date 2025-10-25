@@ -41,6 +41,10 @@ void ATurret::BeginPlay()
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
 
     MakeProjectiles(InitialProjectilePoolSize);
+
+    UpdateTurretValues();
+
+    TurretFireMinimumRadius = FVector::DistSquared(MuzzleBaseLocation, BulletSpawnLocation) + pow(ExtraTurretFireMinimumRadius, 2);
 }
 
 // Called every frame
@@ -146,7 +150,8 @@ AProjectile* ATurret::GetUnusedProjectile()
 AActor* ATurret::GetClosestEnemy()
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
-    float CurrentClosestDistance = 0.f;
+    float CurrentClosestDistance = INFINITY;
+    float EnemyDistance = 0.f;
 
     for (size_t i = 0; i < EnemyRefArray.Num(); i++)
     {
@@ -155,31 +160,34 @@ AActor* ATurret::GetClosestEnemy()
             continue;
         }
 
-        if (!PotentialClosestEnemy)
+        if (!EnemyRefArray[i]->Implements<UDamageable>())
         {
-            if (!EnemyRefArray[i]->Implements<UDamageable>())
-            {
-                continue;
-            }
-            if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
-            {
-                continue;
-            }
-            CurrentClosestDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretLocation);
-            PotentialClosestEnemy = EnemyRefArray[i];
+            continue;
         }
-        else
+
+        if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
         {
-            const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretLocation);
-
-            if (EnemyDistance >= CurrentClosestDistance)
-            {
-                continue;
-            }
-
-            CurrentClosestDistance = EnemyDistance;
-            PotentialClosestEnemy = EnemyRefArray[i];
+            continue;
         }
+
+        EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), MuzzleBaseLocation);
+
+        GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Green, FString::Printf(TEXT("EnemyDistance: %f"), EnemyDistance));
+        GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("TurretFireMinimumRadius: %f"), TurretFireMinimumRadius));
+
+        // TurretFireMinimumRadius is already squared, so comparing distances is fine
+        if (EnemyDistance < TurretFireMinimumRadius)
+        {
+            continue;
+        }
+
+        if (EnemyDistance >= CurrentClosestDistance)
+        {
+            continue;
+        }
+
+        CurrentClosestDistance = EnemyDistance;
+        PotentialClosestEnemy = EnemyRefArray[i];
     }
 
     return PotentialClosestEnemy;

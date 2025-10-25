@@ -70,6 +70,12 @@ protected:
 	float TurretRange = 3000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	float ExtraTurretFireMinimumRadius = 0.f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	float TurretFireMinimumRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;
 
 	// Turret Aim Restrictions
