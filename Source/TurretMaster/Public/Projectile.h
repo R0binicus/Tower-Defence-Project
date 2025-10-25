@@ -56,6 +56,9 @@ protected:
 	FProjectileValues ProjectileValues;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float ProjectileLifetimeTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	bool bEnabled = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")

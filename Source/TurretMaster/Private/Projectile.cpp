@@ -40,6 +40,7 @@ void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InPro
 {
 	TargetActor = Target;
 	ProjectileValues = InProjectileValues;
+	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
 
 	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
@@ -57,6 +58,13 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(float DeltaTime)
 {
+	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
+
+	if (ProjectileLifetimeTimer <= 0 && bEnabled)
+	{
+		SetProjectileEnabled(false);
+	}
+
 	if (!bEnabled)
 	{
 		return;

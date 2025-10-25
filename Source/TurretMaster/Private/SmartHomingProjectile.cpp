@@ -3,14 +3,7 @@
 
 void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 {
-	// Normal BeginPlay doesn't work, so it's being done here instead
-	if (!bHasInitialized)
-	{
-		LifeCountdown = ProjectileValues.PredictedLifetime;
-		bHasInitialized = true;
-	}
-
-	LifeCountdown = LifeCountdown - DeltaTime;
+	float LifeCountdown = (ProjectileValues.PredictedLifetime - (ProjectileValues.Lifetime - ProjectileLifetimeTimer));
 
 	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
 	if (!LockedTarget)
