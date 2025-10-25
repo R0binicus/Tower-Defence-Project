@@ -126,6 +126,23 @@ AProjectile* ATurret::CreateProjectile()
     return Projectile;
 }
 
+AProjectile* ATurret::GetUnusedProjectile()
+{
+    for (size_t i = 0; i < ProjectilePool.Num(); i++)
+    {
+        if (!ProjectilePool[i])
+        {
+            continue;
+        }
+
+        if (ProjectilePool[i]->IsProjectileEnabled())
+        {
+            return ProjectilePool[i];
+        }
+    }
+    return nullptr;
+}
+
 AActor* ATurret::GetClosestEnemy()
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;

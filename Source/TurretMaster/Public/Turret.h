@@ -136,7 +136,7 @@ protected:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	// Create Icons
+	// Projectile pool
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Makes the specified number of projectiles"))
 	void MakeProjectiles(const int NewProjectileAmount);
@@ -144,6 +144,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Creates and initialises a projectile"))
 	AProjectile* CreateProjectile();
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Returns an unused projectile from the pool. Or nullptr if they are all used"))
+	AProjectile* GetUnusedProjectile();
 
 	// Turret update
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",

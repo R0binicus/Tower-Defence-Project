@@ -25,7 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Returns if the projectile is enabled or disabled"))
-	float GetProjectileEnabled() const { return bEnabled; }
+	float IsProjectileEnabled() const { return bEnabled; }
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
