@@ -57,12 +57,12 @@ void ATurret::Tick(float DeltaTime)
 
     UpdateTurretValues();
 
-    if (!CurrentClosestEnemy)
+    FVector TargetLocation = FVector::ZeroVector;
+    if (CurrentClosestEnemy)
     {
-        return;
+        TargetLocation = CurrentClosestEnemy->GetActorLocation();
     }
-
-    const FVector TargetLocation = CurrentClosestEnemy->GetActorLocation();
+    
     const FVector TargetDirection = GetDirectionToEnemy(TargetLocation, MuzzleBaseLocation);
 
     RotateTowardsTarget(DeltaTime, TargetLocation, TargetDirection);
@@ -229,36 +229,34 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
         return;
     }
 
-    // First set desired rotation variable
-    float TurretDesiredYaw;
-    float TurretDesiredPitch;
-    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, TurretDesiredYaw, TurretDesiredPitch);
+    FRotator NewDesiredRotation;
+    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, NewDesiredRotation);
 
     // Then clamp it if it is not allowed
-    TurretDesiredPitch = FMath::Clamp(TurretDesiredPitch, AimVerticalLowerBound, AimVerticalUpperBound);
-    const FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, TurretDesiredYaw, InitialRotation.Roll);
+    float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    const FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, DesiredTurretRotation.Yaw, DesiredTurretRotation.Roll);
 
     // Then set rotation
     const FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, ClampedTurretRotation, DeltaTime, TurretTurnSpeed);
     SetActorRotation(NewRotation);
 }
 
-FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, float& OutDesiredYaw, float& OutDesiredPitch)
-{
-    OutDesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
-    OutDesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
-
-    return FRotator(OutDesiredPitch, OutDesiredYaw, InitialRotation.Roll);
-}
-
-float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
+FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, FRotator& OutDesiredRotation)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
     {
-        return InitialRotation.Yaw;
+        return InitialRotation;
     }
 
+    float DesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    float DesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
+
+    return FRotator(DesiredPitch, DesiredYaw, InitialRotation.Roll);
+}
+
+float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
+{
     // Make a 2D dot product, because we don't want the desired yaw to
     // worry about the pitch of the turret, or the pitch of the target
     FVector MuzzleForward2D = MuzzleForward;
@@ -281,12 +279,6 @@ float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& Targ
 
 float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
-    // Reset to initial rotation if there is no closest enemy
-    if (!CurrentClosestEnemy)
-    {
-        return InitialRotation.Pitch;
-    }
-
     const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
 
     // Prevent turret from aiming vertically  
@@ -384,10 +376,9 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
     const FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
     const FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
 
-    // Dummy variables because we don't actually need the yaw and pitch
-    float DummyYaw;
-    float DummyPitch;
-    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection, DummyYaw, DummyPitch);
+    // Dummy variables because we don't actually need the rotation
+    FRotator DummyRotator;
+    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection, DummyRotator);
 
     PreBulletSpawnSetValues(TargetPosition);
 }
