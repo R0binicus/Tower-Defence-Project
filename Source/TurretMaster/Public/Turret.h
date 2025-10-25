@@ -29,14 +29,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
-	// Projectiles
+	// Projectiles pool
+	UPROPERTY(EditAnywhere, Category = "Turret")
+	int InitialProjectilePoolSize = 5;
+
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	TArray<TObjectPtr<AProjectile>> ProjectilePool;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Turret")
-	FName EnemyTagName = "Enemy";
 
 	// Begin Play Initialize
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
@@ -51,7 +51,10 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
-	// Enemy reference
+	// Enemy
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	FName EnemyTagName = "Enemy";
+
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 

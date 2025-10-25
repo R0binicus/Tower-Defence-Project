@@ -18,6 +18,12 @@ AProjectile::AProjectile()
 void AProjectile::SetProjectileEnabled(bool bNewEnabled)
 {
 	bEnabled = bNewEnabled;
+
+	if (!CollisionMesh)
+	{
+		return;
+	}
+
 	CollisionMesh->SetVisibility(bEnabled);
 	CollisionMesh->SetSimulatePhysics(bEnabled);
 	if (bEnabled)
@@ -74,11 +80,11 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 	if (OtherCompName != "Pawn")
 	{
-		Destroy();
+		SetProjectileEnabled(false);
 		return;
 	}
 
 	IDamageable::Execute_TakeDamage(OtherActor, ProjectileValues.Damage);
-	Destroy();
+	SetProjectileEnabled(false);
 }
 

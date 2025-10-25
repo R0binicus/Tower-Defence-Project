@@ -40,7 +40,7 @@ void ATurret::BeginPlay()
     ProjectileValues.Lifetime = ProjectileLifetime;
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
 
-    MakeProjectiles(10);
+    MakeProjectiles(InitialProjectilePoolSize);
 }
 
 // Called every frame
@@ -94,12 +94,12 @@ void ATurret::MakeProjectiles(const int NewProjectileAmount)
     ProjectilePool.Reserve(ProjectilePool.Num() + NewProjectileAmount);
     for (size_t i = 0; i < NewProjectileAmount; i++)
     {
-        const TObjectPtr<AProjectile> Icon = CreateProjectile();
-        if (!Icon)
+        const TObjectPtr<AProjectile> Projectile = CreateProjectile();
+        if (!Projectile)
         {
             return;
         }
-        ProjectilePool.Add(Icon);
+        ProjectilePool.Add(Projectile);
     }
 }
 
@@ -135,7 +135,7 @@ AProjectile* ATurret::GetUnusedProjectile()
             continue;
         }
 
-        if (ProjectilePool[i]->IsProjectileEnabled())
+        if (!ProjectilePool[i]->IsProjectileEnabled())
         {
             return ProjectilePool[i];
         }
@@ -339,12 +339,18 @@ void ATurret::Shoot(const FVector& TargetPosition)
     }
 
     ShootTimer = ShootCooldown;
-    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, BulletSpawnLocation, SpawnRotation);
+    TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
     if (!Projectile)
     {
-        return;
+        if (!Projectile)
+        {
+            return;
+        }
+
+        ProjectilePool.Add(Projectile);
     }
 
+    Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);
     Projectile->SetProjectileEnabled(true);
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
 
