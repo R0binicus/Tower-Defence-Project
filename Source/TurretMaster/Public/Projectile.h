@@ -46,8 +46,6 @@ protected:
 
 	virtual void UpdateTargetDest_Implementation(float DeltaTime);
 
-	
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
 

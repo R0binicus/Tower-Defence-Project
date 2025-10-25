@@ -29,9 +29,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
-	// 
+	// Projectiles
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
+
+	TArray<TObjectPtr<AProjectile>> ProjectilePool;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FName EnemyTagName = "Enemy";
@@ -134,6 +136,16 @@ protected:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	// Create Icons
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Makes the specified number of projectiles"))
+	void MakeProjectiles(const int NewProjectileAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Creates and initialises a projectile"))
+	AProjectile* CreateProjectile();
+
+	// Turret update
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();

@@ -39,6 +39,8 @@ void ATurret::BeginPlay()
     ProjectileValues.Speed = ProjectileSpeed;
     ProjectileValues.Lifetime = ProjectileLifetime;
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
+
+    MakeProjectiles(10);
 }
 
 // Called every frame
@@ -85,6 +87,43 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
     }
 
     EnemyRefArray.Remove(OtherActor);
+}
+
+void ATurret::MakeProjectiles(const int NewProjectileAmount)
+{
+    ProjectilePool.Reserve(ProjectilePool.Num() + NewProjectileAmount);
+    for (size_t i = 0; i < NewProjectileAmount; i++)
+    {
+        const TObjectPtr<AProjectile> Icon = CreateProjectile();
+        if (!Icon)
+        {
+            return;
+        }
+        ProjectilePool.Add(Icon);
+    }
+}
+
+AProjectile* ATurret::CreateProjectile()
+{
+    if (!ensure(ProjectileClass))
+    {
+        return nullptr;
+    }
+
+    if (!World)
+    {
+        return nullptr;
+    }
+
+    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, TurretLocation, FRotator::ZeroRotator);
+    if (!Projectile)
+    {
+        return nullptr;
+    }
+
+    Projectile->SetProjectileEnabled(false);
+
+    return Projectile;
 }
 
 AActor* ATurret::GetClosestEnemy()
@@ -289,6 +328,7 @@ void ATurret::Shoot(const FVector& TargetPosition)
         return;
     }
 
+    Projectile->SetProjectileEnabled(true);
     Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
 
     // Reset ProjectileValues if custom projectile speed was changed (changed in ArcTurret)
