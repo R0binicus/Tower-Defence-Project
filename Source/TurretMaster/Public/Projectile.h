@@ -20,6 +20,14 @@ public:
 	AProjectile();
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Sets the projectile to be enabled or disabled"))
+	void SetProjectileEnabled(bool bNewEnabled);
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Returns if the projectile is enabled or disabled"))
+	float GetProjectileEnabled() const { return bEnabled; }
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
 	float GetProjectileDamage() const { return ProjectileValues.Damage; }
 
@@ -38,6 +46,8 @@ protected:
 
 	virtual void UpdateTargetDest_Implementation(float DeltaTime);
 
+	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
 
@@ -46,6 +56,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	bool bEnabled = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	float Gravity;

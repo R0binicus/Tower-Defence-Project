@@ -1,5 +1,6 @@
 #include "Projectile.h"
 #include "PhysicsEngine/PhysicsSettings.h"
+#include "Engine/EngineTypes.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -9,9 +10,24 @@ AProjectile::AProjectile()
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshCollider"));
 	CollisionMesh->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-	CollisionMesh->SetSimulatePhysics(true);
 	CollisionMesh->SetNotifyRigidBodyCollision(true);
 	RootComponent = CollisionMesh;
+	SetProjectileEnabled(true);
+}
+
+void AProjectile::SetProjectileEnabled(bool bNewEnabled)
+{
+	bEnabled = bNewEnabled;
+	CollisionMesh->SetVisibility(bEnabled);
+	CollisionMesh->SetSimulatePhysics(bEnabled);
+	if (bEnabled)
+	{
+		CollisionMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+	else
+	{
+		CollisionMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
@@ -36,6 +52,11 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(float DeltaTime)
 {
+	if (!bEnabled)
+	{
+		return;
+	}
+
 	UpdateTargetDest(DeltaTime);
 }
 
