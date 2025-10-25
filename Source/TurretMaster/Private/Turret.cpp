@@ -342,6 +342,8 @@ void ATurret::Shoot(const FVector& TargetPosition)
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
     if (!Projectile)
     {
+        Projectile = CreateProjectile();
+
         if (!Projectile)
         {
             return;
