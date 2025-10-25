@@ -36,13 +36,12 @@ void AProjectile::SetProjectileEnabled(bool bNewEnabled)
 	}
 }
 
-void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
+void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
 {
 	TargetActor = Target;
-
 	ProjectileValues = InProjectileValues;
 
-	SetLifeSpan(ProjectileValues.Lifetime);
+	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
 

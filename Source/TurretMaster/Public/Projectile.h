@@ -32,8 +32,8 @@ public:
 	float GetProjectileDamage() const { return ProjectileValues.Damage; }
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
-		meta = (ToolTip = "Sets the projectile's initial values"))
-	void InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
+		meta = (ToolTip = "Reenabled projectile, and sets its new values"))
+	void SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
 
 protected:
 	virtual void BeginPlay() override;

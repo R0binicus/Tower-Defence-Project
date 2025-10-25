@@ -115,7 +115,7 @@ AProjectile* ATurret::CreateProjectile()
         return nullptr;
     }
 
-    TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, TurretLocation, FRotator::ZeroRotator);
+    const TObjectPtr<AProjectile> Projectile = World->SpawnActor<AProjectile>(ProjectileClass, TurretLocation, FRotator::ZeroRotator);
     if (!Projectile)
     {
         return nullptr;
@@ -329,21 +329,23 @@ void ATurret::Shoot(const FVector& TargetPosition)
         return;
     }
 
-    FRotator SpawnRotation = DesiredTurretRotation;
-    
-    PreBulletSpawnSetValues(TargetPosition);
+    if (!CurrentClosestEnemy)
+    {
+        return;
+    }
 
-    if (AllowLocationPrediction && CurrentClosestEnemy)
+    ShootTimer = ShootCooldown;
+    PreBulletSpawnSetValues(TargetPosition);
+    FRotator SpawnRotation = DesiredTurretRotation;
+    if (AllowLocationPrediction)
     {
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
 
-    ShootTimer = ShootCooldown;
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
     if (!Projectile)
     {
         Projectile = CreateProjectile();
-
         if (!Projectile)
         {
             return;
@@ -353,8 +355,7 @@ void ATurret::Shoot(const FVector& TargetPosition)
     }
 
     Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);
-    Projectile->SetProjectileEnabled(true);
-    Projectile->InitializeProjectile(CurrentClosestEnemy, ProjectileValues);
+    Projectile->SetupProjectile(CurrentClosestEnemy, ProjectileValues);
 
     // Reset ProjectileValues if custom projectile speed was changed (changed in ArcTurret)
     if (ProjectileValues.Speed != ProjectileSpeed)
