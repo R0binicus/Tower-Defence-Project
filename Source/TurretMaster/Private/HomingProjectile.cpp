@@ -5,7 +5,7 @@ AHomingProjectile::AHomingProjectile() : AProjectile()
 	CollisionMesh->SetEnableGravity(false);
 }
 
-void AHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
+void AHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
 	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
 

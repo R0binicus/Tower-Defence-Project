@@ -9,7 +9,7 @@ class UStaticMeshComponent;
 
 /**
  * Projectile base class, which moves in the direction it was
- * fired from at an initial velocity and Expeirences gravity
+ * fired from at an initial velocity and Experiences gravity
  */
 UCLASS()
 class TURRETMASTER_API AProjectile : public AActor
@@ -42,9 +42,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
 		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
-	void UpdateTargetDest(float DeltaTime);
+	void UpdateTargetDest(const float DeltaTime);
 
-	virtual void UpdateTargetDest_Implementation(float DeltaTime);
+	virtual void UpdateTargetDest_Implementation(const float DeltaTime);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;

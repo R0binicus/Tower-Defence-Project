@@ -15,7 +15,7 @@ AProjectile::AProjectile()
 	SetProjectileEnabled(true);
 }
 
-void AProjectile::SetProjectileEnabled(bool bNewEnabled)
+void AProjectile::SetProjectileEnabled(const bool bNewEnabled)
 {
 	bEnabled = bNewEnabled;
 
@@ -50,13 +50,13 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+	if (const UPhysicsSettings* Physics = UPhysicsSettings::Get())
 	{
 		Gravity = -Physics->DefaultGravityZ;
 	}
 }
 
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::Tick(const float DeltaTime)
 {
 	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
 
@@ -73,18 +73,24 @@ void AProjectile::Tick(float DeltaTime)
 	UpdateTargetDest(DeltaTime);
 }
 
-void AProjectile::UpdateTargetDest_Implementation(float DeltaTime)
+void AProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
 	// Base projectile has no implementation
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor == nullptr) return;
-	if (OtherComp == nullptr) return;
+	if (OtherActor == nullptr)
+	{
+		return;
+	}
+	
+	if (OtherComp == nullptr)
+		{
+		return;
+	}
 
-	FName OtherCompName = OtherComp->GetCollisionProfileName();
-
+	const FName OtherCompName = OtherComp->GetCollisionProfileName();
 	if (OtherCompName != "Pawn")
 	{
 		SetProjectileEnabled(false);

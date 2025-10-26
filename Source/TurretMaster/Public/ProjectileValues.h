@@ -31,7 +31,7 @@ struct FProjectileValues
 
 	}
 
-	FProjectileValues(float InDamage, float InSpeed, float InLifetime, float InTurnMultiplier, float InPredictedLifetime) :
+	FProjectileValues(const float InDamage, const float InSpeed, const float InLifetime, const float InTurnMultiplier, const float InPredictedLifetime) :
 		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), TurnMultiplier(InTurnMultiplier), PredictedLifetime(InPredictedLifetime)
 	{
 		

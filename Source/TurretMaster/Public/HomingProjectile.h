@@ -17,5 +17,5 @@ public:
 	AHomingProjectile();
 
 protected:
-	virtual void UpdateTargetDest_Implementation(float DeltaTime) override;
+	virtual void UpdateTargetDest_Implementation(const float DeltaTime) override;
 };
