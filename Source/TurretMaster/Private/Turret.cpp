@@ -37,7 +37,7 @@ void ATurret::BeginPlay()
     InitialRotation = GetActorRotation();
     World = GetWorld();
 
-    if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+    if (const UPhysicsSettings* Physics = UPhysicsSettings::Get())
     {
         Gravity = -Physics->DefaultGravityZ;
     }
@@ -55,7 +55,7 @@ void ATurret::BeginPlay()
 }
 
 // Called every frame
-void ATurret::Tick(float DeltaTime)
+void ATurret::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     ShootTimer = ShootTimer - DeltaTime;
@@ -158,7 +158,6 @@ AActor* ATurret::GetClosestEnemy()
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
     float CurrentClosestDistance = INFINITY;
-    float EnemyDistance = 0.f;
 
     if (!TurretProtectPoint)
     {
@@ -182,7 +181,7 @@ AActor* ATurret::GetClosestEnemy()
             continue;
         }
 
-        EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
+        const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
 
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
         if (EnemyDistance < TurretFireMinimumRange)
@@ -242,7 +241,7 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
     DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, NewDesiredRotation);
 
     // Then clamp it if it is not allowed
-    float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    const float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
     const FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, DesiredTurretRotation.Yaw, DesiredTurretRotation.Roll);
 
     // Then set rotation
@@ -258,8 +257,8 @@ FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVect
         return InitialRotation;
     }
 
-    float DesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
-    float DesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
+    const float DesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    const float DesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
 
     return FRotator(DesiredPitch, DesiredYaw, InitialRotation.Roll);
 }
@@ -288,10 +287,9 @@ float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& Targ
 
 float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
-    const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
-
     // Prevent turret from aiming vertically  
     // if the vertical distance is too great
+    const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
     if (TargetDotProduct < GiveUpVerticalAimThreshold)
     {
         return InitialRotation.Pitch;
@@ -317,7 +315,6 @@ bool ATurret::CanShoot()
     }
 
     const float DesiredAngleDotProduct = FVector::DotProduct(MuzzleForward, DesiredTurretRotation.Vector());
-
     if (DesiredAngleDotProduct < FacingTargetThreshold)
     {
         return false;

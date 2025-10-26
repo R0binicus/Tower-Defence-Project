@@ -44,7 +44,7 @@ protected:
 	int InitialProjectilePoolSize = 5;
 
 	UPROPERTY(EditAnywhere, Category = "Turret")
-	TSubclassOf<class AProjectile> ProjectileClass;
+	TSubclassOf<AProjectile> ProjectileClass;
 
 	TArray<TObjectPtr<AProjectile>> ProjectilePool;
 
