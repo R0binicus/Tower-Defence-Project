@@ -29,12 +29,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
-	// 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "The point in space which the turret tries to protect. Enemies near this point will get attacked first"))
+	TObjectPtr<USceneComponent> TurretProtectPoint;
+
+	// Projectiles pool
+	UPROPERTY(EditAnywhere, Category = "Turret")
+	int InitialProjectilePoolSize = 5;
+
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	TSubclassOf<class AProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Turret")
-	FName EnemyTagName = "Enemy";
+	TArray<TObjectPtr<AProjectile>> ProjectilePool;
 
 	// Begin Play Initialize
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
@@ -49,7 +55,10 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
-	// Enemy reference
+	// Enemy
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	FName EnemyTagName = "Enemy";
+
 	UPROPERTY()
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 
@@ -63,6 +72,14 @@ protected:
 	// Turret Aiming
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
+	float ExtraTurretFireMinimumRange = 0.f;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
+	float TurretFireMinimumRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;
@@ -78,14 +95,17 @@ protected:
 	float AimVerticalLowerBound = -35.f;
 
 	// Turret Shooting
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float ShootCooldown = 1.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	float ShootTimer = 0.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float FacingTargetThreshold = 0.999f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	FTimerHandle ShootDelayHandle;
 
 	// Projectile Values
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
@@ -134,6 +154,20 @@ protected:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	// Projectile pool
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Makes the specified number of projectiles"))
+	void MakeProjectiles(const int NewProjectileAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Creates and initialises a projectile"))
+	AProjectile* CreateProjectile();
+
+	UFUNCTION(BlueprintCallable, Category = "Turret",
+		meta = (ToolTip = "Returns an unused projectile from the pool. Or nullptr if they are all used"))
+	AProjectile* GetUnusedProjectile();
+
+	// Turret update
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();
@@ -155,7 +189,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
-	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, float& OutDesiredYaw, float& OutDesiredPitch);
+	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, FRotator& OutDesiredRotation);
 
 	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
 

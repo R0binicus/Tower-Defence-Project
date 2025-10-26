@@ -1,5 +1,6 @@
 #include "Projectile.h"
-#include "GameFramework/ProjectileMovementComponent.h"
+#include "PhysicsEngine/PhysicsSettings.h"
+#include "Engine/EngineTypes.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -9,30 +10,66 @@ AProjectile::AProjectile()
 	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshCollider"));
 	CollisionMesh->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	CollisionMesh->SetNotifyRigidBodyCollision(true);
 	RootComponent = CollisionMesh;
-
-	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
-	MovementComponent->UpdatedComponent = CollisionMesh;
-	MovementComponent->bRotationFollowsVelocity = true;
+	SetProjectileEnabled(true);
 }
 
-void AProjectile::InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
+void AProjectile::SetProjectileEnabled(bool bNewEnabled)
+{
+	bEnabled = bNewEnabled;
+
+	if (!CollisionMesh)
+	{
+		return;
+	}
+
+	CollisionMesh->SetVisibility(bEnabled);
+	CollisionMesh->SetSimulatePhysics(bEnabled);
+	if (bEnabled)
+	{
+		CollisionMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+	else
+	{
+		CollisionMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
 {
 	TargetActor = Target;
-
 	ProjectileValues = InProjectileValues;
+	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
 
-	SetLifeSpan(ProjectileValues.Lifetime);
-	MovementComponent->Velocity = GetActorForwardVector() * ProjectileValues.Speed;
+	SetProjectileEnabled(true);
+	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
 
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+	{
+		Gravity = -Physics->DefaultGravityZ;
+	}
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
+	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
+
+	if (ProjectileLifetimeTimer <= 0 && bEnabled)
+	{
+		SetProjectileEnabled(false);
+	}
+
+	if (!bEnabled)
+	{
+		return;
+	}
+
 	UpdateTargetDest(DeltaTime);
 }
 
@@ -50,11 +87,11 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 	if (OtherCompName != "Pawn")
 	{
-		Destroy();
+		SetProjectileEnabled(false);
 		return;
 	}
 
 	IDamageable::Execute_TakeDamage(OtherActor, ProjectileValues.Damage);
-	Destroy();
+	SetProjectileEnabled(false);
 }
 

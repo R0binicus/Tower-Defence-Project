@@ -2,12 +2,6 @@
 
 float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
-    // Reset to initial rotation if there is no closest enemy
-    if (!CurrentClosestEnemy)
-    {
-        return InitialRotation.Pitch;
-    }
-
     if (!BulletSpawnPoint)
     {
         return InitialRotation.Pitch;

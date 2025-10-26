@@ -16,9 +16,6 @@ class TURRETMASTER_API ASmartHomingProjectile : public AProjectile
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Smart Homing Projectile")
-	float LifeCountdown;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Smart Homing Projectile")
 	float HomingRate = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Smart Homing Projectile")

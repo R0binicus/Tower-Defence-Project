@@ -6,7 +6,6 @@
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
-class UProjectileMovementComponent;
 
 /**
  * Projectile base class, which moves in the direction it was
@@ -21,12 +20,20 @@ public:
 	AProjectile();
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Sets the projectile to be enabled or disabled"))
+	void SetProjectileEnabled(bool bNewEnabled);
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Returns if the projectile is enabled or disabled"))
+	float IsProjectileEnabled() const { return bEnabled; }
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
 	float GetProjectileDamage() const { return ProjectileValues.Damage; }
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
-		meta = (ToolTip = "Sets the projectile's initial values"))
-	void InitializeProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
+		meta = (ToolTip = "Reenabled projectile, and sets its new values"))
+	void SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
 
 protected:
 	virtual void BeginPlay() override;
@@ -45,11 +52,17 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	TObjectPtr<UStaticMeshComponent> CollisionMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
-	TObjectPtr<UProjectileMovementComponent> MovementComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float ProjectileLifetimeTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
+	bool bEnabled = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	float Gravity;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

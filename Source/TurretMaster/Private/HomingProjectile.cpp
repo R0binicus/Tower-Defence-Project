@@ -1,9 +1,8 @@
 #include "HomingProjectile.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 
 AHomingProjectile::AHomingProjectile() : AProjectile()
 {
-	MovementComponent->ProjectileGravityScale = 0.f;
+	CollisionMesh->SetEnableGravity(false);
 }
 
 void AHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
@@ -18,15 +17,10 @@ void AHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 	FVector TargetDirection = LockedTarget->GetActorLocation() - GetActorLocation();
 	TargetDirection.Normalize();
 
-	if (!MovementComponent)
-	{
-		return;
-	}
-
 	if (ProjectileValues.TurnMultiplier != 1.f)
 	{
-		TargetDirection = FMath::Lerp(MovementComponent->Velocity.GetSafeNormal(), TargetDirection, ProjectileValues.TurnMultiplier);
+		TargetDirection = FMath::Lerp(CollisionMesh->GetPhysicsLinearVelocity().GetSafeNormal(), TargetDirection, ProjectileValues.TurnMultiplier);
 	}
 
-	MovementComponent->Velocity = (TargetDirection * ProjectileValues.Speed);
+	CollisionMesh->SetPhysicsLinearVelocity(TargetDirection * ProjectileValues.Speed, false);
 }
