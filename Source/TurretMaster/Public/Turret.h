@@ -69,11 +69,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	float ExtraTurretFireMinimumRadius = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
+	float ExtraTurretFireMinimumRange = 0.f;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Turret")
-	float TurretFireMinimumRadius;
+	UPROPERTY(BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
+	float TurretFireMinimumRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;

@@ -44,7 +44,7 @@ void ATurret::BeginPlay()
 
     UpdateTurretValues();
 
-    TurretFireMinimumRadius = FVector::DistSquared(MuzzleBaseLocation, BulletSpawnLocation) + pow(ExtraTurretFireMinimumRadius, 2);
+    TurretFireMinimumRange = FVector::DistSquared(MuzzleBaseLocation, BulletSpawnLocation) + pow(ExtraTurretFireMinimumRange, 2);
 }
 
 // Called every frame
@@ -75,6 +75,7 @@ void ATurret::Tick(float DeltaTime)
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
     if (!OtherActor->ActorHasTag(EnemyTagName))
     {
         return;
@@ -172,11 +173,8 @@ AActor* ATurret::GetClosestEnemy()
 
         EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), MuzzleBaseLocation);
 
-        GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Green, FString::Printf(TEXT("EnemyDistance: %f"), EnemyDistance));
-        GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, FString::Printf(TEXT("TurretFireMinimumRadius: %f"), TurretFireMinimumRadius));
-
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
-        if (EnemyDistance < TurretFireMinimumRadius)
+        if (EnemyDistance < TurretFireMinimumRange)
         {
             continue;
         }
