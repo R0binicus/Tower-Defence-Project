@@ -100,9 +100,9 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 
     EnemyRefArray.Remove(OtherActor);
 }
-#pragma endregion
+#pragma endregion Unreal Functions
 
-#pragma region ProjectilePool
+#pragma region Projectile Pool
 void ATurret::MakeProjectiles(const int NewProjectileAmount)
 {
     ProjectilePool.Reserve(ProjectilePool.Num() + NewProjectileAmount);
@@ -156,9 +156,9 @@ AProjectile* ATurret::GetUnusedProjectile()
     }
     return nullptr;
 }
-#pragma endregion
+#pragma endregion Projectile Pool
 
-#pragma region Turret Update
+#pragma region Turret Update Values
 AActor* ATurret::GetClosestEnemy()
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
@@ -234,7 +234,7 @@ FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVecto
 {
     return EnemyPosition + (EnemyVelocity * ProjectileFlightTime);
 }
-#pragma endregion
+#pragma endregion Turret Update Values
 
 #pragma region Turret Rotation
 void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
@@ -308,7 +308,7 @@ float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& Ta
 
     return TurretDesiredPitch;
 }
-#pragma endregion 
+#pragma endregion Turret Rotation
 
 #pragma region Shooting
 bool ATurret::CanShoot()
@@ -414,7 +414,7 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
 
     PreBulletSpawnSetValues(TargetPosition);
 }
-#pragma endregion
+#pragma endregion Shooting
 
 #pragma region Projectile Motion Calculations
 float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)
@@ -444,4 +444,4 @@ float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Heigh
 
     return RequiredVel;
 }
-#pragma endregion 
+#pragma endregion Projectile Motion Calculations
