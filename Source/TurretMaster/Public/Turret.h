@@ -29,6 +29,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> MuzzleDirectionSocket;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "The point in space which the turret tries to protect. Enemies near this point will get attacked first"))
+	TObjectPtr<USceneComponent> TurretProtectPoint;
+
 	// Projectiles pool
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	int InitialProjectilePoolSize = 5;

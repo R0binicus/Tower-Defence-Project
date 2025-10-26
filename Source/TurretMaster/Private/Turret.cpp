@@ -20,6 +20,9 @@ ATurret::ATurret()
 
     MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
     MuzzleDirectionSocket->SetupAttachment(RootComponent);
+
+    TurretProtectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("TurretProtectPoint"));
+    TurretProtectPoint->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -75,7 +78,6 @@ void ATurret::Tick(float DeltaTime)
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
     if (!OtherActor->ActorHasTag(EnemyTagName))
     {
         return;
@@ -154,6 +156,11 @@ AActor* ATurret::GetClosestEnemy()
     float CurrentClosestDistance = INFINITY;
     float EnemyDistance = 0.f;
 
+    if (!TurretProtectPoint)
+    {
+        return nullptr;
+    }
+
     for (size_t i = 0; i < EnemyRefArray.Num(); i++)
     {
         if (!EnemyRefArray[i])
@@ -171,7 +178,7 @@ AActor* ATurret::GetClosestEnemy()
             continue;
         }
 
-        EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), MuzzleBaseLocation);
+        EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
 
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
         if (EnemyDistance < TurretFireMinimumRange)
