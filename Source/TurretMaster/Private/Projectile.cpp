@@ -83,6 +83,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	if (OtherActor == nullptr) return;
 	if (OtherComp == nullptr) return;
 
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OtherComp: %s"), *OtherComp->GetCollisionProfileName().ToString()));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OtherComp: %s"), *OtherComp->GetName()));
+
 	FName OtherCompName = OtherComp->GetCollisionProfileName();
 
 	if (OtherCompName != "Pawn")
