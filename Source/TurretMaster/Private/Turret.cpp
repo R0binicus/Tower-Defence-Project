@@ -23,6 +23,10 @@ ATurret::ATurret()
 
     TurretProtectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("TurretProtectPoint"));
     TurretProtectPoint->SetupAttachment(RootComponent);
+
+    TurretMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMesh"));
+    TurretMesh->SetupAttachment(RootComponent);
+    TurretMesh->SetRelativeRotation(FRotator(0, 270, 0));
 }
 
 // Called when the game starts or when spawned
@@ -345,6 +349,11 @@ void ATurret::Shoot(const FVector& TargetPosition)
     if (AllowLocationPrediction)
     {
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
+    }
+
+    if (TurretShootAnimation && TurretMesh)
+    {
+        TurretMesh->PlayAnimation(TurretShootAnimation, false);
     }
 
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();

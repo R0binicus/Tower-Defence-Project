@@ -33,6 +33,12 @@ protected:
 		meta = (ToolTip = "The point in space which the turret tries to protect. Enemies near this point will get attacked first"))
 	TObjectPtr<USceneComponent> TurretProtectPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<USkeletalMeshComponent> TurretMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<UAnimSequence> TurretShootAnimation;
+
 	// Projectiles pool
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	int InitialProjectilePoolSize = 5;
