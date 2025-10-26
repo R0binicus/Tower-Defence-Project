@@ -100,6 +100,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float FacingTargetThreshold = 0.999f;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	FTimerHandle ShootDelayHandle;
+
 	// Projectile Values
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
