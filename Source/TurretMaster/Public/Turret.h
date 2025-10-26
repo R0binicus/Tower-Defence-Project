@@ -20,6 +20,7 @@ public:
 
 protected:
 	// Components
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USphereComponent> RangeSphere;
 
@@ -40,6 +41,7 @@ protected:
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
 
 	// Projectiles pool
+	
 	UPROPERTY(EditAnywhere, Category = "Turret")
 	int InitialProjectilePoolSize = 5;
 
@@ -49,6 +51,7 @@ protected:
 	TArray<TObjectPtr<AProjectile>> ProjectilePool;
 
 	// Begin Play Initialize
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	float Gravity = 980.f;
 
@@ -62,6 +65,7 @@ protected:
 	TObjectPtr<UWorld> World;
 
 	// Enemy
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FName EnemyTagName = "Enemy";
 
@@ -71,11 +75,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<AActor> CurrentClosestEnemy;
 
-	// Turret Settings
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	bool AllowLocationPrediction = true;
-
 	// Turret Aiming
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
@@ -90,7 +91,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretTurnSpeed = 2.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	bool AllowLocationPrediction = true;
+	
+
 	// Turret Aim Restrictions
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float GiveUpVerticalAimThreshold = 0.8f;
 
@@ -101,6 +107,7 @@ protected:
 	float AimVerticalLowerBound = -35.f;
 
 	// Turret Shooting
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float ShootCooldown = 1.f;
 
@@ -114,6 +121,7 @@ protected:
 	FTimerHandle ShootDelayHandle;
 
 	// Projectile Values
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileDamage = 25.0f;
@@ -134,6 +142,7 @@ protected:
 	FProjectileValues ProjectileValues;
 
 	// Update Turret Values
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector MuzzleForward;
 
@@ -150,6 +159,7 @@ protected:
 	FVector BulletSpawnLocation;
 
 	// Functions
+	
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
@@ -161,6 +171,7 @@ protected:
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	// Projectile pool
+	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Makes the specified number of projectiles"))
 	void MakeProjectiles(const int NewProjectileAmount);
@@ -174,6 +185,7 @@ protected:
 	AProjectile* GetUnusedProjectile();
 
 	// Turret update
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy();
@@ -189,6 +201,7 @@ protected:
 	virtual FVector PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime);
 
 	// Turret rotation
+	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Rotates turret actor to face the target using the shortest angle"))
 	virtual void RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection);
@@ -202,6 +215,7 @@ protected:
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection);
 
 	// Shooting
+	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
 	virtual bool CanShoot();
@@ -210,6 +224,9 @@ protected:
 		meta = (ToolTip = "Shoots the enemy"))
 	virtual void Shoot(const FVector& TargetPosition);
 
+	// Used to set the values just before bullet creation.
+	// This function was split off Shoot() to make it cleaner,
+	// and to make it easier to override in ArcTurret
 	virtual void PreBulletSpawnSetValues(const FVector& TargetPosition);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
@@ -217,8 +234,9 @@ protected:
 	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation);
 
 	// Misc Projectile Motion Calculations
+	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
-		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will fail if height is negative. Expectes angle in radians"))
+		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will give incorrect value if height is negative. Expectes angle in radians"))
 	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity);
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",

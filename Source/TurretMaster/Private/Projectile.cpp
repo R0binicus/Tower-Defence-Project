@@ -26,6 +26,7 @@ void AProjectile::SetProjectileEnabled(const bool bNewEnabled)
 
 	CollisionMesh->SetVisibility(bEnabled);
 	CollisionMesh->SetSimulatePhysics(bEnabled);
+	
 	if (bEnabled)
 	{
 		CollisionMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -41,7 +42,6 @@ void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InPro
 	TargetActor = Target;
 	ProjectileValues = InProjectileValues;
 	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
-
 	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
@@ -86,7 +86,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	}
 	
 	if (OtherComp == nullptr)
-		{
+	{
 		return;
 	}
 

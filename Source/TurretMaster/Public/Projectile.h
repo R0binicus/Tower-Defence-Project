@@ -19,13 +19,15 @@ class TURRETMASTER_API AProjectile : public AActor
 public:	
 	AProjectile();
 
+	// Getters & setters
+	
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Sets the projectile to be enabled or disabled"))
 	void SetProjectileEnabled(bool bNewEnabled);
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Returns if the projectile is enabled or disabled"))
-	float IsProjectileEnabled() const { return bEnabled; }
+	bool IsProjectileEnabled() const { return bEnabled; }
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Gets the damage that the projectile will deal to its target"))
@@ -36,16 +38,8 @@ public:
 	void SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
 
 protected:
-	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
-		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
-	void UpdateTargetDest(const float DeltaTime);
-
-	virtual void UpdateTargetDest_Implementation(const float DeltaTime);
-
+	// Variables
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TWeakObjectPtr<AActor> TargetActor = nullptr;
 
@@ -63,6 +57,18 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	float Gravity;
+
+	// Functions
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
+		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
+	void UpdateTargetDest(const float DeltaTime);
+
+	virtual void UpdateTargetDest_Implementation(const float DeltaTime);
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
