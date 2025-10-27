@@ -11,7 +11,8 @@ class UDamageable : public UInterface
 };
 
 /**
- * 
+ * Allows classes that implement this interface   
+ * to take damage and report if they are dead
  */
 class TURRETMASTER_API IDamageable
 {
@@ -22,5 +23,5 @@ public:
 	void TakeDamage(float DamageTaken);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
-	bool IsDead();
+	bool IsDead() const;
 };
