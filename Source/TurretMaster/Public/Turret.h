@@ -208,7 +208,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
-	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, FRotator& OutDesiredRotation);
+	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection);
 
 	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
 
@@ -234,7 +234,7 @@ protected:
 	virtual void CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime, FRotator& OutDesiredRotation);
 
 	// Misc Projectile Motion Calculations
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will give incorrect value if height is negative. Expectes angle in radians"))
 	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity);

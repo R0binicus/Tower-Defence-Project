@@ -244,8 +244,7 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
         return;
     }
 
-    FRotator NewDesiredRotation;
-    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, NewDesiredRotation);
+    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
     // Then clamp it if it is not allowed
     const float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
@@ -256,7 +255,7 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
     SetActorRotation(NewRotation);
 }
 
-FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, FRotator& OutDesiredRotation)
+FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
@@ -408,9 +407,7 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
     const FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
     const FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
 
-    // Dummy variables because we don't actually need the rotation
-    FRotator DummyRotator;
-    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection, DummyRotator);
+    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
     PreBulletSpawnSetValues(TargetPosition);
 }
