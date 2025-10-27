@@ -181,13 +181,13 @@ protected:
 		meta = (ToolTip = "Creates and initialises a projectile"))
 	AProjectile* CreateProjectile() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Turret",
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns an unused projectile from the pool. Or nullptr if they are all used"))
 	AProjectile* GetUnusedProjectile() const;
 
 	// Turret update
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy() const;
 
@@ -236,11 +236,11 @@ protected:
 
 	// Misc Projectile Motion Calculations
 
-	UFUNCTION(BlueprintCallable, Category = "Turret",
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will give incorrect value if height is negative. Expectes angle in radians"))
 	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Turret",
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Calculates the initial velocity to hit its the target, with a given angle. Expectes angle in radians"))
 	virtual float CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy) const;
 };
