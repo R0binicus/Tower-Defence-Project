@@ -8,7 +8,8 @@
 #include "Turret.generated.h"
 
 /**
- *
+ * Base turret class, which aims in a stright line 
+ * towards the target, and ignores gravity
  */
 UCLASS()
 class TURRETMASTER_API ATurret : public AActor
@@ -178,27 +179,27 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Creates and initialises a projectile"))
-	AProjectile* CreateProjectile();
+	AProjectile* CreateProjectile() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Returns an unused projectile from the pool. Or nullptr if they are all used"))
-	AProjectile* GetUnusedProjectile();
+	AProjectile* GetUnusedProjectile() const;
 
 	// Turret update
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
-	AActor* GetClosestEnemy();
+	AActor* GetClosestEnemy() const;
 
 	virtual void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Returns the direction to Location A from location B"))
-	virtual FVector GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition);
+	virtual FVector GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Tries to predict the enemy's future location, using its current position and velocity"))
-	virtual FVector PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime);
+	virtual FVector PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime) const;
 
 	// Turret rotation
 	
@@ -210,7 +211,7 @@ protected:
 		meta = (ToolTip = "Finds the desired angle the turret needs to shoot, to hit the desired location"))
 	virtual FRotator FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection);
 
-	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection);
+	virtual float FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection) const;
 
 	virtual float FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection);
 
@@ -218,7 +219,7 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Checks if the gun is in cooldown, is facing the target and the target is within range"))
-	virtual bool CanShoot();
+	virtual bool CanShoot() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Shoots the enemy"))
@@ -237,9 +238,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Calculates the time it will take for the projectile to hit its target. Will give incorrect value if height is negative. Expectes angle in radians"))
-	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity);
+	virtual float CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Calculates the initial velocity to hit its the target, with a given angle. Expectes angle in radians"))
-	virtual float CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy);
+	virtual float CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy) const;
 };

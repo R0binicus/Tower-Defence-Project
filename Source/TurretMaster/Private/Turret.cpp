@@ -117,7 +117,7 @@ void ATurret::MakeProjectiles(const int NewProjectileAmount)
     }
 }
 
-AProjectile* ATurret::CreateProjectile()
+AProjectile* ATurret::CreateProjectile() const
 {
     if (!ensure(ProjectileClass))
     {
@@ -140,7 +140,7 @@ AProjectile* ATurret::CreateProjectile()
     return Projectile;
 }
 
-AProjectile* ATurret::GetUnusedProjectile()
+AProjectile* ATurret::GetUnusedProjectile() const
 {
     for (size_t i = 0; i < ProjectilePool.Num(); i++)
     {
@@ -159,7 +159,7 @@ AProjectile* ATurret::GetUnusedProjectile()
 #pragma endregion Projectile Pool
 
 #pragma region Turret Update Values
-AActor* ATurret::GetClosestEnemy()
+AActor* ATurret::GetClosestEnemy() const
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
     float CurrentClosestDistance = INFINITY;
@@ -222,7 +222,7 @@ void ATurret::UpdateTurretValues()
     }
 }
 
-FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition)
+FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition) const
 {
     FVector EnemyDirection = EnemyPosition - SourcePosition;
     EnemyDirection.Normalize();
@@ -230,7 +230,7 @@ FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector
     return EnemyDirection;
 }
 
-FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime)
+FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime) const
 {
     return EnemyPosition + (EnemyVelocity * ProjectileFlightTime);
 }
@@ -269,7 +269,7 @@ FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVect
     return FRotator(DesiredPitch, DesiredYaw, InitialRotation.Roll);
 }
 
-float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
+float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection) const
 {
     // Make a 2D dot product, because we don't want the desired yaw to
     // worry about the pitch of the turret, or the pitch of the target
@@ -310,7 +310,7 @@ float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& Ta
 #pragma endregion Turret Rotation
 
 #pragma region Shooting
-bool ATurret::CanShoot()
+bool ATurret::CanShoot() const
 {
     if (!CurrentClosestEnemy)
     {
@@ -414,7 +414,7 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
 #pragma endregion Shooting
 
 #pragma region Projectile Motion Calculations
-float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)
+float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity) const
 {
     // Equation taken from: https://www.omnicalculator.com/physics/projectile-motion
     // NOTE: Equation values will not be correct if the player is above the turret muzzle
@@ -430,7 +430,7 @@ float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Hei
     return PredictTime;
 }
 
-float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy)
+float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy) const
 {
     // Equation taken from: https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat
 
