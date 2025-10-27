@@ -113,11 +113,10 @@ void ATurret::MakeProjectiles(const int NewProjectileAmount)
         {
             return;
         }
-        ProjectilePool.Add(Projectile);
     }
 }
 
-AProjectile* ATurret::CreateProjectile() const
+AProjectile* ATurret::CreateProjectile()
 {
     if (!ensure(ProjectileClass))
     {
@@ -136,6 +135,7 @@ AProjectile* ATurret::CreateProjectile() const
     }
 
     Projectile->SetProjectileEnabled(false);
+    ProjectilePool.Add(Projectile);
 
     return Projectile;
 }
@@ -369,8 +369,6 @@ void ATurret::Shoot(const FVector& TargetPosition)
         {
             return;
         }
-
-        ProjectilePool.Add(Projectile);
     }
 
     Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);

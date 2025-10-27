@@ -179,7 +179,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
 		meta = (ToolTip = "Creates and initialises a projectile"))
-	AProjectile* CreateProjectile() const;
+	AProjectile* CreateProjectile();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns an unused projectile from the pool. Or nullptr if they are all used"))
