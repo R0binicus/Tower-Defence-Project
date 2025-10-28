@@ -42,4 +42,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Creates and initialises a buildable actor"))
 	TScriptInterface<IBuildable> CreateBuildableActor(TSubclassOf<AActor> BuildableClass);
+
+	UFUNCTION()
+	void OnCursorOverBegin(AActor* TouchedActor);
+
+	UFUNCTION()
+	void OnCursorOverEnd(AActor* TouchedActor);
+
+	UFUNCTION()
+	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
 };

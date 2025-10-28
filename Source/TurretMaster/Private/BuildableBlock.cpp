@@ -10,6 +10,10 @@ ABuildableBlock::ABuildableBlock()
 
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
+
+    OnBeginCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverBegin);
+    OnEndCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverEnd);
+    OnClicked.AddDynamic(this, &ABuildableBlock::OnActorClicked);
 }
 
 void ABuildableBlock::BeginPlay()
@@ -55,5 +59,20 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(TSubclassOf<A
     }
 
     return Building;
+}
+
+void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnCursorOverBegin")));
+}
+
+void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnCursorOverEnd")));
+}
+
+void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnActorClicked")));
 }
 
