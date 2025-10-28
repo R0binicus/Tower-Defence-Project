@@ -12,7 +12,7 @@ class UBuildable : public UInterface
 
 /**
  * Interface for turrets or other actors
- * that are buildable on the Buiildable Blocks
+ * that are buildable on the Buildable Blocks
  */
 class TURRETMASTER_API IBuildable
 {

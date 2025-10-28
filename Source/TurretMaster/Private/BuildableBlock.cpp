@@ -15,12 +15,43 @@ ABuildableBlock::ABuildableBlock()
 void ABuildableBlock::BeginPlay()
 {
 	Super::BeginPlay();
+
+    World = GetWorld();
 	
+    CreatedBuildable = CreateBuildableActor(TestStartBuilding);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(TSubclassOf<AActor> BuildableClass)
+{
+    if (!BuildableClass)
+    {
+        return nullptr;
+    }
+
+    if (!World)
+    {
+        return nullptr;
+    }
+
+    const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
+    if (!BuildingActor->Implements<UBuildable>())
+    {
+        return nullptr;
+    }
+
+    const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
+
+    if (!Building)
+    {
+        return nullptr;
+    }
+
+    return Building;
 }
 

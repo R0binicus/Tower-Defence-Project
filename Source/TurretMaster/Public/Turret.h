@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "ProjectileValues.h"
 #include "Projectile.h"
+#include "Buildable.h"
 #include "Turret.generated.h"
 
 /**
@@ -12,7 +13,7 @@
  * towards the target, and ignores gravity
  */
 UCLASS()
-class TURRETMASTER_API ATurret : public AActor
+class TURRETMASTER_API ATurret : public AActor, public IBuildable
 {
 	GENERATED_BODY()
 	
