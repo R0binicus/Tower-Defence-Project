@@ -18,7 +18,7 @@ void ABuildableBlock::BeginPlay()
 
     World = GetWorld();
 	
-    CreatedBuildable = CreateBuildableActor(TestStartBuilding);
+    //CreatedBuildable = CreateBuildableActor(TestStartBuilding);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
@@ -38,6 +38,8 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(TSubclassOf<A
     {
         return nullptr;
     }
+
+    //TODO: Disucss, can I check if it implements UBuildable, before I spawn it? 
 
     const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
     if (!BuildingActor->Implements<UBuildable>())
