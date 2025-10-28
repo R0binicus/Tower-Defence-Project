@@ -4,12 +4,22 @@ APlayerCamera::APlayerCamera()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
+	RootComponent = PlayerCamera;
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void APlayerCamera::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		PlayerController->bShowMouseCursor = true;
+		PlayerController->bEnableClickEvents = true;
+		PlayerController->bEnableMouseOverEvents = true;
+	}
 }
 
 void APlayerCamera::Tick(float DeltaTime)
@@ -17,4 +27,3 @@ void APlayerCamera::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
