@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Buildable Block")
 	TObjectPtr<UStaticMeshComponent> BlockMesh;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "Buildable Block")
+	TObjectPtr<UStaticMeshComponent> BuildingPreviewMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	TScriptInterface<IBuildable> CreatedBuildable = nullptr;
 
@@ -41,7 +44,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Creates and initialises a buildable actor"))
-	TScriptInterface<IBuildable> CreateBuildableActor(TSubclassOf<AActor> BuildableClass);
+	TScriptInterface<IBuildable> CreateBuildableActor(const TSubclassOf<AActor> BuildableClass);
 
 	UFUNCTION()
 	void OnCursorOverBegin(AActor* TouchedActor);
@@ -51,4 +54,12 @@ protected:
 
 	UFUNCTION()
 	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+
+	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
+		meta = (ToolTip = "Sets building preview mesh"))
+	void SetBuildingPreview(UStaticMesh* PreviewMesh);
+
+	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
+		meta = (ToolTip = "Hides the building preview, and sets the mesh to be null"))
+	void DisableBuildingPreview();
 };

@@ -11,6 +11,10 @@ ABuildableBlock::ABuildableBlock()
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
 
+    BuildingPreviewMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Building Preview Mesh"));
+    BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
+    BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
     OnBeginCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverEnd);
     OnClicked.AddDynamic(this, &ABuildableBlock::OnActorClicked);
@@ -31,7 +35,7 @@ void ABuildableBlock::Tick(float DeltaTime)
 
 }
 
-TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(TSubclassOf<AActor> BuildableClass)
+TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubclassOf<AActor> BuildableClass)
 {
     if (!BuildableClass)
     {
@@ -63,22 +67,61 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(TSubclassOf<A
 
 void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
 {
+    // Don't create building preview if one already exists
+    if (CreatedBuildable)
+    {
+        return;
+    }
 
+    if (!BuildingPreviewMesh)
+    {
+        return;
+    }
+
+    SetBuildingPreview(BlockMesh->GetStaticMesh());
 }
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
 {
+    // Don't create building preview if one already exists
+    if (CreatedBuildable)
+    {
+        return;
+    }
 
+    if (!BuildingPreviewMesh)
+    {
+        return;
+    }
+
+    DisableBuildingPreview();
 }
 
 void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
 {
-    // Don't create new turret if one already exists
+    // Don't create new building if one already exists
     if (CreatedBuildable)
     {
         return;
     }
 
     CreatedBuildable = CreateBuildableActor(TestStartBuilding);
+
+    DisableBuildingPreview();
+}
+
+void ABuildableBlock::SetBuildingPreview(UStaticMesh* PreviewMesh)
+{
+    if (!PreviewMesh)
+    {
+        return;
+    }
+
+    BuildingPreviewMesh->SetStaticMesh(PreviewMesh);
+}
+
+void ABuildableBlock::DisableBuildingPreview()
+{
+    BuildingPreviewMesh->SetStaticMesh(nullptr);
 }
 
