@@ -18,16 +18,19 @@ public:
 protected:
 	// Components
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	UPROPERTY(BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<USceneComponent> TurretHardpoint;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Buildable Block")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<UStaticMeshComponent> BlockMesh;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Buildable Block")
+	UPROPERTY(BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<UStaticMeshComponent> BuildingPreviewMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	TObjectPtr<UMaterialInterface> PreviewMaterial;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	TScriptInterface<IBuildable> CreatedBuildable = nullptr;
 
 	//TODO: Disucss, is there a better way of doing this?

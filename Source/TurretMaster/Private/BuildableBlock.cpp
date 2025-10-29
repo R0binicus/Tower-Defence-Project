@@ -117,7 +117,13 @@ void ABuildableBlock::SetBuildingPreview(UStaticMesh* PreviewMesh)
         return;
     }
 
+    if (!BuildingPreviewMesh)
+    {
+        return;
+    }
+
     BuildingPreviewMesh->SetStaticMesh(PreviewMesh);
+    BuildingPreviewMesh->SetMaterial(0, PreviewMaterial);
 }
 
 void ABuildableBlock::DisableBuildingPreview()
