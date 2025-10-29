@@ -1,9 +1,9 @@
 #include "SmartHomingProjectile.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
+void ASmartHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
-	float LifeCountdown = (ProjectileValues.PredictedLifetime - (ProjectileValues.Lifetime - ProjectileLifetimeTimer));
+	const float LifeCountdown = (ProjectileValues.PredictedLifetime - (ProjectileValues.Lifetime - ProjectileLifetimeTimer));
 
 	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
 	if (!LockedTarget)
@@ -16,7 +16,7 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 		return;
 	}
 
-	float CurveTimeInput = UKismetMathLibrary::NormalizeToRange(ProjectileValues.PredictedLifetime - LifeCountdown, 0, ProjectileValues.PredictedLifetime);
+	const float CurveTimeInput = UKismetMathLibrary::NormalizeToRange(ProjectileValues.PredictedLifetime - LifeCountdown, 0, ProjectileValues.PredictedLifetime);
 	HomingRate = HomingRateCurve->GetFloatValue(CurveTimeInput);
 
 	if (HomingRate == 0.f)
@@ -24,7 +24,7 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(float DeltaTime)
 		return;
 	}
 
-	FVector CurrentVelocity = CollisionMesh->GetPhysicsLinearVelocity();
+	const FVector CurrentVelocity = CollisionMesh->GetPhysicsLinearVelocity();
 	FVector TargetDirection = LockedTarget->GetActorLocation() - GetActorLocation();
 	TargetDirection.Normalize();
 	FVector NewVelocity = TargetDirection * (CurrentVelocity.Length() + Gravity * DeltaTime);

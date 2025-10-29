@@ -23,8 +23,13 @@ ATurret::ATurret()
 
     TurretProtectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("TurretProtectPoint"));
     TurretProtectPoint->SetupAttachment(RootComponent);
+
+    TurretMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMesh"));
+    TurretMesh->SetupAttachment(RootComponent);
+    TurretMesh->SetRelativeRotation(FRotator(0, 270, 0));
 }
 
+#pragma region Unreal Functions
 // Called when the game starts or when spawned
 void ATurret::BeginPlay()
 {
@@ -33,7 +38,7 @@ void ATurret::BeginPlay()
     InitialRotation = GetActorRotation();
     World = GetWorld();
 
-    if (UPhysicsSettings* Physics = UPhysicsSettings::Get())
+    if (const UPhysicsSettings* Physics = UPhysicsSettings::Get())
     {
         Gravity = -Physics->DefaultGravityZ;
     }
@@ -51,7 +56,7 @@ void ATurret::BeginPlay()
 }
 
 // Called every frame
-void ATurret::Tick(float DeltaTime)
+void ATurret::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     ShootTimer = ShootTimer - DeltaTime;
@@ -95,7 +100,9 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 
     EnemyRefArray.Remove(OtherActor);
 }
+#pragma endregion Unreal Functions
 
+#pragma region Projectile Pool
 void ATurret::MakeProjectiles(const int NewProjectileAmount)
 {
     ProjectilePool.Reserve(ProjectilePool.Num() + NewProjectileAmount);
@@ -106,7 +113,6 @@ void ATurret::MakeProjectiles(const int NewProjectileAmount)
         {
             return;
         }
-        ProjectilePool.Add(Projectile);
     }
 }
 
@@ -129,11 +135,12 @@ AProjectile* ATurret::CreateProjectile()
     }
 
     Projectile->SetProjectileEnabled(false);
+    ProjectilePool.Add(Projectile);
 
     return Projectile;
 }
 
-AProjectile* ATurret::GetUnusedProjectile()
+AProjectile* ATurret::GetUnusedProjectile() const
 {
     for (size_t i = 0; i < ProjectilePool.Num(); i++)
     {
@@ -149,12 +156,13 @@ AProjectile* ATurret::GetUnusedProjectile()
     }
     return nullptr;
 }
+#pragma endregion Projectile Pool
 
-AActor* ATurret::GetClosestEnemy()
+#pragma region Turret Update Values
+AActor* ATurret::GetClosestEnemy() const
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
     float CurrentClosestDistance = INFINITY;
-    float EnemyDistance = 0.f;
 
     if (!TurretProtectPoint)
     {
@@ -178,7 +186,7 @@ AActor* ATurret::GetClosestEnemy()
             continue;
         }
 
-        EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
+        const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
 
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
         if (EnemyDistance < TurretFireMinimumRange)
@@ -214,7 +222,7 @@ void ATurret::UpdateTurretValues()
     }
 }
 
-FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition)
+FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector& SourcePosition) const
 {
     FVector EnemyDirection = EnemyPosition - SourcePosition;
     EnemyDirection.Normalize();
@@ -222,11 +230,13 @@ FVector ATurret::GetDirectionToEnemy(const FVector& EnemyPosition, const FVector
     return EnemyDirection;
 }
 
-FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime)
+FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVector& EnemyVelocity, const float ProjectileFlightTime) const
 {
     return EnemyPosition + (EnemyVelocity * ProjectileFlightTime);
 }
+#pragma endregion Turret Update Values
 
+#pragma region Turret Rotation
 void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
 {
     if (!MuzzleDirectionSocket)
@@ -234,11 +244,10 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
         return;
     }
 
-    FRotator NewDesiredRotation;
-    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection, NewDesiredRotation);
+    DesiredTurretRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
     // Then clamp it if it is not allowed
-    float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
+    const float TurretDesiredPitch = FMath::Clamp(DesiredTurretRotation.Pitch, AimVerticalLowerBound, AimVerticalUpperBound);
     const FRotator ClampedTurretRotation = FRotator(TurretDesiredPitch, DesiredTurretRotation.Yaw, DesiredTurretRotation.Roll);
 
     // Then set rotation
@@ -246,7 +255,7 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
     SetActorRotation(NewRotation);
 }
 
-FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection, FRotator& OutDesiredRotation)
+FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection)
 {
     // Reset to initial rotation if there is no closest enemy
     if (!CurrentClosestEnemy)
@@ -254,13 +263,13 @@ FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVect
         return InitialRotation;
     }
 
-    float DesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
-    float DesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
+    const float DesiredYaw = FindDesiredYaw(TargetPosition, TargetDirection);
+    const float DesiredPitch = FindDesiredPitch(TargetPosition, TargetDirection);
 
     return FRotator(DesiredPitch, DesiredYaw, InitialRotation.Roll);
 }
 
-float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection)
+float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& TargetDirection) const
 {
     // Make a 2D dot product, because we don't want the desired yaw to
     // worry about the pitch of the turret, or the pitch of the target
@@ -284,10 +293,9 @@ float ATurret::FindDesiredYaw(const FVector& TargetPosition, const FVector& Targ
 
 float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& TargetDirection)
 {
-    const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
-
     // Prevent turret from aiming vertically  
     // if the vertical distance is too great
+    const float TargetDotProduct = FVector::DotProduct(MuzzleForward, TargetDirection);
     if (TargetDotProduct < GiveUpVerticalAimThreshold)
     {
         return InitialRotation.Pitch;
@@ -299,8 +307,10 @@ float ATurret::FindDesiredPitch(const FVector& TargetPosition, const FVector& Ta
 
     return TurretDesiredPitch;
 }
+#pragma endregion Turret Rotation
 
-bool ATurret::CanShoot()
+#pragma region Shooting
+bool ATurret::CanShoot() const
 {
     if (!CurrentClosestEnemy)
     {
@@ -313,7 +323,6 @@ bool ATurret::CanShoot()
     }
 
     const float DesiredAngleDotProduct = FVector::DotProduct(MuzzleForward, DesiredTurretRotation.Vector());
-
     if (DesiredAngleDotProduct < FacingTargetThreshold)
     {
         return false;
@@ -347,6 +356,11 @@ void ATurret::Shoot(const FVector& TargetPosition)
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
 
+    if (TurretShootAnimation && TurretMesh)
+    {
+        TurretMesh->PlayAnimation(TurretShootAnimation, false);
+    }
+
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
     if (!Projectile)
     {
@@ -355,8 +369,6 @@ void ATurret::Shoot(const FVector& TargetPosition)
         {
             return;
         }
-
-        ProjectilePool.Add(Projectile);
     }
 
     Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);
@@ -393,14 +405,14 @@ void ATurret::CalculateEnemyFutureLocationValues(const FVector& EnemyPosition, c
     const FVector TargetPosition = PredictEnemyLocation(EnemyPosition, EnemyVelocity, ProjectileFlightTime);
     const FVector TargetDirection = GetDirectionToEnemy(TargetPosition, MuzzleBaseLocation);
 
-    // Dummy variables because we don't actually need the rotation
-    FRotator DummyRotator;
-    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection, DummyRotator);
+    OutDesiredRotation = FindDesiredRotation(TargetPosition, TargetDirection);
 
     PreBulletSpawnSetValues(TargetPosition);
 }
+#pragma endregion Shooting
 
-float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity)
+#pragma region Projectile Motion Calculations
+float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Height, const float InGravity, const float InitialVelocity) const
 {
     // Equation taken from: https://www.omnicalculator.com/physics/projectile-motion
     // NOTE: Equation values will not be correct if the player is above the turret muzzle
@@ -416,7 +428,7 @@ float ATurret::CalculateProjectileLifetime(const float AngleRad, const float Hei
     return PredictTime;
 }
 
-float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy)
+float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Height, const float InGravity, const float FlatDistToEnemy) const
 {
     // Equation taken from: https://physics.stackexchange.com/questions/27992/solving-for-initial-velocity-required-to-launch-a-projectile-to-a-given-destinat
 
@@ -427,3 +439,4 @@ float ATurret::CalculateRequiredVelocity(const float AngleRad, const float Heigh
 
     return RequiredVel;
 }
+#pragma endregion Projectile Motion Calculations
