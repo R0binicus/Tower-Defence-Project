@@ -4,7 +4,7 @@
 #include "UObject/Interface.h"
 #include "Buildable.generated.h"
 
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, Blueprintable)
 class UBuildable : public UInterface
 {
 	GENERATED_BODY()

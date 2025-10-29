@@ -24,9 +24,9 @@ ATurret::ATurret()
     TurretProtectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("TurretProtectPoint"));
     TurretProtectPoint->SetupAttachment(RootComponent);
 
-    TurretMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMesh"));
-    TurretMesh->SetupAttachment(RootComponent);
-    TurretMesh->SetRelativeRotation(FRotator(0, 270, 0));
+    TurretMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMeshComp"));
+    TurretMeshComp->SetupAttachment(RootComponent);
+    TurretMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
 }
 
 #pragma region Unreal Functions
@@ -356,9 +356,9 @@ void ATurret::Shoot(const FVector& TargetPosition)
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
 
-    if (TurretShootAnimation && TurretMesh)
+    if (TurretShootAnimation && TurretMeshComp)
     {
-        TurretMesh->PlayAnimation(TurretShootAnimation, false);
+        TurretMeshComp->PlayAnimation(TurretShootAnimation, false);
     }
 
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();

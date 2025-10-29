@@ -37,7 +37,7 @@ protected:
 	TObjectPtr<USceneComponent> TurretProtectPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	TObjectPtr<USkeletalMeshComponent> TurretMesh;
+	TObjectPtr<USkeletalMeshComponent> TurretMeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
