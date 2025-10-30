@@ -4,7 +4,6 @@ ABuildableBlock::ABuildableBlock()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-    //TODO: Disucss, is this structure ok? or would just setting the preview to be 0.33 in editor scale be better?
     SceneComponentRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component Root"));
     RootComponent = SceneComponentRoot;
 
@@ -54,13 +53,12 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
         return nullptr;
     }
 
-    //TODO: Disucss, can I check if it implements UBuildable, before I spawn it? 
-
-    const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
-    if (!BuildingActor->Implements<UBuildable>())
+    if (!BuildableClass->ImplementsInterface(UBuildable::StaticClass()))
     {
         return nullptr;
     }
+
+    const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
 
     const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
 
