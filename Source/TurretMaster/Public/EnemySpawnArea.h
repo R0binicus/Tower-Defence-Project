@@ -26,11 +26,16 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
+	FTimerHandle EnemySpawnTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	float SpawnRateSeconds = 5.f;
+
 	virtual void BeginPlay() override;
 
 	virtual void Tick(const float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Enemy Spawn Area",
 		meta = (ToolTip = "Spawns an enemy class at a random point in the SpawnVolumeBox"))
-	void SpawnEnemy(const TSubclassOf<AActor> EnemyClass) const;
+	void SpawnEnemy() const;
 };
