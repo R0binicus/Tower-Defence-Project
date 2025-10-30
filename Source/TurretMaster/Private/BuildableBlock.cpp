@@ -4,16 +4,25 @@ ABuildableBlock::ABuildableBlock()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+    //TODO: Disucss, is this structure ok? or would just setting the preview to be 0.33 in editor scale be better?
+    SceneComponentRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component Root"));
+    RootComponent = SceneComponentRoot;
+
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Buildable Block Mesh"));
 	BlockMesh->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
-	RootComponent = BlockMesh;
-
+    BlockMesh->SetupAttachment(RootComponent);
+	
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
 
-    BuildingPreviewMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Building Preview Mesh"));
+    BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
     BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
     BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    BuildingPreviewMeshNew = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh New"));
+    BuildingPreviewMeshNew->SetupAttachment(TurretHardpoint);
+    BuildingPreviewMeshNew->SetRelativeRotation(FRotator(0, 270, 0));
+    BuildingPreviewMeshNew->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     OnBeginCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverEnd);
@@ -25,8 +34,6 @@ void ABuildableBlock::BeginPlay()
 	Super::BeginPlay();
 
     World = GetWorld();
-	
-    //CreatedBuildable = CreateBuildableActor(TestStartBuilding);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
@@ -73,12 +80,7 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
         return;
     }
 
-    if (!BuildingPreviewMesh)
-    {
-        return;
-    }
-
-    SetBuildingPreview(BlockMesh->GetStaticMesh());
+    SetBuildingPreview(TestTurretMesh);
 }
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
@@ -89,7 +91,7 @@ void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
         return;
     }
 
-    if (!BuildingPreviewMesh)
+    if (!BuildingPreviewMeshNew)
     {
         return;
     }
@@ -110,24 +112,32 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     DisableBuildingPreview();
 }
 
-void ABuildableBlock::SetBuildingPreview(UStaticMesh* PreviewMesh)
+void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)
 {
     if (!PreviewMesh)
     {
         return;
     }
 
-    if (!BuildingPreviewMesh)
+    if (!BuildingPreviewMeshNew)
     {
         return;
     }
 
-    BuildingPreviewMesh->SetStaticMesh(PreviewMesh);
-    BuildingPreviewMesh->SetMaterial(0, PreviewMaterial);
+    BuildingPreviewMeshNew->SetSkeletalMesh(PreviewMesh);
+    for (size_t i = 0; i < BuildingPreviewMeshNew->GetNumMaterials(); i++)
+    {
+        BuildingPreviewMeshNew->SetMaterial(i, PreviewMaterial);
+    }
 }
 
 void ABuildableBlock::DisableBuildingPreview()
 {
-    BuildingPreviewMesh->SetStaticMesh(nullptr);
+    if (!BuildingPreviewMeshNew)
+    {
+        return;
+    }
+
+    BuildingPreviewMeshNew->SetSkeletalMesh(nullptr);
 }
 
