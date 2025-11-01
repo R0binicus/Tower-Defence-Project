@@ -43,6 +43,6 @@ void AEnemySpawnArea::SpawnEnemy() const
     SpawnLocation.Y += FMath::RandRange(-SpawnVolume.Y, SpawnVolume.Y);
     SpawnLocation.Z += FMath::RandRange(-SpawnVolume.Z, SpawnVolume.Z);
 
-    const TObjectPtr<AActor> NewEnemy = World->SpawnActor<AActor>(EnemyToSpawn, SpawnLocation, CollectibleRotation);
+    const TObjectPtr<AEnemy> NewEnemy = World->SpawnActor<AEnemy>(EnemyToSpawn, SpawnLocation, CollectibleRotation);
 }
 
