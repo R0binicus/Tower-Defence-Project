@@ -14,6 +14,10 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Enemt",
+		meta = (ToolTip = "Sets the enemy's destination"))
+	void SetDestination(const FVector NewDestination);
+
 protected:
 	virtual void BeginPlay() override;
 

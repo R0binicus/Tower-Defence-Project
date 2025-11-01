@@ -27,6 +27,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	TObjectPtr<AActor> EnemyDestination;
+
 	FTimerHandle EnemySpawnTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
