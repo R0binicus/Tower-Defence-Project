@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Damageable.h"
 #include "Enemy.generated.h"
 
 UCLASS()
-class TURRETMASTER_API AEnemy : public ACharacter
+class TURRETMASTER_API AEnemy : public ACharacter, public IDamageable
 {
 	GENERATED_BODY()
 
