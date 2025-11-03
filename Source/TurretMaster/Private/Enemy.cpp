@@ -11,11 +11,27 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AEnemy::TakeDamage_Implementation(float DamageTaken)
+{
+	CurrentHealth = CurrentHealth - DamageTaken;
+
+	if (CurrentHealth <= 0.f)
+	{
+		bIsDead = true;
+	}
+}
+
+void AEnemy::Death_Implementation()
+{
+	SetDestination(GetActorLocation());
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
