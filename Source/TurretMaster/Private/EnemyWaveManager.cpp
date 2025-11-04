@@ -9,7 +9,6 @@ void AEnemyWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// TODO, Discuss BeginPlay exceution order issue
 	auto TestStartWave = [this]()
 		{
 			TriggerNextWaveSpawning();

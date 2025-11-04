@@ -69,19 +69,9 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
-	// TODO: Discuss, I could imagine a problem with this system being that a 
-	// new wave being triggered could override the previous, if it wasn't done.
-	// Realistically, don't think this is a problem for this project. 
-	// However how might one solve this? Have wave spawner class, that is created
-	// to spawn a wave, then deletes itself (or disabled itself for an object pool)
-	// that way two waves could be apwned at once? maybe some type of queue
-
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
 	void TriggerNextWaveSpawning();
-
-	// TODO: Discuss, how could I make this have convenient out reference   
-	// output nodes for a blueprint?
 
 	//UFUNCTION(BlueprintCallable,BlueprintPure = false, Category = "EnemyWaveManager",
 		//meta = (ToolTip = "Gets random spawn area, and weighted random enemy class"))
@@ -100,8 +90,6 @@ protected:
 	void WavesComplete();
 
 	// Utility functions
-
-	// TODO: Discuss, template doesn't work in blueprints right?
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))

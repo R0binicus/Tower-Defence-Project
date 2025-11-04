@@ -25,9 +25,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy Spawn Area")
 	FVector SpawnVolume;
 
-	UPROPERTY()
-	TObjectPtr<UWorld> World;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
 	TObjectPtr<AActor> EnemyDestination;
 

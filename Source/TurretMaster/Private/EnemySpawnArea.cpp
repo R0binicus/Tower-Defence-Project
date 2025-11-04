@@ -13,7 +13,6 @@ void AEnemySpawnArea::BeginPlay()
 {
 	Super::BeginPlay();
 
-    World = GetWorld();
 	SpawnVolume = SpawnVolumeBox->GetUnscaledBoxExtent();
 }
 
@@ -29,11 +28,6 @@ void AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
         return;
     }
 
-    if (!World)
-    {
-        return;
-    }
-
     const FRotator CollectibleRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
 
     FVector SpawnLocation = GetActorLocation();
@@ -41,7 +35,7 @@ void AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
     SpawnLocation.Y += FMath::RandRange(-SpawnVolume.Y, SpawnVolume.Y);
     SpawnLocation.Z += FMath::RandRange(-SpawnVolume.Z, SpawnVolume.Z);
 
-    const TObjectPtr<AEnemy> NewEnemy = World->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
+    const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
     if (!NewEnemy)
     {
         return;
