@@ -8,6 +8,10 @@ AEnemyWaveManager::AEnemyWaveManager()
 void AEnemyWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FTimerDelegate TimerDelagate;
+	TimerDelagate.BindUObject(this, &AEnemyWaveManager::SpawnNewEnemy, SpawnAreaToSpawn, EnemyToSpawn);
+	GetWorldTimerManager().SetTimer(EnemySpawnTimer, TimerDelagate, SpawnRateSeconds, true);
 }
 
 void AEnemyWaveManager::Tick(float DeltaTime)
@@ -25,9 +29,14 @@ void AEnemyWaveManager::MakeWaveEnemy()
 
 }
 
-void AEnemyWaveManager::SpawnNewEnemy()
+void AEnemyWaveManager::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass)
 {
+	if (!SpawnArea)
+	{
+		return;
+	}
 
+	SpawnArea->SpawnEnemy(NewEnemyClass);
 }
 
 void AEnemyWaveManager::WavesComplete()

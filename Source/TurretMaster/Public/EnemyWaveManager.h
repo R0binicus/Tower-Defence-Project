@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EnemyWaveData.h"
+#include "EnemySpawnArea.h"
 #include "Enemy.h"
 #include "EnemyWaveManager.generated.h"
 
@@ -27,8 +28,19 @@ public:
 	int32 GetCurrentWaveNum() { return CurrentWaveNum; };
 
 protected:
+	FTimerHandle EnemySpawnTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	float SpawnRateSeconds = 5.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	TSubclassOf<AEnemy> EnemyToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	AEnemySpawnArea* SpawnAreaToSpawn; // using TObjectPtr breaks BindUObject 
+
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
-	//TArray<TObjectPtr<AEnemySpawnArea>> SelectedSpawnAreas;
+	//TArray<TObjectPtr<AEnemySpawnArea>> SpawnAreas;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<FEnemyWaveData> EnemyWaveData;
@@ -66,7 +78,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Spawns a new enemy, not necessaraly part of a wave"))
-	void SpawnNewEnemy();
+	void SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))

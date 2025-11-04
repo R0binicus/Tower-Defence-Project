@@ -15,8 +15,6 @@ void AEnemySpawnArea::BeginPlay()
 
     World = GetWorld();
 	SpawnVolume = SpawnVolumeBox->GetUnscaledBoxExtent();
-
-    GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemySpawnArea::SpawnEnemy, SpawnRateSeconds, true);
 }
 
 void AEnemySpawnArea::Tick(const float DeltaTime)
@@ -24,9 +22,9 @@ void AEnemySpawnArea::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemySpawnArea::SpawnEnemy() const
+void AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
 {
-    if (!EnemyToSpawn)
+    if (!NewEnemyClass)
     {
         return;
     }
@@ -43,7 +41,7 @@ void AEnemySpawnArea::SpawnEnemy() const
     SpawnLocation.Y += FMath::RandRange(-SpawnVolume.Y, SpawnVolume.Y);
     SpawnLocation.Z += FMath::RandRange(-SpawnVolume.Z, SpawnVolume.Z);
 
-    const TObjectPtr<AEnemy> NewEnemy = World->SpawnActor<AEnemy>(EnemyToSpawn, SpawnLocation, CollectibleRotation);
+    const TObjectPtr<AEnemy> NewEnemy = World->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
     if (!NewEnemy)
     {
         return;
