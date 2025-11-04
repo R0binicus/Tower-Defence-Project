@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Enemy.h"
 #include "EnemySpawnArea.generated.h"
 
 UCLASS()
@@ -18,13 +19,16 @@ protected:
 	TObjectPtr<UBoxComponent> SpawnVolumeBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	TSubclassOf<AActor> EnemyToSpawn;
+	TSubclassOf<AEnemy> EnemyToSpawn;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy Spawn Area")
 	FVector SpawnVolume;
 
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	TObjectPtr<AActor> EnemyDestination;
 
 	FTimerHandle EnemySpawnTimer;
 
