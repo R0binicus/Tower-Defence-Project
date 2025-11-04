@@ -1,5 +1,4 @@
 #include "EnemyWaveManager.h"
-#include "Kismet/KismetArrayLibrary.h"
 
 AEnemyWaveManager::AEnemyWaveManager()
 {
@@ -50,7 +49,7 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 	ShuffleArray(PendingEnemyWaveSpawns);
 	for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
 	{
-		int32 SpawnAreaIndex = GetRandomIndexFromArray(CurrentWaveData.SelectedSpawnAreas);
+		int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
 		if (SpawnAreaIndex == -1)
 		{
 			return;
@@ -98,7 +97,7 @@ TSubclassOf<AEnemy> AEnemyWaveManager::GetWeightedEnemy()
 }
 
 template<typename T>
-int32 AEnemyWaveManager::GetRandomIndexFromArray(const TArray<T>& Array) const
+int32 AEnemyWaveManager::GetRandomArrayIndex(const TArray<T>& Array) const
 {
 	if (Array.IsEmpty())
 	{

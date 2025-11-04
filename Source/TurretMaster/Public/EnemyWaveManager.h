@@ -96,7 +96,7 @@ protected:
 	TSubclassOf<AEnemy> GetWeightedEnemy();
 
 	template<typename T>
-	int32 GetRandomIndexFromArray(const TArray<T>& Array) const;
+	int32 GetRandomArrayIndex(const TArray<T>& Array) const;
 
 	template<typename T>
 	void ShuffleArray(TArray<T>& Array) const;
