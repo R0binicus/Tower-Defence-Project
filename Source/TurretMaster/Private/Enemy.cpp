@@ -25,6 +25,7 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 
 	if (CurrentHealth <= 0.f)
 	{
+		CurrentHealth = 0;
 		bIsDead = true;
 	}
 }
