@@ -19,7 +19,7 @@ struct FEnemyWaveData
 	// TODO: Discuss, how do i access this in the editor?
 	// TODO: Is there any problem with using int32 for editor accesible stuff?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData")
-	TMap<TSubclassOf<AEnemy>, int32> EnemyAmountMap;
+	TMap<TSubclassOf<AEnemy>, int32> EnemyAmounts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData")
 	TArray<TObjectPtr<AEnemySpawnArea>> SelectedSpawnAreas;
@@ -28,8 +28,8 @@ struct FEnemyWaveData
 	{
 	}
 
-	FEnemyWaveData(const float InWaveDelay, const float InSpawnPeriod, const TMap<TSubclassOf<AEnemy>, int32>& InEnemyAmountMap, const TArray<TObjectPtr<AEnemySpawnArea>>& InSelectedSpawnAreas) :
-		WaveDelay(InWaveDelay), SpawnPeriod(InSpawnPeriod), EnemyAmountMap(InEnemyAmountMap), SelectedSpawnAreas(InSelectedSpawnAreas)
+	FEnemyWaveData(const float InWaveDelay, const float InSpawnPeriod, const TMap<TSubclassOf<AEnemy>, int32>& InEnemyAmounts, const TArray<TObjectPtr<AEnemySpawnArea>>& InSelectedSpawnAreas) :
+		WaveDelay(InWaveDelay), SpawnPeriod(InSpawnPeriod), EnemyAmounts(InEnemyAmounts), SelectedSpawnAreas(InSelectedSpawnAreas)
 	{
 	}
 };

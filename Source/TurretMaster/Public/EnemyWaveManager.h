@@ -28,17 +28,6 @@ public:
 	int32 GetCurrentWaveNum() { return CurrentWaveNum; };
 
 protected:
-	FTimerHandle EnemySpawnTimer;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	float SpawnRateSeconds = 5.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	TSubclassOf<AEnemy> EnemyToSpawn;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	AEnemySpawnArea* SpawnAreaToSpawn; // using TObjectPtr breaks BindUObject 
-
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	//TArray<TObjectPtr<AEnemySpawnArea>> SpawnAreas;
 
@@ -57,6 +46,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	bool bIsSpawningNewWave;
 
+	// Indivigual wave variables
+
+	UPROPERTY(BlueprintReadWrite, Category = "EnemyWaveManager")
+	FTimerHandle EnemySpawnTimer;
+
+	FTimerDelegate EnemySpawnTimerDelegate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
+	TArray<TSubclassOf<AEnemy>> PendingEnemyWaveSpawns;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	float SpawnRateSeconds = 5.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	TSubclassOf<AEnemy> EnemyToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
+	AEnemySpawnArea* SpawnAreaToSpawn; // using TObjectPtr breaks BindUObject 
+
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
@@ -70,7 +78,14 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
-	void TriggerNextWaveSpawn();
+	void TriggerNextWaveSpawning();
+
+	// TODO: Discuss, how could I make this have convenient out reference   
+	// output nodes for a blueprint?
+
+	//UFUNCTION(BlueprintCallable,BlueprintPure = false, Category = "EnemyWaveManager",
+		//meta = (ToolTip = "Gets random spawn area, and weighted random enemy class"))
+	//void GetNextEnemyData(AEnemySpawnArea* OutSpawnArea, TSubclassOf<AEnemy> OutEnemyClass) const;
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Spawns a new enemy, as part of the enemy wave spawning sequence"))
