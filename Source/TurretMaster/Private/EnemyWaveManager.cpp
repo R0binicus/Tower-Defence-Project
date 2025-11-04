@@ -9,13 +9,13 @@ void AEnemyWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto TestStartWave = [this]()
-		{
-			TriggerNextWaveSpawning();
-		};
-	FTimerHandle TestStartWaveTimer;
-	GetWorldTimerManager().ClearTimer(TestStartWaveTimer);
-	TestStartWaveTimer = GetWorldTimerManager().SetTimerForNextTick(TestStartWave);
+	if (!EnemyWaveData.IsValidIndex(0))
+	{
+		return;
+	}
+
+	FEnemyWaveData& FirstWaveData = EnemyWaveData[0];
+	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, FirstWaveData.WaveDelay, false);
 }
 
 void AEnemyWaveManager::Tick(float DeltaTime)
@@ -25,11 +25,18 @@ void AEnemyWaveManager::Tick(float DeltaTime)
 
 void AEnemyWaveManager::TriggerNextWaveSpawning()
 {
-	FEnemyWaveData& WaveData = EnemyWaveData[0];
+	int32 CurrentWaveIndex = CurrentWaveNum;
+	CurrentWaveNum++;
 
-	int32 NewWaveNumber = 0;
+	FEnemyWaveData& CurrentWaveData = EnemyWaveData[CurrentWaveIndex];
+
+	if (EnemyWaveData.Num() > CurrentWaveNum)
+	{
+		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, CurrentWaveData.WaveDelay, false);
+	}
+
 	PendingEnemyWaveSpawns.Empty();
-	for (const TPair<TSubclassOf<AEnemy>, int32>& Pair : WaveData.EnemyAmounts)
+	for (const TPair<TSubclassOf<AEnemy>, int32>& Pair : CurrentWaveData.EnemyAmounts)
 	{
 		int32 Number = Pair.Value;
 		PendingEnemyWaveSpawns.Reserve(PendingEnemyWaveSpawns.Num() + Number);
@@ -41,7 +48,7 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 
 	for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
 	{
-		int32 SpawnAreaIndex = GetRandomIndexFromArray(WaveData.SelectedSpawnAreas);
+		int32 SpawnAreaIndex = GetRandomIndexFromArray(CurrentWaveData.SelectedSpawnAreas);
 		if (SpawnAreaIndex == -1)
 		{
 			return;
@@ -53,7 +60,7 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 			return;
 		}
 
-		AEnemySpawnArea* NextEnemySpawnArea = WaveData.SelectedSpawnAreas[SpawnAreaIndex];
+		AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
 		TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[EnemyClassIndex];
 
 		PendingEnemyWaveSpawns.RemoveAtSwap(EnemyClassIndex);

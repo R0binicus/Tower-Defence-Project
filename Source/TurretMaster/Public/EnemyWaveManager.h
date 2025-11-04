@@ -41,7 +41,7 @@ protected:
 	FTimerHandle NextWaveTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
-	int32 CurrentWaveNum;
+	int32 CurrentWaveNum = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	bool bIsSpawningNewWave;
