@@ -15,22 +15,34 @@ void AEnemyWaveManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemyWaveManager::TriggerNextWaveSpawn() const
+void AEnemyWaveManager::TriggerNextWaveSpawn()
 {
 
 }
 
-void AEnemyWaveManager::MakeWaveEnemy() const
+void AEnemyWaveManager::MakeWaveEnemy()
 {
 
 }
 
-void AEnemyWaveManager::SpawnNewEnemy() const
+void AEnemyWaveManager::SpawnNewEnemy()
 {
 
 }
 
-void AEnemyWaveManager::WavesComplete() const
+void AEnemyWaveManager::WavesComplete()
 {
 
+}
+
+TSubclassOf<AEnemy> AEnemyWaveManager::GetWeightedEnemy()
+{
+	return TSubclassOf<AEnemy>();
+}
+
+
+template<typename T>
+int32 AEnemyWaveManager::GetRandomIndexFromArray(const TArray<T>& Array) const
+{
+	return int32();
 }

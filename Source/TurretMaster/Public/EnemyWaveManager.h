@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "EnemyWaveData.h"
+#include "Enemy.h"
 #include "EnemyWaveManager.generated.h"
 
 UCLASS()
@@ -48,17 +49,28 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
-	void TriggerNextWaveSpawn() const;
+	void TriggerNextWaveSpawn();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Spawns a new enemy, as part of the enemy wave spawning sequence"))
-	void MakeWaveEnemy() const;
+	void MakeWaveEnemy();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Spawns a new enemy, not necessaraly part of a wave"))
-	void SpawnNewEnemy() const;
+	void SpawnNewEnemy();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))
-	void WavesComplete() const;
+	void WavesComplete();
+
+	// Utility functions
+
+	// TODO: Discuss, template doesn't work in blueprints right?
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "______ when all the waves are complete"))
+	TSubclassOf<AEnemy> GetWeightedEnemy();
+
+	template<typename T>
+	int32 GetRandomIndexFromArray(const TArray<T>& Array) const;
 };
