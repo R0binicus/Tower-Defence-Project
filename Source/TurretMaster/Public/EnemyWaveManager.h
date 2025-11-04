@@ -97,4 +97,7 @@ protected:
 
 	template<typename T>
 	int32 GetRandomIndexFromArray(const TArray<T>& Array) const;
+
+	template<typename T>
+	void ShuffleArray(TArray<T>& Array) const;
 };

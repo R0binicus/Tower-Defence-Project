@@ -1,4 +1,5 @@
 #include "EnemyWaveManager.h"
+#include "Kismet/KismetArrayLibrary.h"
 
 AEnemyWaveManager::AEnemyWaveManager()
 {
@@ -46,6 +47,7 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 		}
 	}
 
+	ShuffleArray(PendingEnemyWaveSpawns);
 	for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
 	{
 		int32 SpawnAreaIndex = GetRandomIndexFromArray(CurrentWaveData.SelectedSpawnAreas);
@@ -54,17 +56,8 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 			return;
 		}
 
-		int32 EnemyClassIndex = GetRandomIndexFromArray(PendingEnemyWaveSpawns);
-		if (EnemyClassIndex == -1)
-		{
-			return;
-		}
-
 		AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
-		TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[EnemyClassIndex];
-
-		PendingEnemyWaveSpawns.RemoveAtSwap(EnemyClassIndex);
-		i--;
+		TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[i];
 
 		SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 	}
@@ -114,4 +107,18 @@ int32 AEnemyWaveManager::GetRandomIndexFromArray(const TArray<T>& Array) const
 
 	int RandomIndex = FMath::RandRange(0, Array.Num() - 1);
 	return RandomIndex;
+}
+
+template<typename T>
+void AEnemyWaveManager::ShuffleArray(TArray<T>& Array) const
+{
+	int32 LastIndex = Array.Num() - 1;
+	for (int32 i = 0; i <= LastIndex; ++i)
+	{
+		int32 RandIndex = FMath::RandRange(i, LastIndex);
+		if (i != RandIndex)
+		{
+			Array.Swap(i, RandIndex);
+		}
+	}
 }
