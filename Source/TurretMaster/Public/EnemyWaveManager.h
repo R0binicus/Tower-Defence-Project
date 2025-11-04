@@ -14,10 +14,19 @@ class TURRETMASTER_API AEnemyWaveManager : public AActor
 public:	
 	AEnemyWaveManager();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Gets the number of enemies remaining in the wave"))
+	int32 GetEnemiesRemaining() const { return EnemiesRemaining; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Gets a reference to the NextWaveTimer"))
+	FTimerHandle& GetNextWaveTimer() { return NextWaveTimer; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Gets current wave number"))
+	int32 GetCurrentWaveNum() { return CurrentWaveNum; };
+
 protected:
-
-	
-
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	//TArray<TObjectPtr<AEnemySpawnArea>> SelectedSpawnAreas;
 
@@ -28,7 +37,7 @@ protected:
 	int32 EnemiesRemaining;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
-	float NextWaveCountdown;
+	FTimerHandle NextWaveTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	int32 CurrentWaveNum;
