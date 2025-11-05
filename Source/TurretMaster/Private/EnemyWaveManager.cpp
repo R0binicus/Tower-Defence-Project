@@ -14,8 +14,13 @@ void AEnemyWaveManager::BeginPlay()
 		return;
 	}
 
-	FEnemyWaveData& FirstWaveData = EnemyWaveData[0];
-	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, FirstWaveData.WaveDelay, false);
+	float FirstWaveDelay = EnemyWaveData[0].WaveDelay;
+	if (FirstWaveDelay == 0)
+	{
+		FirstWaveDelay = 0.001;
+	}
+
+	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, FirstWaveDelay, false);
 }
 
 void AEnemyWaveManager::Tick(float DeltaTime)
@@ -34,6 +39,11 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 	if (EnemyWaveData.Num() > CurrentWaveNum)
 	{
 		float NextWaveDelay = EnemyWaveData[CurrentWaveIndex + 1].WaveDelay;
+		if (NextWaveDelay == 0)
+		{
+			NextWaveDelay = 0.001;
+		}
+
 		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, NextWaveDelay, false);
 	}
 
@@ -58,8 +68,17 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 		return;
 	}
 
-	float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod/ PendingEnemyWaveSpawns.Num();
+	if (CurrentWaveData.SpawnPeriod == 0.f)
+	{
+		// MakeWaveEnemy increments CurrentWaveEnemyIndex
+		while (CurrentWaveEnemyIndex <= PendingEnemyWaveSpawns.Num() - 1)
+		{
+			MakeWaveEnemy();
+		}
+		return;
+	}
 
+	float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod / PendingEnemyWaveSpawns.Num();
 	WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num() - 1);
 }
 
