@@ -87,11 +87,6 @@ void AEnemyWaveManager::SetupEnemySpawning()
 	WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
 }
 
-//void AEnemyWaveManager::GetNextEnemyData(AEnemySpawnArea* OutSpawnArea, TSubclassOf<AEnemy> OutEnemyClass) const
-//{
-	//OutSpawnArea
-//}
-
 void AEnemyWaveManager::MakeWaveEnemy()
 {
 	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
@@ -145,6 +140,7 @@ void AEnemyWaveManager::OnEnemyDeathHandler()
 void AEnemyWaveManager::WaveComplete()
 {
 	StartWavePrepStage(CurrentWaveNum);
+	// Also trigger some juice when a wave is complete
 }
 
 void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
@@ -175,11 +171,6 @@ void AEnemyWaveManager::SkipPrepStage()
 void AEnemyWaveManager::WavesComplete()
 {
 	// Trigger victory contitions
-}
-
-TSubclassOf<AEnemy> AEnemyWaveManager::GetWeightedEnemy()
-{
-	return TSubclassOf<AEnemy>();
 }
 
 template<typename T>

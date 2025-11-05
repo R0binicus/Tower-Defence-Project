@@ -29,9 +29,6 @@ public:
 	int32 GetCurrentWaveNum() { return CurrentWaveNum; };
 
 protected:
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
-	//TArray<TObjectPtr<AEnemySpawnArea>> SpawnAreas;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	float WavePrepTime = 0.5f;
 
@@ -92,10 +89,6 @@ protected:
 		meta = (ToolTip = "Sets up the enemies to spawn over time, or all at once"))
 	void SetupEnemySpawning();
 
-	//UFUNCTION(BlueprintCallable,BlueprintPure = false, Category = "EnemyWaveManager",
-		//meta = (ToolTip = "Gets random spawn area, and weighted random enemy class"))
-	//void GetNextEnemyData(AEnemySpawnArea* OutSpawnArea, TSubclassOf<AEnemy> OutEnemyClass) const;
-
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Spawns a new enemy, as part of the enemy wave spawning sequence"))
 	void MakeWaveEnemy();
@@ -121,14 +114,10 @@ protected:
 	void SkipPrepStage();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
-		meta = (ToolTip = "______ when all the waves are complete"))
+		meta = (ToolTip = "Triggers victory when all the waves are complete"))
 	void WavesComplete();
 
 	// Utility functions
-
-	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
-		meta = (ToolTip = "______ when all the waves are complete"))
-	TSubclassOf<AEnemy> GetWeightedEnemy();
 
 	template<typename T>
 	int32 GetRandomArrayIndex(const TArray<T>& Array) const;
