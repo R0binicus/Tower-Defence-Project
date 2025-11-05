@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Buildable.h"
+#include "DataAssets/BuildingDataAsset.h"
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
@@ -41,13 +42,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	TScriptInterface<IBuildable> CreatedBuildable = nullptr;
 
-	//TODO: Disucss, is there a better way of doing this so it requires IBuildable?
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block", meta = (MustImplement = "Buildable"))
-	TSubclassOf<AActor> TestStartBuilding;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Buildable Block")
-	TObjectPtr<USkeletalMesh> TestTurretMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	TObjectPtr<UBuildingDataAsset> TestBuildingDataAsset;
 
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
