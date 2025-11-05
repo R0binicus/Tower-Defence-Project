@@ -33,6 +33,9 @@ protected:
 	//TArray<TObjectPtr<AEnemySpawnArea>> SpawnAreas;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
+	float WavePrepTime = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<FEnemyWaveData> EnemyWaveData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
@@ -106,6 +109,14 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Handles recieving an OnEnemyDeath event, reducing the EnemiesRemaining counter and related logic"))
 	void OnEnemyDeathHandler();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Handles what to do after the wave is complete"))
+	void WaveComplete();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Starts the waiting period, before the next wave starts"))
+	void StartWavePrepStage(int32 WaveIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))
