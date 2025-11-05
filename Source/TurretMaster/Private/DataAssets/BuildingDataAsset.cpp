@@ -1,2 +1,0 @@
-#include "DataAssets/BuildingDataAsset.h"
-
