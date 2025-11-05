@@ -134,6 +134,27 @@ void AEnemyWaveManager::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AE
 void AEnemyWaveManager::OnEnemyDeathHandler()
 {
 	EnemiesRemaining--;
+
+	if (EnemiesRemaining > 0)
+	{
+		return;
+	}
+
+	if (EnemyWaveData.Num() <= CurrentWaveNum)
+	{
+		return;
+	}
+
+	float NextWaveDelay = EnemyWaveData[CurrentWaveNum].WaveDelay;
+	if (NextWaveDelay == 0)
+	{
+		NextWaveDelay = 0.001;
+	}
+
+	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
+	StartNextWave();
+}
+
 }
 
 void AEnemyWaveManager::WavesComplete()
