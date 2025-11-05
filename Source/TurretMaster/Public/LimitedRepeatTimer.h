@@ -14,8 +14,6 @@ class TURRETMASTER_API ULimitedRepeatTimer : public UObject
 	GENERATED_BODY()
 
 public:
-	const FTimerHandle* GetTimerHandle() const { return &TimerHandle; };
-
 	void SetupTimer(TObjectPtr<UWorld> InWorld, FTimerDelegate& InCallerDelagate, float InRate, int32 InRepeats);
 
 protected:

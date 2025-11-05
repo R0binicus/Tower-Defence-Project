@@ -1,9 +1,5 @@
 #include "LimitedRepeatTimer.h"
 
-//ULimitedRepeatTimer::ULimitedRepeatTimer()
-//{
-//}
-
 void ULimitedRepeatTimer::SetupTimer(TObjectPtr<UWorld> InWorld, FTimerDelegate& InCallerDelagate, float InRate, int32 InRepeats)
 {
 	if (InRepeats == 0)
@@ -21,17 +17,25 @@ void ULimitedRepeatTimer::SetupTimer(TObjectPtr<UWorld> InWorld, FTimerDelegate&
 
 	TimerDelagate.BindUObject(this, &ULimitedRepeatTimer::RepeatFunction, InCallerDelagate, InRate);
 
-	InWorld->GetTimerManager().SetTimer(TimerHandle, TimerDelagate, InRate, false);
+	World->GetTimerManager().ClearTimer(TimerHandle);
+	World->GetTimerManager().SetTimer(TimerHandle, TimerDelagate, InRate, false);
 }
 
 void ULimitedRepeatTimer::RepeatFunction(FTimerDelegate CallerDelagate, float RepeatRate)
 {
 	CallerDelagate.Execute();
 
+	RemainingRepeats--;
+	if (RemainingRepeats <= 0)
+	{
+		return;
+	}
+
 	if (!World)
 	{
 		return;
 	}
 
+	World->GetTimerManager().ClearTimer(TimerHandle);
 	World->GetTimerManager().SetTimer(TimerHandle, TimerDelagate, RepeatRate, false);
 }
