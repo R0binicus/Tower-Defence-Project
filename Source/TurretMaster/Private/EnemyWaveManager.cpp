@@ -77,6 +77,8 @@ void AEnemyWaveManager::SetupEnemySpawning()
 		return;
 	}
 
+	EnemiesRemaining = 0;
+
 	if (CurrentWaveData.SpawnPeriod == 0.f)
 	{
 		// MakeWaveEnemy increments CurrentWaveEnemyIndex
@@ -114,6 +116,7 @@ void AEnemyWaveManager::MakeWaveEnemy()
 
 	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 
+	EnemiesRemaining++;
 	CurrentWaveEnemyIndex++;
 }
 
@@ -124,7 +127,13 @@ void AEnemyWaveManager::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AE
 		return;
 	}
 
-	SpawnArea->SpawnEnemy(NewEnemyClass);
+	TObjectPtr<AEnemy> TempEnemy = SpawnArea->SpawnEnemy(NewEnemyClass);
+	TempEnemy->OnEnemyDeath.AddUniqueDynamic(this, &AEnemyWaveManager::OnEnemyDeathHandler);
+}
+
+void AEnemyWaveManager::OnEnemyDeathHandler()
+{
+	EnemiesRemaining--;
 }
 
 void AEnemyWaveManager::WavesComplete()

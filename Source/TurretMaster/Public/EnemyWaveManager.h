@@ -104,6 +104,10 @@ protected:
 	void SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Handles recieving an OnEnemyDeath event, reducing the EnemiesRemaining counter and related logic"))
+	void OnEnemyDeathHandler();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))
 	void WavesComplete();
 

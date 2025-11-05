@@ -16,7 +16,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Enemy Spawn Area",
 		meta = (ToolTip = "Spawns an enemy class at a random point in the SpawnVolumeBox"))
-	void SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const;
+	AEnemy* SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Enemy Spawn Area")

@@ -21,11 +21,11 @@ void AEnemySpawnArea::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
+AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
 {
     if (!NewEnemyClass)
     {
-        return;
+        return nullptr;
     }
 
     const FRotator CollectibleRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
@@ -38,14 +38,16 @@ void AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
     const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
     if (!NewEnemy)
     {
-        return;
+        return nullptr;
     }
 
     if (!EnemyDestination)
     {
-        return;
+        return nullptr;
     }
 
     NewEnemy->SetDestination(EnemyDestination->GetActorLocation());
+
+    return NewEnemy;
 }
 
