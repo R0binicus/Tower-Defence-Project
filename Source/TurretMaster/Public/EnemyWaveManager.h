@@ -5,6 +5,7 @@
 #include "EnemyWaveData.h"
 #include "EnemySpawnArea.h"
 #include "Enemy.h"
+#include "LimitedRepeatTimer.h"
 #include "EnemyWaveManager.generated.h"
 
 UCLASS()
@@ -47,6 +48,15 @@ protected:
 	bool bIsSpawningNewWave;
 
 	// Indivigual wave variables
+
+	UPROPERTY()
+	TObjectPtr<ULimitedRepeatTimer> WaveSpawnTimer;
+
+	UPROPERTY(BlueprintReadWrite, Category = "EnemyWaveManager")
+	FEnemyWaveData CurrentWaveData;
+
+	UPROPERTY(BlueprintReadWrite, Category = "EnemyWaveManager")
+	int32 CurrentWaveEnemyIndex;
 
 	UPROPERTY(BlueprintReadWrite, Category = "EnemyWaveManager")
 	FTimerHandle EnemySpawnTimer;

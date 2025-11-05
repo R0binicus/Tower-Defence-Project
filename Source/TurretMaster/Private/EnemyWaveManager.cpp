@@ -28,7 +28,8 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 	int32 CurrentWaveIndex = CurrentWaveNum;
 	CurrentWaveNum++;
 
-	FEnemyWaveData& CurrentWaveData = EnemyWaveData[CurrentWaveIndex];
+	CurrentWaveData = EnemyWaveData[CurrentWaveIndex];
+	CurrentWaveEnemyIndex = 0;
 
 	if (EnemyWaveData.Num() > CurrentWaveNum)
 	{
@@ -45,21 +46,34 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 			PendingEnemyWaveSpawns.Add(Pair.Key);
 		}
 	}
-
 	ShuffleArray(PendingEnemyWaveSpawns);
-	for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
-	{
-		int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
-		if (SpawnAreaIndex == -1)
+
+	//for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
+	//{
+		//int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
+		//if (SpawnAreaIndex == -1)
+		//{
+		//	return;
+		//}
+
+		//AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
+		//TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[i];
+
+		//SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
+
+		FTimerDelegate TimerDelagate;
+		TimerDelagate.BindUObject(this, &AEnemyWaveManager::MakeWaveEnemy);
+
+		WaveSpawnTimer = NewObject<ULimitedRepeatTimer>();
+		if (!WaveSpawnTimer)
 		{
 			return;
 		}
 
-		AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
-		TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[i];
-
-		SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
-	}
+		WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, 0.5, PendingEnemyWaveSpawns.Num() - 1);
+		//GetWorldTimerManager().ClearTimer(TestStartWaveTimer);
+		//TestStartWaveTimer = GetWorldTimerManager().SetTimerForNextTick(TestWave);
+	//}
 
 	//GetNextEnemyData(NextEnemySpawnArea, NextEnemyClass);
 	//EnemySpawnTimerDelegate.BindUObject(this, &AEnemyWaveManager::MakeWaveEnemy, SpawnAreaToSpawn, EnemyToSpawn);
@@ -73,7 +87,23 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 
 void AEnemyWaveManager::MakeWaveEnemy()
 {
+	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
+	if (SpawnAreaIndex == -1)
+	{
+		return;
+	}
 
+	if (!PendingEnemyWaveSpawns.IsValidIndex(CurrentWaveEnemyIndex))
+	{
+		return;
+	}
+
+	AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
+	TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
+
+	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
+
+	CurrentWaveEnemyIndex++;
 }
 
 void AEnemyWaveManager::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass)

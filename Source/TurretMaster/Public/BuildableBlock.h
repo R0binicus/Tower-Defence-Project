@@ -29,8 +29,8 @@ protected:
 
 	//TODO: Disucss, how does this get set to null???
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
-	TObjectPtr<USkeletalMeshComponent> BuildingPreviewMesh;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	//TObjectPtr<USkeletalMeshComponent> BuildingPreviewMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<USkeletalMeshComponent> BuildingPreviewMeshNew;

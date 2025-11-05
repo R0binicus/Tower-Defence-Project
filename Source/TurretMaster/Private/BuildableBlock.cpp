@@ -14,9 +14,9 @@ ABuildableBlock::ABuildableBlock()
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
 
-    BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
-    BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
-    BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    //BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
+    //BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
+    //BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     BuildingPreviewMeshNew = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh New"));
     BuildingPreviewMeshNew->SetupAttachment(TurretHardpoint);
