@@ -81,7 +81,15 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
-	void TriggerNextWaveSpawning();
+	void StartNextWave();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Sets up the PendingEnemyWaveSpawns array. This adds the enemies from the EnemyWaveData, then shuffles the array"))
+	void SetupEnemySpawnArray();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Sets up the enemies to spawn over time, or all at once"))
+	void SetupEnemySpawning();
 
 	//UFUNCTION(BlueprintCallable,BlueprintPure = false, Category = "EnemyWaveManager",
 		//meta = (ToolTip = "Gets random spawn area, and weighted random enemy class"))
