@@ -64,8 +64,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "EnemyWaveManager")
 	FTimerHandle EnemySpawnTimer;
 
-	FTimerDelegate EnemySpawnTimerDelegate;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<TSubclassOf<AEnemy>> PendingEnemyWaveSpawns;
 
@@ -117,6 +115,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the waiting period, before the next wave starts"))
 	void StartWavePrepStage(int32 WaveIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Skips the prep stage, immidietly starting the next wave"))
+	void SkipPrepStage();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "______ when all the waves are complete"))

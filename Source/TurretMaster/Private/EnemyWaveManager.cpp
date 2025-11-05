@@ -35,7 +35,7 @@ void AEnemyWaveManager::StartNextWave()
 		float NextWaveDelay = EnemyWaveData[CurrentWaveIndex + 1].WaveDelay;
 		if (NextWaveDelay == 0)
 		{
-			NextWaveDelay = 0.001;
+			NextWaveDelay = UE_KINDA_SMALL_NUMBER;
 		}
 
 		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::WaveComplete, NextWaveDelay, false);
@@ -139,7 +139,6 @@ void AEnemyWaveManager::OnEnemyDeathHandler()
 		return;
 	}
 
-	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
 	WaveComplete();
 }
 
@@ -159,15 +158,23 @@ void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
 	float NextWaveDelay = EnemyWaveData[WaveIndex].WaveDelay + WavePrepTime;
 	if (NextWaveDelay <= 0.f)
 	{
-		NextWaveDelay = 0.001;
+		NextWaveDelay = UE_KINDA_SMALL_NUMBER;
 	}
 
+	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
 	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::StartNextWave, NextWaveDelay, false);
+}
+
+void AEnemyWaveManager::SkipPrepStage()
+{
+	// Not currently triggered, needs to be set up
+	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
+	StartNextWave();
 }
 
 void AEnemyWaveManager::WavesComplete()
 {
-
+	// Trigger victory contitions
 }
 
 TSubclassOf<AEnemy> AEnemyWaveManager::GetWeightedEnemy()

@@ -10,7 +10,8 @@ struct FEnemyWaveData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData",
+		meta = (ToolTip = "Adds (or removes) time from the base prep time before this wave starts"))
 	float WaveDelay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData")
