@@ -30,7 +30,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
-	float WavePrepTime = 0.5f;
+	float WavePrepTime = 15.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<FEnemyWaveData> EnemyWaveData;
