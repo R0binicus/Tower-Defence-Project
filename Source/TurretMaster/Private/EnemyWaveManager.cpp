@@ -33,7 +33,8 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 
 	if (EnemyWaveData.Num() > CurrentWaveNum)
 	{
-		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, CurrentWaveData.WaveDelay, false);
+		float NextWaveDelay = EnemyWaveData[CurrentWaveIndex + 1].WaveDelay;
+		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::TriggerNextWaveSpawning, NextWaveDelay, false);
 	}
 
 	PendingEnemyWaveSpawns.Empty();
@@ -48,36 +49,18 @@ void AEnemyWaveManager::TriggerNextWaveSpawning()
 	}
 	ShuffleArray(PendingEnemyWaveSpawns);
 
-	//for (size_t i = 0; i < PendingEnemyWaveSpawns.Num(); i++)
-	//{
-		//int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
-		//if (SpawnAreaIndex == -1)
-		//{
-		//	return;
-		//}
+	FTimerDelegate TimerDelagate;
+	TimerDelagate.BindUObject(this, &AEnemyWaveManager::MakeWaveEnemy);
 
-		//AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
-		//TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[i];
+	WaveSpawnTimer = NewObject<ULimitedRepeatTimer>();
+	if (!WaveSpawnTimer)
+	{
+		return;
+	}
 
-		//SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
+	float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod/ PendingEnemyWaveSpawns.Num();
 
-		FTimerDelegate TimerDelagate;
-		TimerDelagate.BindUObject(this, &AEnemyWaveManager::MakeWaveEnemy);
-
-		WaveSpawnTimer = NewObject<ULimitedRepeatTimer>();
-		if (!WaveSpawnTimer)
-		{
-			return;
-		}
-
-		WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, 0.5, PendingEnemyWaveSpawns.Num() - 1);
-		//GetWorldTimerManager().ClearTimer(TestStartWaveTimer);
-		//TestStartWaveTimer = GetWorldTimerManager().SetTimerForNextTick(TestWave);
-	//}
-
-	//GetNextEnemyData(NextEnemySpawnArea, NextEnemyClass);
-	//EnemySpawnTimerDelegate.BindUObject(this, &AEnemyWaveManager::MakeWaveEnemy, SpawnAreaToSpawn, EnemyToSpawn);
-	//GetWorldTimerManager().SetTimer(EnemySpawnTimer, EnemySpawnTimerDelegate, SpawnRateSeconds, false);
+	WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num() - 1);
 }
 
 //void AEnemyWaveManager::GetNextEnemyData(AEnemySpawnArea* OutSpawnArea, TSubclassOf<AEnemy> OutEnemyClass) const
