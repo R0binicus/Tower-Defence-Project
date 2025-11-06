@@ -17,6 +17,8 @@ class TURRETMASTER_API UBuildingButtonWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(BlueprintReadWrite, Category = "BuildingButtonWidget")
+	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
 	// Bind Widget
 
@@ -25,7 +27,4 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> CostTextBlock;
-
-	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
-	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 };
