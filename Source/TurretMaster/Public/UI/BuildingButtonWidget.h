@@ -17,7 +17,7 @@ class TURRETMASTER_API UBuildingButtonWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "BuildingButtonWidget")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BuildingButtonWidget")
 	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
 	// Bind Widget
