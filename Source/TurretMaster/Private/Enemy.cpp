@@ -33,6 +33,7 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 void AEnemy::Death_Implementation()
 {
 	SetDestination(GetActorLocation());
+	OnEnemyDeath.Broadcast();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

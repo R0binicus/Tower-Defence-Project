@@ -14,9 +14,9 @@ ABuildableBlock::ABuildableBlock()
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
 
-    BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
-    BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
-    BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    //BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
+    //BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
+    //BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     BuildingPreviewMeshNew = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh New"));
     BuildingPreviewMeshNew->SetupAttachment(TurretHardpoint);
@@ -78,7 +78,19 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
         return;
     }
 
-    SetBuildingPreview(TestTurretMesh);
+    if (!TestBuildingDataAsset)
+    {
+        return;
+    }
+
+    const TObjectPtr<USkeletalMesh> SkeletalMesh = TestBuildingDataAsset->SkeletalMesh;
+
+    if (!SkeletalMesh)
+    {
+        return;
+    }
+
+    SetBuildingPreview(SkeletalMesh);
 }
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
@@ -105,7 +117,14 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
         return;
     }
 
-    CreatedBuildable = CreateBuildableActor(TestStartBuilding);
+    const TSubclassOf<AActor> BuildableClass = TestBuildingDataAsset->Class;
+
+    if (!BuildableClass)
+    {
+        return;
+    }
+
+    CreatedBuildable = CreateBuildableActor(BuildableClass);
 
     DisableBuildingPreview();
 }

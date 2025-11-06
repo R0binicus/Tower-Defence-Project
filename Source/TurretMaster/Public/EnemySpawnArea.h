@@ -14,32 +14,21 @@ class TURRETMASTER_API AEnemySpawnArea : public AActor
 public:	
 	AEnemySpawnArea();
 
+	UFUNCTION(BlueprintCallable, Category = "Enemy Spawn Area",
+		meta = (ToolTip = "Spawns an enemy class at a random point in the SpawnVolumeBox"))
+	AEnemy* SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Enemy Spawn Area")
 	TObjectPtr<UBoxComponent> SpawnVolumeBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	TSubclassOf<AEnemy> EnemyToSpawn;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy Spawn Area")
 	FVector SpawnVolume;
-
-	UPROPERTY()
-	TObjectPtr<UWorld> World;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
 	TObjectPtr<AActor> EnemyDestination;
 
-	FTimerHandle EnemySpawnTimer;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Spawn Area")
-	float SpawnRateSeconds = 5.f;
-
 	virtual void BeginPlay() override;
 
 	virtual void Tick(const float DeltaTime) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Enemy Spawn Area",
-		meta = (ToolTip = "Spawns an enemy class at a random point in the SpawnVolumeBox"))
-	void SpawnEnemy() const;
 };

@@ -5,6 +5,8 @@
 #include "Damageable.h"
 #include "Enemy.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
+
 UCLASS()
 class TURRETMASTER_API AEnemy : public ACharacter, public IDamageable
 {
@@ -12,6 +14,9 @@ class TURRETMASTER_API AEnemy : public ACharacter, public IDamageable
 
 public:
 	AEnemy();
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Enemy")
+	FOnEnemyDeath OnEnemyDeath;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
