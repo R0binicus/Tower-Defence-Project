@@ -23,7 +23,7 @@ void ULimitedRepeatTimer::SetupTimer(TObjectPtr<UWorld> InWorld, FTimerDelegate&
 
 void ULimitedRepeatTimer::RepeatFunction(FTimerDelegate CallerDelagate, float RepeatRate)
 {
-	CallerDelagate.Execute();
+	CallerDelagate.ExecuteIfBound();
 
 	RemainingRepeats--;
 	if (RemainingRepeats <= 0)

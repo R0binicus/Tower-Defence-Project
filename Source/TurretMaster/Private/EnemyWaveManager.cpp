@@ -151,13 +151,15 @@ void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
 		return;
 	}
 
+	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
+
 	float NextWaveDelay = EnemyWaveData[WaveIndex].WaveDelay + WavePrepTime;
 	if (NextWaveDelay <= 0.f)
 	{
-		NextWaveDelay = UE_KINDA_SMALL_NUMBER;
+		StartNextWave();
+		return;
 	}
 
-	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
 	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::StartNextWave, NextWaveDelay, false);
 }
 
