@@ -2,5 +2,5 @@
 
 void UBuildingsWidget::NativeConstruct()
 {
-
+	Super::NativeConstruct();
 }

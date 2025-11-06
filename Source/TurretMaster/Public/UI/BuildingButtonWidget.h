@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "BuildingButtonWidget.generated.h"
 
@@ -23,8 +24,17 @@ protected:
 	// Bind Widget
 
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
+	TObjectPtr<UButton> Button;
+
+	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
 	TObjectPtr<UImage> BuildingIcon;
 
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> CostTextBlock;
+
+	void NativeConstruct() override;
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
+		meta = (ToolTip = "Triggered when the button is clicked"))
+	void OnButtonClicked();
 };
