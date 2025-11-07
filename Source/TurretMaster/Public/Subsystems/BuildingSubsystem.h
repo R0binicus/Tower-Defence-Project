@@ -26,12 +26,12 @@ public:
 	void SelectedPlaceBuilding(UBuildingDataAsset* BuildingData);
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
-		meta = (ToolTip = "Clears the CurrentPlaceBuildingSelected"))
-	void CancelPlaceBuilding();
-
-	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Tells the building subsystem that a building is placed, then removes appropriate resources"))
 	void BuildingPlaced();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+		meta = (ToolTip = "Clears the CurrentPlaceBuildingSelected"))
+	void CancelPlaceBuilding();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")

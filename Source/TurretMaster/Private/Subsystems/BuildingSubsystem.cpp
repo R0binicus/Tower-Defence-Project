@@ -11,12 +11,13 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
 }
 
-void UBuildingSubsystem::CancelPlaceBuilding()
-{
-	CurrentPlaceBuildingSelected = nullptr;
-}
-
 void UBuildingSubsystem::BuildingPlaced()
 {
 	CancelPlaceBuilding();
+}
+
+void UBuildingSubsystem::CancelPlaceBuilding()
+{
+	CurrentPlaceBuildingSelected = nullptr;
+	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
 }

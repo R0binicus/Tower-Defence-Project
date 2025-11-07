@@ -140,6 +140,14 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     CreatedBuildable = CreateBuildableActor(BuildableClass);
 
     DisableBuildingPreview();
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (!BuildingSubsystem)
+    {
+        return;
+    }
+
+    BuildingSubsystem->BuildingPlaced();
 }
 
 void ABuildableBlock::SetBuildingAsset(UBuildingDataAsset* NewBuilding)
