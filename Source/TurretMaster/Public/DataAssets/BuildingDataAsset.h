@@ -20,6 +20,9 @@ public:
 	FText Description;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
+	int32 Cost;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
 	TObjectPtr<UTexture2D> Icon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")

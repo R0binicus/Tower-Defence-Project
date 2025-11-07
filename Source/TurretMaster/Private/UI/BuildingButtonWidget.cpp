@@ -4,12 +4,26 @@ void UBuildingButtonWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    if (!Button)
+    if (Button)
+    {
+        Button->OnClicked.AddDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
+    }
+    
+    if (!BuildingDataAsset)
     {
         return;
     }
 
-    Button->OnClicked.AddDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
+    if (BuildingIcon)
+    {
+        BuildingIcon->SetBrushFromTexture(BuildingDataAsset->Icon);
+    }
+
+    if (CostTextBlock)
+    {
+        FString FormattedNum = FString::Printf(TEXT("$%i"), BuildingDataAsset->Cost);
+        CostTextBlock->SetText(FText::FromString(FormattedNum));
+    }
 }
 
 void UBuildingButtonWidget::OnButtonClicked()
