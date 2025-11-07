@@ -5,6 +5,8 @@
 #include "DataAssets/BuildingDataAsset.h"
 #include "BuildingSubsystem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
+
 /**
  * Subsystem for managing resources and building structures
  */
@@ -15,6 +17,10 @@ class TURRETMASTER_API UBuildingSubsystem : public UWorldSubsystem
 
 	
 public:
+	// Sent when the player selects a new building type to be placed
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
+	FOnBuildingTypeSelected OnBuildingTypeSelected;
+
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Sets the building subsystem's CurrentPlaceBuildingSelected variable. Used when a player selects the place building button"))
 	void SelectedPlaceBuilding(UBuildingDataAsset* BuildingData);
@@ -30,5 +36,4 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")
 	TObjectPtr<UBuildingDataAsset> CurrentPlaceBuildingSelected = nullptr;
-
 };

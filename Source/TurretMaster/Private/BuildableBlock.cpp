@@ -33,6 +33,14 @@ void ABuildableBlock::BeginPlay()
 	Super::BeginPlay();
 
     World = GetWorld();
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (!BuildingSubsystem)
+    {
+        return;
+    }
+
+    BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
@@ -78,12 +86,12 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
         return;
     }
 
-    if (!TestBuildingDataAsset)
+    if (!BuildingDataAsset)
     {
         return;
     }
 
-    const TObjectPtr<USkeletalMesh> SkeletalMesh = TestBuildingDataAsset->SkeletalMesh;
+    const TObjectPtr<USkeletalMesh> SkeletalMesh = BuildingDataAsset->SkeletalMesh;
 
     if (!SkeletalMesh)
     {
@@ -117,7 +125,12 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
         return;
     }
 
-    const TSubclassOf<AActor> BuildableClass = TestBuildingDataAsset->Class;
+    if (!BuildingDataAsset)
+    {
+        return;
+    }
+
+    const TSubclassOf<AActor> BuildableClass = BuildingDataAsset->Class;
 
     if (!BuildableClass)
     {
@@ -127,6 +140,11 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     CreatedBuildable = CreateBuildableActor(BuildableClass);
 
     DisableBuildingPreview();
+}
+
+void ABuildableBlock::SetBuildingAsset(UBuildingDataAsset* NewBuilding)
+{
+    BuildingDataAsset = NewBuilding;
 }
 
 void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)

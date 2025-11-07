@@ -6,6 +6,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 #include "DataAssets/BuildingDataAsset.h"
+#include "Subsystems/BuildingSubsystem.h"
 #include "BuildingButtonWidget.generated.h"
 
 /**

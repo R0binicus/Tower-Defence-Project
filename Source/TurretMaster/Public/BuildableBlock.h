@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Buildable.h"
 #include "DataAssets/BuildingDataAsset.h"
+#include "Subsystems/BuildingSubsystem.h"
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
@@ -43,7 +44,7 @@ protected:
 	TScriptInterface<IBuildable> CreatedBuildable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
-	TObjectPtr<UBuildingDataAsset> TestBuildingDataAsset;
+	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
@@ -64,6 +65,10 @@ protected:
 
 	UFUNCTION()
 	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+
+	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
+		meta = (ToolTip = "Sets building preview mesh"))
+	void SetBuildingAsset(UBuildingDataAsset* NewBuilding);
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))

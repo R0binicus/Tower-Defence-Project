@@ -14,5 +14,11 @@ void UBuildingButtonWidget::NativeConstruct()
 
 void UBuildingButtonWidget::OnButtonClicked()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnButtonClicked")));
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (!BuildingSubsystem)
+    {
+        return;
+    }
+
+    BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
 }
