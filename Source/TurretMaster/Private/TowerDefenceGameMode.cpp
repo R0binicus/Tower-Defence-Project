@@ -1,5 +1,10 @@
 #include "TowerDefenceGameMode.h"
 
+ATowerDefenceGameMode::ATowerDefenceGameMode()
+{
+	PlayerStateClass = ATowerDefencePlayerState::StaticClass();
+}
+
 void ATowerDefenceGameMode::BeginPlay()
 {
 	if (!PlayerHudClass)

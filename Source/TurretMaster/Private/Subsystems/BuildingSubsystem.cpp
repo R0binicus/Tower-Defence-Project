@@ -7,6 +7,19 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 		return;
 	}
 
+	// TODO: Discuss, setting CustomPlayerState when Subsystem is created
+	TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
+	TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
+	if (!CustomPlayerState)
+	{
+		return;
+	}
+
+	if (!CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
+	{
+		return;
+	}
+
 	CurrentPlaceBuildingSelected = BuildingData;
 	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
 }
@@ -18,6 +31,18 @@ void UBuildingSubsystem::BuildingPlaced()
 
 void UBuildingSubsystem::CancelPlaceBuilding()
 {
+	TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
+	TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
+	if (!CustomPlayerState)
+	{
+		return;
+	}
+
+	if (!CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Default))
+	{
+		return;
+	}
+
 	CurrentPlaceBuildingSelected = nullptr;
 	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
 }

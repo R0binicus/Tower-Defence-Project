@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "DataAssets/BuildingDataAsset.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefencePlayerState.h"
 #include "BuildingSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);

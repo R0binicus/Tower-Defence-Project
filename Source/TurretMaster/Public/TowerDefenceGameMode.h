@@ -13,6 +13,9 @@ class TURRETMASTER_API ATowerDefenceGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	ATowerDefenceGameMode();
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameMode")
