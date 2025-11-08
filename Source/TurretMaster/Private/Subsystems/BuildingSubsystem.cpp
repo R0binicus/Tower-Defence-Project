@@ -38,11 +38,5 @@ void UBuildingSubsystem::CancelPlaceBuilding()
 		return;
 	}
 
-	if (!CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Default))
-	{
-		return;
-	}
-
-	CurrentPlaceBuildingSelected = nullptr;
-	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
+	CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
 }
