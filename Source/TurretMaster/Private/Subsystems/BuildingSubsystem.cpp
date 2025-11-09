@@ -7,15 +7,13 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 		return;
 	}
 
-	// TODO: Discuss, setting CustomPlayerState when Subsystem is created
-	TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
-	TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
-	if (!CustomPlayerState)
+	TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	if (!PlayerState)
 	{
 		return;
 	}
 
-	if (!CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
+	if (!PlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
 	{
 		return;
 	}
@@ -31,12 +29,11 @@ void UBuildingSubsystem::BuildingPlaced()
 
 void UBuildingSubsystem::CancelPlaceBuilding()
 {
-	TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
-	TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
-	if (!CustomPlayerState)
+	TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	if (!PlayerState)
 	{
 		return;
 	}
 
-	CustomPlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
+	PlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
 }
