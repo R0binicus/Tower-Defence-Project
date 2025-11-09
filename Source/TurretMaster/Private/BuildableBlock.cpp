@@ -33,6 +33,23 @@ void ABuildableBlock::BeginPlay()
 	Super::BeginPlay();
 
     World = GetWorld();
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (!BuildingSubsystem)
+    {
+        return;
+    }
+
+    BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
+
+    TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
+    TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
+    if (!CustomPlayerState)
+    {
+        return;
+    }
+
+    CustomPlayerState->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
@@ -72,18 +89,23 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
 
 void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
 {
+    if (PlayerState != EPlayerStateEnum::Building)
+    {
+        return;
+    }
+
     // Don't create building preview if one already exists
     if (CreatedBuildable)
     {
         return;
     }
 
-    if (!TestBuildingDataAsset)
+    if (!BuildingDataAsset)
     {
         return;
     }
 
-    const TObjectPtr<USkeletalMesh> SkeletalMesh = TestBuildingDataAsset->SkeletalMesh;
+    const TObjectPtr<USkeletalMesh> SkeletalMesh = BuildingDataAsset->SkeletalMesh;
 
     if (!SkeletalMesh)
     {
@@ -95,6 +117,11 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
 {
+    if (PlayerState != EPlayerStateEnum::Building)
+    {
+        return;
+    }
+
     // Don't create building preview if one already exists
     if (CreatedBuildable)
     {
@@ -111,13 +138,23 @@ void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
 
 void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
 {
+    if (PlayerState != EPlayerStateEnum::Building)
+    {
+        return;
+    }
+
     // Don't create new building if one already exists
     if (CreatedBuildable)
     {
         return;
     }
 
-    const TSubclassOf<AActor> BuildableClass = TestBuildingDataAsset->Class;
+    if (!BuildingDataAsset)
+    {
+        return;
+    }
+
+    const TSubclassOf<AActor> BuildableClass = BuildingDataAsset->Class;
 
     if (!BuildableClass)
     {
@@ -127,6 +164,19 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     CreatedBuildable = CreateBuildableActor(BuildableClass);
 
     DisableBuildingPreview();
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (!BuildingSubsystem)
+    {
+        return;
+    }
+
+    BuildingSubsystem->BuildingPlaced();
+}
+
+void ABuildableBlock::SetBuildingAsset(UBuildingDataAsset* NewBuilding)
+{
+    BuildingDataAsset = NewBuilding;
 }
 
 void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)
@@ -158,3 +208,12 @@ void ABuildableBlock::DisableBuildingPreview()
     BuildingPreviewMeshNew->SetSkeletalMesh(nullptr);
 }
 
+void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState)
+{
+    PlayerState = NewState;
+
+    if (PlayerState != EPlayerStateEnum::Building)
+    {
+        DisableBuildingPreview();
+    }
+}

@@ -4,6 +4,8 @@
 #include "GameFramework/Actor.h"
 #include "Buildable.h"
 #include "DataAssets/BuildingDataAsset.h"
+#include "Subsystems/BuildingSubsystem.h"
+#include "GameFramework/TowerDefencePlayerState.h"
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
@@ -43,10 +45,13 @@ protected:
 	TScriptInterface<IBuildable> CreatedBuildable = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
-	TObjectPtr<UBuildingDataAsset> TestBuildingDataAsset;
+	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	EPlayerStateEnum PlayerState = EPlayerStateEnum::Default;
 
 	virtual void BeginPlay() override;
 
@@ -67,9 +72,17 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))
+	void SetBuildingAsset(UBuildingDataAsset* NewBuilding);
+
+	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
+		meta = (ToolTip = "Sets building preview mesh"))
 	void SetBuildingPreview(USkeletalMesh* PreviewMesh);
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Hides the building preview, and sets the mesh to be null"))
 	void DisableBuildingPreview();
+
+	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
+		meta = (ToolTip = "Sets the internal player state variable"))
+	void SetPlayerState(const EPlayerStateEnum NewState);
 };
