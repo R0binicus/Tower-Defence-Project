@@ -9,12 +9,19 @@ void AEnemyWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!EnemyWaveData.IsValidIndex(0))
-	{
-		return;
-	}
+	int32 StartWaveIndex = 0;
 
-	StartWavePrepStage(0);
+	// If the first wave is fired without any delay, it can cause minor UI issues
+	// Howver this shouldn't occur normally, but just in case, here is a quick fix
+	float NextWaveDelay = EnemyWaveData[StartWaveIndex].WaveDelay + WavePrepTime;
+	if (NextWaveDelay > 0.f)
+	{
+		StartWavePrepStage(StartWaveIndex);
+	}
+	else
+	{
+		GetWorldTimerManager().SetTimerForNextTick(this, &AEnemyWaveManager::StartNextWave);
+	}
 }
 
 void AEnemyWaveManager::Tick(float DeltaTime)
@@ -29,17 +36,6 @@ void AEnemyWaveManager::StartNextWave()
 
 	CurrentWaveData = EnemyWaveData[CurrentWaveIndex];
 	CurrentWaveEnemyIndex = 0;
-
-	/*if (EnemyWaveData.Num() > CurrentWaveNum)
-	{
-		float NextWaveDelay = EnemyWaveData[CurrentWaveIndex + 1].WaveDelay;
-		if (NextWaveDelay == 0)
-		{
-			NextWaveDelay = UE_KINDA_SMALL_NUMBER;
-		}
-
-		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::WaveComplete, NextWaveDelay, false);
-	}*/
 
 	SetupEnemySpawnArray();
 	SetupEnemySpawning();
@@ -71,17 +67,7 @@ void AEnemyWaveManager::SetupEnemySpawning()
 		return;
 	}
 
-	EnemiesRemaining = 0;
-
-	if (CurrentWaveData.SpawnPeriod == 0.f)
-	{
-		// MakeWaveEnemy increments CurrentWaveEnemyIndex
-		while (CurrentWaveEnemyIndex <= PendingEnemyWaveSpawns.Num() - 1)
-		{
-			MakeWaveEnemy();
-		}
-		return;
-	}
+	EnemiesRemaining = PendingEnemyWaveSpawns.Num();
 
 	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
 	if (!EnemySubsystem)
@@ -91,8 +77,19 @@ void AEnemyWaveManager::SetupEnemySpawning()
 
 	EnemySubsystem->SetEnemiesRemaining(EnemiesRemaining);
 
-	float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod / PendingEnemyWaveSpawns.Num();
-	WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
+	if (CurrentWaveData.SpawnPeriod == 0.f)
+	{
+		// MakeWaveEnemy increments CurrentWaveEnemyIndex
+		while (CurrentWaveEnemyIndex <= PendingEnemyWaveSpawns.Num() - 1)
+		{
+			MakeWaveEnemy();
+		}
+	}
+	else
+	{
+		float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod / PendingEnemyWaveSpawns.Num();
+		WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
+	}
 }
 
 void AEnemyWaveManager::MakeWaveEnemy()
@@ -113,7 +110,6 @@ void AEnemyWaveManager::MakeWaveEnemy()
 
 	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 
-	EnemiesRemaining++;
 	CurrentWaveEnemyIndex++;
 }
 
@@ -171,10 +167,11 @@ void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
 	if (NextWaveDelay <= 0.f)
 	{
 		StartNextWave();
-		return;
 	}
-
-	GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::StartNextWave, NextWaveDelay, false);
+	else
+	{
+		GetWorldTimerManager().SetTimer(EnemySpawnTimer, this, &AEnemyWaveManager::StartNextWave, NextWaveDelay, false);
+	}
 }
 
 void AEnemyWaveManager::SkipPrepStage()

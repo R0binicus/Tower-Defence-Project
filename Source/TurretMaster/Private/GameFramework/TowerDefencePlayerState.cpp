@@ -2,7 +2,7 @@
 
 bool ATowerDefencePlayerState::TrySetPlayerState(const EPlayerStateEnum NewState)
 {
-    // This is excessive for what I actually need but oh well
+    // This is excessive for what I actually need but it is extensible
     switch (PlayerStateEnum)
     {
     case EPlayerStateEnum::Default:

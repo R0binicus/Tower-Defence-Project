@@ -32,7 +32,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<FEnemyWaveData> EnemyWaveData;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	int32 EnemiesRemaining;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
