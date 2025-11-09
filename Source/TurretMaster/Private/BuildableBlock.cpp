@@ -42,6 +42,8 @@ void ABuildableBlock::BeginPlay()
 
     BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
 
+    // TODO: Discuss, will it break if I try to cast a nullptr?
+
     TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
     TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
     if (!CustomPlayerState)
