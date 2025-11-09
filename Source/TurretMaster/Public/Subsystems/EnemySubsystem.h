@@ -16,6 +16,7 @@ class TURRETMASTER_API UEnemySubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
+public:
 	//UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
 	//FOnWaveChanged OnWaveChanged;
 

@@ -83,6 +83,14 @@ void AEnemyWaveManager::SetupEnemySpawning()
 		return;
 	}
 
+	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+	if (!EnemySubsystem)
+	{
+		return;
+	}
+
+	EnemySubsystem->SetEnemiesRemaining(EnemiesRemaining);
+
 	float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod / PendingEnemyWaveSpawns.Num();
 	WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
 }
@@ -124,7 +132,13 @@ void AEnemyWaveManager::OnEnemyDeathHandler()
 {
 	EnemiesRemaining--;
 
-	if (EnemiesRemaining > 0)
+	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+	if (EnemySubsystem)
+	{
+		EnemySubsystem->SetEnemiesRemaining(EnemiesRemaining);
+	}
+
+	if (EnemySubsystem->GetEnemiesRemaining() > 0)
 	{
 		return;
 	}
