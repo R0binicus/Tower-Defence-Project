@@ -29,6 +29,24 @@ void AEnemyWaveManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void  AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray)
+{
+	OutWaveObjectArray.Empty();
+	OutWaveObjectArray.Reserve(WaveDataArray.Num());
+
+	for (size_t i = 0; i < WaveDataArray.Num(); i++)
+	{
+		TObjectPtr<UWaveDataObject> WaveObject = NewObject<UWaveDataObject>();
+		if (!WaveObject)
+		{
+			return;
+		}
+
+		WaveObject->WaveData = WaveDataArray[i];
+		OutWaveObjectArray.Add(WaveObject);
+	}
+}
+
 void AEnemyWaveManager::StartNextWave()
 {
 	int32 CurrentWaveIndex = CurrentWaveNum;

@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "EnemyWaveData.h"
 #include "EnemySpawnArea.h"
+#include "WaveDataObject.h"
 #include "Enemy.h"
 #include "LimitedRepeatTimer.h"
 #include "Subsystems/EnemySubsystem.h"
@@ -31,6 +32,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
 	TArray<FEnemyWaveData> EnemyWaveData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveManager")
+	TArray<TObjectPtr<UWaveDataObject>> WaveDataObjects;
 
 	int32 EnemiesRemaining;
 
@@ -69,6 +73,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
+		meta = (ToolTip = "Creates an array of WaveDataObjects from an array of EnemyWaveData"))
+	void MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
