@@ -17,11 +17,10 @@ void UTopBarWidget::NativeConstruct()
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
-
     if (WavesRemainingText)
     {
         FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
-        EnemiesRemainingText->SetText(FText::FromString(FormattedNum));
+        WavesRemainingText->SetText(FText::FromString(FormattedNum));
     }
 
     if (!NewWaveData)

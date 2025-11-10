@@ -23,3 +23,8 @@ void UEnemySubsystem::SetEnemiesRemaining(const int32 NewEnemiesRemaining)
 	EnemiesRemaining = NewEnemiesRemaining;
 	OnEnemiesRemainingChanged.Broadcast(EnemiesRemaining);
 }
+
+void UEnemySubsystem::SetTotalWaveNum(const int32 NewTotalWaveNum)
+{
+	TotalWaveNum = NewTotalWaveNum;
+}

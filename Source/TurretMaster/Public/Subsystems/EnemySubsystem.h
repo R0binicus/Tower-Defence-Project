@@ -50,6 +50,10 @@ public:
 		meta = (ToolTip = "Changes the number of enemies remaining in the level"))
 	void SetEnemiesRemaining(const int32 NewEnemiesRemaining);
 
+	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
+		meta = (ToolTip = "Sets the total number of waves for the UI"))
+	void SetTotalWaveNum(const int32 NewTotalWaveNum);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	TObjectPtr<UWaveDataObject> CurrentWaveData;

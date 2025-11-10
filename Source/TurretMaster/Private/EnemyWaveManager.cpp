@@ -47,8 +47,14 @@ TArray<UWaveDataObject*> AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEn
 		WaveObject->WaveData = WaveDataArray[i];
 		WaveObjects.Add(WaveObject);
 	}
-	return WaveObjects;
 
+	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+	if (EnemySubsystem)
+	{
+		EnemySubsystem->SetTotalWaveNum(WaveObjects.Num());
+	}
+
+	return WaveObjects;
 }
 
 void AEnemyWaveManager::StartNextWave()
@@ -65,7 +71,7 @@ void AEnemyWaveManager::StartNextWave()
 	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
 	if (EnemySubsystem)
 	{
-		EnemySubsystem->SetCurrentWaveData(WaveObject, CurrentWaveIndex);
+		EnemySubsystem->SetCurrentWaveData(WaveObject, CurrentWaveIndex + 1);
 	}
 	
 	CurrentWaveData = WaveObject->WaveData;
