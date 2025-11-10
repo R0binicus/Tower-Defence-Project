@@ -3,9 +3,10 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "EnemyWaveData.h"
+#include "WaveDataObject.h"
 #include "EnemySubsystem.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWaveChanged, TObjectPtr<FEnemyWaveData>, NewWaveData, int32, NewWaveNum);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWaveChanged, UWaveDataObject*, NewWaveData, int32, NewWaveNum);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemiesRemainingChanged, int32, NewEnemiesRemaining);
 
 /**
@@ -17,17 +18,17 @@ class TURRETMASTER_API UEnemySubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
-	//UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
-	//FOnWaveChanged OnWaveChanged;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
+	FOnWaveChanged OnWaveChanged;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
 	FOnEnemiesRemainingChanged OnEnemiesRemainingChanged;
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-	//UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
-	//	meta = (ToolTip = "Gets the the data for the current enemy wave"))
-	//TObjectPtr<FEnemyWaveData> GetCurrentWaveData() const { return CurrentWaveData; };
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
+		meta = (ToolTip = "Gets the the data for the current enemy wave"))
+	UWaveDataObject* GetCurrentWaveData() const { return CurrentWaveData; };
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
 		meta = (ToolTip = "Gets the number of Enemies Remaining"))
@@ -41,17 +42,17 @@ public:
 		meta = (ToolTip = "Gets the total number of enemy waves"))
 	int32 GetTotalWaveNum() const { return TotalWaveNum; };
 
-	//UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
-	//	meta = (ToolTip = "Changes the number of current money the player has"))
-	//void SetCurrentWaveData(TObjectPtr<FEnemyWaveData> NewWaveData, const int32 NewEnemiesRemaining);
+	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
+		meta = (ToolTip = "Changes the number of current money the player has"))
+	void SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewEnemiesRemaining);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Changes the number of enemies remaining in the level"))
 	void SetEnemiesRemaining(const int32 NewEnemiesRemaining);
 
 protected:
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
-	//TObjectPtr<FEnemyWaveData> CurrentWaveData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
+	TObjectPtr<UWaveDataObject> CurrentWaveData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 EnemiesRemaining;

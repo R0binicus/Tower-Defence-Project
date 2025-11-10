@@ -29,7 +29,7 @@ void AEnemyWaveManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void  AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray)
+void  AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray) const
 {
 	OutWaveObjectArray.Empty();
 	OutWaveObjectArray.Reserve(WaveDataArray.Num());
@@ -52,7 +52,13 @@ void AEnemyWaveManager::StartNextWave()
 	int32 CurrentWaveIndex = CurrentWaveNum;
 	CurrentWaveNum++;
 
-	CurrentWaveData = EnemyWaveData[CurrentWaveIndex];
+	TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[CurrentWaveIndex];
+	if (!WaveObject)
+	{
+		return;
+	}
+
+	CurrentWaveData = WaveDataObjects[CurrentWaveIndex]->WaveData;
 	CurrentWaveEnemyIndex = 0;
 
 	SetupEnemySpawnArray();
@@ -157,7 +163,7 @@ void AEnemyWaveManager::OnEnemyDeathHandler()
 		return;
 	}
 
-	if (EnemyWaveData.Num() <= CurrentWaveNum)
+	if (WaveDataObjects.Num() <= CurrentWaveNum)
 	{
 		return;
 	}
@@ -173,7 +179,7 @@ void AEnemyWaveManager::WaveComplete()
 
 void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
 {
-	if (EnemyWaveData.Num() <= CurrentWaveNum)
+	if (WaveDataObjects.Num() <= CurrentWaveNum)
 	{
 		WavesComplete();
 		return;
@@ -181,7 +187,13 @@ void AEnemyWaveManager::StartWavePrepStage(int32 WaveIndex)
 
 	GetWorldTimerManager().ClearTimer(EnemySpawnTimer);
 
-	float NextWaveDelay = EnemyWaveData[WaveIndex].WaveDelay + WavePrepTime;
+	TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[WaveIndex];
+	if (!WaveObject)
+	{
+		return;
+	}
+
+	float NextWaveDelay = WaveObject->WaveData.WaveDelay + WavePrepTime;
 	if (NextWaveDelay <= 0.f)
 	{
 		StartNextWave();

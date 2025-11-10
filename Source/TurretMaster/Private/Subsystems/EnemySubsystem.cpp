@@ -5,13 +5,18 @@ void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
-//void UEnemySubsystem::SetCurrentWaveData(TObjectPtr<FEnemyWaveData> NewWaveData, const int32 NewEnemiesRemaining)
-//{
-//	CurrentWaveData = NewWaveData;
-//  EnemiesRemaining = NewEnemiesRemaining;
-// 
-//  OnWaveChanged.Broadcast(CurrentWaveData, EnemiesRemaining);
-//}
+void UEnemySubsystem::SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewEnemiesRemaining)
+{
+	if (!NewWaveData)
+	{
+		return;
+	}
+
+	CurrentWaveData = NewWaveData;
+	EnemiesRemaining = NewEnemiesRemaining;
+ 
+	OnWaveChanged.Broadcast(NewWaveData, EnemiesRemaining);
+}
 
 void UEnemySubsystem::SetEnemiesRemaining(const int32 NewEnemiesRemaining)
 {
