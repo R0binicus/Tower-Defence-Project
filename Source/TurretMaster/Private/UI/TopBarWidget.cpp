@@ -1,6 +1,5 @@
 #include "UI/TopBarWidget.h"
 #include "Subsystems/EnemySubsystem.h"
-#include "Subsystems/PlayerSubsystem.h"
 
 void UTopBarWidget::NativeConstruct()
 {
@@ -19,14 +18,14 @@ void UTopBarWidget::NativeConstruct()
         EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
     }
 
-    TObjectPtr<UPlayerSubsystem> PlayerSubsystem = GetWorld()->GetSubsystem<UPlayerSubsystem>();
-    if (PlayerSubsystem)
+    TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    if (PlayerState)
     {
-        UpdateLivesText(PlayerSubsystem->GetPlayerLivesCurrent());
-        UpdateMoneyText(PlayerSubsystem->GetPlayerMoneyCurrent());
+        UpdateLivesText(PlayerState->GetPlayerLivesCurrent());
+        UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent());
 
-        PlayerSubsystem->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
-        PlayerSubsystem->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
+        PlayerState->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
+        PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
     }
 }
 

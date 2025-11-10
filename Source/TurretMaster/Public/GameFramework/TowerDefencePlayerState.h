@@ -12,6 +12,8 @@ enum class EPlayerStateEnum
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChanged, EPlayerStateEnum, NewPlayerState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLivesChanged, int32, NewPlayerLives);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerMoneyChanged, int32, NewPlayerMoney);
 
 /**
  * Player state for the tower defence game
@@ -22,8 +24,16 @@ class TURRETMASTER_API ATowerDefencePlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
+	ATowerDefencePlayerState();
+
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerState")
 	FOnPlayerStateChanged OnPlayerStateChanged;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerState")
+	FOnPlayerLivesChanged OnPlayerLivesChanged;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerState")
+	FOnPlayerMoneyChanged OnPlayerMoneyChanged;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Gets the TowerDefencePlayerState's PlayerStateEnum"))
@@ -32,10 +42,42 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Tries to set the player state to be the a new value"))
 	bool TrySetPlayerState(const EPlayerStateEnum NewState);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Gets the number of player starting lives"))
+	int32 GetPlayerLivesInitial() const { return PlayerLivesInitial; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Gets the number of current player lives"))
+	int32 GetPlayerLivesCurrent() const { return PlayerLivesCurrent; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Gets the number of current money the player has"))
+	int32 GetPlayerMoneyCurrent() const { return PlayerMoneyCurrent; };
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Changes the number of current money the player has"))
+	void SetPlayerLivesCurrent(const int32 NewLives);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Changes the number of current money the player has"))
+	void SetPlayerMoneyCurrent(const int32 NewMoney);
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
 	EPlayerStateEnum PlayerStateEnum;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
+	int32 PlayerLivesInitial = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
+	int32 PlayerLivesCurrent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
+	int32 PlayerMoneyInitial = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
+	int32 PlayerMoneyCurrent;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Updates player state and sends the event"))

@@ -5,6 +5,8 @@
 #include "Components/TextBlock.h"
 #include "EnemyWaveData.h"
 #include "WaveDataObject.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 #include "TopBarWidget.generated.h"
 
 /**

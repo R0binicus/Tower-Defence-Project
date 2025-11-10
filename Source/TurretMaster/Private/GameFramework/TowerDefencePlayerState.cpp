@@ -1,5 +1,11 @@
 #include "GameFramework/TowerDefencePlayerState.h"
 
+ATowerDefencePlayerState::ATowerDefencePlayerState()
+{
+    PlayerLivesCurrent = PlayerLivesInitial;
+    PlayerMoneyCurrent = PlayerMoneyInitial;
+}
+
 bool ATowerDefencePlayerState::TrySetPlayerState(const EPlayerStateEnum NewState)
 {
     // This is excessive for what I actually need but it is extensible
@@ -23,4 +29,16 @@ void ATowerDefencePlayerState::SetPlayerState(const EPlayerStateEnum NewState)
 {
     PlayerStateEnum = NewState;
     OnPlayerStateChanged.Broadcast(PlayerStateEnum);
+}
+
+void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
+{
+    PlayerLivesCurrent = NewLives;
+    OnPlayerLivesChanged.Broadcast(PlayerLivesCurrent);
+}
+
+void ATowerDefencePlayerState::SetPlayerMoneyCurrent(const int32 NewMoney)
+{
+    PlayerMoneyCurrent = NewMoney;
+    OnPlayerMoneyChanged.Broadcast(PlayerMoneyCurrent);
 }
