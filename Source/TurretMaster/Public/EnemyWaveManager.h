@@ -1,12 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "EnemyWaveData.h"
-#include "EnemySpawnArea.h"
-#include "WaveDataObject.h"
-#include "Enemy.h"
-#include "LimitedRepeatTimer.h"
 #include "Subsystems/EnemySubsystem.h"
 #include "EnemyWaveManager.generated.h"
 
