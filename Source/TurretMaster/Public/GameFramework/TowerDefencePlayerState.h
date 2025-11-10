@@ -61,7 +61,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Changes the number of current money the player has"))
+	void ChangeCurrentMoney(const int32 MoneyChange);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Changes the number of current money the player has"))
 	void SetPlayerMoneyCurrent(const int32 NewMoney);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Checks if the player has enough resources for the cost"))
+	bool HasEnoughResources(const int32 Cost) const;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")

@@ -150,13 +150,20 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     }
 
     const TSubclassOf<AActor> BuildableClass = BuildingDataAsset->Class;
-
     if (!BuildableClass)
     {
         return;
     }
 
     CreatedBuildable = CreateBuildableActor(BuildableClass);
+
+    TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    if (!PlayerStateClass)
+    {
+        return;
+    }
+
+    PlayerStateClass->ChangeCurrentMoney(-BuildingDataAsset->Cost);
 
     DisableBuildingPreview();
 

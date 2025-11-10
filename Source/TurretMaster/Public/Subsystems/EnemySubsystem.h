@@ -5,6 +5,7 @@
 #include "EnemyWaveData.h"
 #include "WaveDataObject.h"
 #include "LimitedRepeatTimer.h"
+#include "Kismet/GameplayStatics.h"
 #include "EnemySubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWaveChanged, UWaveDataObject*, NewWaveData, int32, NewWaveNum);
@@ -129,7 +130,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Handles recieving an OnEnemyDeath event, reducing the EnemiesRemaining counter and related logic"))
-	void OnEnemyDeathHandler();
+	void OnEnemyDeathHandler(int32 ResourcesGained);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Handles what to do after the wave is complete"))

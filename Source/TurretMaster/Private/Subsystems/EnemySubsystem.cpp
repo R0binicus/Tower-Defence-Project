@@ -1,4 +1,5 @@
 #include "Subsystems/EnemySubsystem.h"
+#include "GameFramework/TowerDefencePlayerState.h"
 
 void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -168,9 +169,15 @@ void UEnemySubsystem::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEne
 	TempEnemy->OnEnemyDeath.AddUniqueDynamic(this, &UEnemySubsystem::OnEnemyDeathHandler);
 }
 
-void UEnemySubsystem::OnEnemyDeathHandler()
+void UEnemySubsystem::OnEnemyDeathHandler(int32 ResourcesGained)
 {
 	SetEnemiesRemaining(--EnemiesRemaining);
+
+	TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	if (PlayerStateClass)
+	{
+		PlayerStateClass->ChangeCurrentMoney(ResourcesGained);
+	}
 
 	if (EnemiesRemaining > 0)
 	{

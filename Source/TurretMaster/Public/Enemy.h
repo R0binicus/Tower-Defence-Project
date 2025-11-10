@@ -5,7 +5,7 @@
 #include "Damageable.h"
 #include "Enemy.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeath, int32, ResourcesGained);
 
 UCLASS()
 class TURRETMASTER_API AEnemy : public ACharacter, public IDamageable
@@ -30,6 +30,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	int32 ResourcesOnKill = 5;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	bool bIsDead = false;

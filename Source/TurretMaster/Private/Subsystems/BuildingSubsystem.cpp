@@ -13,6 +13,11 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 		return;
 	}
 
+	if (!PlayerState->HasEnoughResources(BuildingData->Cost))
+	{
+		return;
+	}
+
 	if (!PlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
 	{
 		return;

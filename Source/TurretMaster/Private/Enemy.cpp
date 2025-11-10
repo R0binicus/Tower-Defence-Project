@@ -33,7 +33,10 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 void AEnemy::Death_Implementation()
 {
 	SetDestination(GetActorLocation());
-	OnEnemyDeath.Broadcast();
+
+	// TODO: Discuss, now that the thing using the event has been moved to a subsystem
+	// would it be better to just call 
+	OnEnemyDeath.Broadcast(ResourcesOnKill);
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -48,7 +51,6 @@ void AEnemy::SetDestination(const FVector NewDestination)
 	{
 		return;
 	}
-	//AIController->MoveToLocation(NewDestination);
 	AIController->MoveToLocation(NewDestination, 5.f, false, true, true, false);
 }
 

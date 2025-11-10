@@ -37,8 +37,26 @@ void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
     OnPlayerLivesChanged.Broadcast(PlayerLivesCurrent);
 }
 
+void ATowerDefencePlayerState::ChangeCurrentMoney(const int32 MoneyChange)
+{
+    SetPlayerMoneyCurrent(PlayerMoneyCurrent + MoneyChange);
+}
+
 void ATowerDefencePlayerState::SetPlayerMoneyCurrent(const int32 NewMoney)
 {
     PlayerMoneyCurrent = NewMoney;
     OnPlayerMoneyChanged.Broadcast(PlayerMoneyCurrent);
+}
+
+bool ATowerDefencePlayerState::HasEnoughResources(const int32 Cost) const
+{
+    const int32 ResourcesAfterCost = PlayerMoneyCurrent - Cost;
+    if (ResourcesAfterCost < 0)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
