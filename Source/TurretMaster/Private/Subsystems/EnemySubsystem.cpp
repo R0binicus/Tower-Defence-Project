@@ -124,7 +124,7 @@ void UEnemySubsystem::SetupEnemySpawning()
 	if (CurrentWaveData.SpawnPeriod == 0.f)
 	{
 		// MakeWaveEnemy increments CurrentWaveEnemyIndex
-		while (CurrentWaveEnemyIndex <= PendingEnemyWaveSpawns.Num() - 1)
+		while (CurrentWaveEnemyIndex < PendingEnemyWaveSpawns.Num())
 		{
 			MakeWaveEnemy();
 		}
