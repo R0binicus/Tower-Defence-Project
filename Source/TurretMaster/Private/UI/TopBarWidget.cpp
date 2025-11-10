@@ -5,15 +5,11 @@ void UTopBarWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    // Set default text values
-    NewWaveStarted(nullptr, 0);
-    UpdateEnemiesRemainingText(0);
-
     TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
     if (EnemySubsystem)
     {
         TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
-
+        
         EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
         EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
     }
@@ -27,6 +23,10 @@ void UTopBarWidget::NativeConstruct()
         PlayerState->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
         PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
     }
+
+    // Set default text value
+    NewWaveStarted(nullptr, 0);
+    UpdateEnemiesRemainingText(0);
 }
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
