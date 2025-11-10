@@ -11,6 +11,10 @@ void UTopBarWidget::NativeConstruct()
 
     TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
 
+    // Set default text values
+    NewWaveStarted(nullptr, 0);
+    UpdateEnemiesRemainingText(0);
+
     EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
     EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
 }
