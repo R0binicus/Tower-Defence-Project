@@ -9,12 +9,36 @@ void UTopBarWidget::NativeConstruct()
         return;
     }
 
+    TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
+
+    EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
     EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
 }
 
-void UTopBarWidget::NewWaveStarted(const int32 NewWavesRemaining, const int32 NewWaveEnemies)
+void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
 
+    if (WavesRemainingText)
+    {
+        FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
+        EnemiesRemainingText->SetText(FText::FromString(FormattedNum));
+    }
+
+    if (!NewWaveData)
+    {
+        return;
+    }
+
+    FEnemyWaveData& WaveData = NewWaveData->WaveData;
+
+    int32 TotalNumber = 0;
+    for (const TPair<TSubclassOf<AEnemy>, int32>& Pair : WaveData.EnemyAmounts)
+    {
+        TotalNumber = TotalNumber + Pair.Value;
+    }
+
+    TotalWaveEnemies = TotalNumber;
+    UpdateEnemiesRemainingText(TotalWaveEnemies);
 }
 
 void UTopBarWidget::UpdateLivesText(const int32 NewLives)
@@ -31,7 +55,7 @@ void UTopBarWidget::UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining)
 {
     if (EnemiesRemainingText)
     {
-        FString FormattedNum = FString::Printf(TEXT("%i/%i"), TotalWaveEnemies, NewEnemiesRemaining);
+        FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewEnemiesRemaining, TotalWaveEnemies);
         EnemiesRemainingText->SetText(FText::FromString(FormattedNum));
     }
 }

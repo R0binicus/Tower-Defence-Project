@@ -3,7 +3,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
-//#include "EnemyWaveData.h"
+#include "EnemyWaveData.h"
+#include "WaveDataObject.h"
 #include "TopBarWidget.generated.h"
 
 /**
@@ -22,10 +23,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TopBarWidget")
 	int32 TotalWaveEnemies;
 
-	//TODO: Discuss, why doesn't this recognise the struct? is it because of the folder structure?
-
-	//UPROPERTY(BlueprintReadWrite, Category = "TopBarWidget")
-	//TObjectPtr<FEnemyWaveData> CurrentWaveData;
+	UPROPERTY(BlueprintReadWrite, Category = "TopBarWidget")
+	FEnemyWaveData CurrentWaveData;
 
 	// Bound Widgets
 
@@ -45,7 +44,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates values due to a new wave starting. Called when OnWaveChanged event is triggered"))
-	void NewWaveStarted(const int32 NewWavesRemaining, const int32 NewWaveEnemies);
+	void NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the LivesText. Called when OnLivesChanged event is triggered"))

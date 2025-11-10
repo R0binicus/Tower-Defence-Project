@@ -76,7 +76,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Creates an array of WaveDataObjects from an array of EnemyWaveData"))
-	void MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray) const;
+	TArray<UWaveDataObject*> MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray) const;
 
 	UFUNCTION(BlueprintCallable, Category = "EnemyWaveManager",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))

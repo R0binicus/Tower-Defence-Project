@@ -11,6 +11,8 @@ void AEnemyWaveManager::BeginPlay()
 
 	int32 StartWaveIndex = 0;
 
+	WaveDataObjects = MakeWaveObjectArray(EnemyWaveData);
+
 	// If the first wave is fired without any delay, it can cause minor UI issues
 	// Howver this shouldn't occur normally, but just in case, here is a quick fix
 	float NextWaveDelay = EnemyWaveData[StartWaveIndex].WaveDelay + WavePrepTime;
@@ -29,22 +31,24 @@ void AEnemyWaveManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void  AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray, TArray<UWaveDataObject*>& OutWaveObjectArray) const
+TArray<UWaveDataObject*> AEnemyWaveManager::MakeWaveObjectArray(const TArray<FEnemyWaveData>& WaveDataArray) const
 {
-	OutWaveObjectArray.Empty();
-	OutWaveObjectArray.Reserve(WaveDataArray.Num());
+	TArray<UWaveDataObject*> WaveObjects;
+	WaveObjects.Reserve(WaveDataArray.Num());
 
 	for (size_t i = 0; i < WaveDataArray.Num(); i++)
 	{
 		TObjectPtr<UWaveDataObject> WaveObject = NewObject<UWaveDataObject>();
 		if (!WaveObject)
 		{
-			return;
+			continue;
 		}
 
 		WaveObject->WaveData = WaveDataArray[i];
-		OutWaveObjectArray.Add(WaveObject);
+		WaveObjects.Add(WaveObject);
 	}
+	return WaveObjects;
+
 }
 
 void AEnemyWaveManager::StartNextWave()
@@ -58,7 +62,13 @@ void AEnemyWaveManager::StartNextWave()
 		return;
 	}
 
-	CurrentWaveData = WaveDataObjects[CurrentWaveIndex]->WaveData;
+	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+	if (EnemySubsystem)
+	{
+		EnemySubsystem->SetCurrentWaveData(WaveObject, CurrentWaveIndex);
+	}
+	
+	CurrentWaveData = WaveObject->WaveData;
 	CurrentWaveEnemyIndex = 0;
 
 	SetupEnemySpawnArray();
@@ -92,14 +102,6 @@ void AEnemyWaveManager::SetupEnemySpawning()
 	}
 
 	EnemiesRemaining = PendingEnemyWaveSpawns.Num();
-
-	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
-	if (!EnemySubsystem)
-	{
-		return;
-	}
-
-	EnemySubsystem->SetEnemiesRemaining(EnemiesRemaining);
 
 	if (CurrentWaveData.SpawnPeriod == 0.f)
 	{

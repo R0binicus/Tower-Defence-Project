@@ -44,7 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Changes the number of current money the player has"))
-	void SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewEnemiesRemaining);
+	void SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewWaveNum);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Changes the number of enemies remaining in the level"))

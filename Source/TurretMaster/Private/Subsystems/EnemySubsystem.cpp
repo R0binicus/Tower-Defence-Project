@@ -5,7 +5,7 @@ void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
-void UEnemySubsystem::SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewEnemiesRemaining)
+void UEnemySubsystem::SetCurrentWaveData(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
 	if (!NewWaveData)
 	{
@@ -13,9 +13,9 @@ void UEnemySubsystem::SetCurrentWaveData(UWaveDataObject* NewWaveData, const int
 	}
 
 	CurrentWaveData = NewWaveData;
-	EnemiesRemaining = NewEnemiesRemaining;
+	CurrentWaveNum = NewWaveNum;
  
-	OnWaveChanged.Broadcast(NewWaveData, EnemiesRemaining);
+	OnWaveChanged.Broadcast(NewWaveData, CurrentWaveNum);
 }
 
 void UEnemySubsystem::SetEnemiesRemaining(const int32 NewEnemiesRemaining)
