@@ -64,6 +64,10 @@ public:
 	void ChangeCurrentMoney(const int32 MoneyChange);
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Changes the number of current lives the player has"))
+	void ChangeCurrentLives(const int32 LiveChange);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Changes the number of current money the player has"))
 	void SetPlayerMoneyCurrent(const int32 NewMoney);
 
@@ -76,7 +80,7 @@ protected:
 	EPlayerStateEnum PlayerStateEnum;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
-	int32 PlayerLivesInitial = 100;
+	int32 PlayerLivesInitial = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
 	int32 PlayerLivesCurrent;

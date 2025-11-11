@@ -42,6 +42,11 @@ void ATowerDefencePlayerState::ChangeCurrentMoney(const int32 MoneyChange)
     SetPlayerMoneyCurrent(PlayerMoneyCurrent + MoneyChange);
 }
 
+void ATowerDefencePlayerState::ChangeCurrentLives(const int32 LiveChange)
+{
+    SetPlayerLivesCurrent(PlayerLivesCurrent + LiveChange);
+}
+
 void ATowerDefencePlayerState::SetPlayerMoneyCurrent(const int32 NewMoney)
 {
     PlayerMoneyCurrent = NewMoney;

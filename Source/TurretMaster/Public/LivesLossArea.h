@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 #include "LivesLossArea.generated.h"
 
 /**
@@ -16,9 +19,14 @@ public:
 	ALivesLossArea();
 
 protected:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "LivesLossArea")
+	TObjectPtr<UBoxComponent> EnemyDetectionBox;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Turret")
+	FName EnemyTagName = "Enemy";
+
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
-
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
