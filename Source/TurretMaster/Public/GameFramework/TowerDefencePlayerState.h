@@ -25,8 +25,6 @@ class TURRETMASTER_API ATowerDefencePlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
-	ATowerDefencePlayerState();
-
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerState")
 	FOnPlayerStateChanged OnPlayerStateChanged;
 
@@ -91,6 +89,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
 	int32 PlayerMoneyCurrent;
+
+	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Updates player state and sends the event"))

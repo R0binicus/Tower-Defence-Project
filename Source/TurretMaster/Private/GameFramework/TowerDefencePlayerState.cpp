@@ -1,9 +1,9 @@
 #include "GameFramework/TowerDefencePlayerState.h"
 
-ATowerDefencePlayerState::ATowerDefencePlayerState()
+void ATowerDefencePlayerState::BeginPlay()
 {
-    PlayerLivesCurrent = PlayerLivesInitial;
-    PlayerMoneyCurrent = PlayerMoneyInitial;
+    SetPlayerLivesCurrent(PlayerLivesInitial);
+    SetPlayerMoneyCurrent(PlayerMoneyInitial);
 }
 
 bool ATowerDefencePlayerState::TrySetPlayerState(const EPlayerStateEnum NewState)
