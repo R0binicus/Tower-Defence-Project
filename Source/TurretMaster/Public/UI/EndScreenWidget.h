@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 #include "EndScreenWidget.generated.h"
 
 /**
@@ -15,6 +16,9 @@ class TURRETMASTER_API UEndScreenWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndScreenWidget")
+	const TSoftObjectPtr<UWorld> MainMenuLevel;
+
 	UPROPERTY(BlueprintReadOnly, Category = "EndScreenWidget", meta = (BindWidget))
 	TObjectPtr<UButton> RestartButton;
 
