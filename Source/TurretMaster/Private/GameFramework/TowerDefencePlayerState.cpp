@@ -35,6 +35,17 @@ void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
 {
     PlayerLivesCurrent = NewLives;
     OnPlayerLivesChanged.Broadcast(PlayerLivesCurrent);
+
+    if (PlayerLivesCurrent > 0)
+    {
+        return;
+    }
+
+    TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+    if (GameState)
+    {
+        GameState->TwiggerLose();
+    }
 }
 
 void ATowerDefencePlayerState::ChangeCurrentMoney(const int32 MoneyChange)
