@@ -5,7 +5,7 @@ ALivesLossArea::ALivesLossArea()
     EnemyDetectionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Enemy Detection Box"));
     EnemyDetectionBox->SetCollisionProfileName(TEXT("EnemyDetection"));
     EnemyDetectionBox->SetGenerateOverlapEvents(true);
-    EnemyDetectionBox->SetBoxExtent(FVector(1000, 1000, 500), false);
+    EnemyDetectionBox->SetBoxExtent(FVector(500, 500, 100), false);
     EnemyDetectionBox->OnComponentBeginOverlap.AddDynamic(this, &ALivesLossArea::OnOverlapBegin);
     RootComponent = EnemyDetectionBox;
 }
