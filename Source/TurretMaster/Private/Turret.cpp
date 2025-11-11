@@ -21,18 +21,23 @@ ATurret::ATurret()
     MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
     MuzzleDirectionSocket->SetupAttachment(RootComponent);
 
-    TurretProtectPoint = CreateDefaultSubobject<USceneComponent>(TEXT("TurretProtectPoint"));
-    TurretProtectPoint->SetupAttachment(RootComponent);
-
     TurretMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMeshComp"));
     TurretMeshComp->SetupAttachment(RootComponent);
     TurretMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
+}
+
+void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
+{
+    //TODO: Discuss, why doesn't this trigger???
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NewProtectPoint: %s"), *NewProtectPoint->GetName()));
+    TurretProtectPoint = NewProtectPoint;
 }
 
 #pragma region Unreal Functions
 // Called when the game starts or when spawned
 void ATurret::BeginPlay()
 {
+    TurretProtectPoint = this;
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
     InitialRotation = GetActorRotation();
@@ -186,7 +191,7 @@ AActor* ATurret::GetClosestEnemy() const
             continue;
         }
 
-        const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetComponentLocation());
+        const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetActorLocation());
 
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
         if (EnemyDistance < TurretFireMinimumRange)

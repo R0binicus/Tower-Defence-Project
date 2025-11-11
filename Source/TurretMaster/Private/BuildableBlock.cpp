@@ -71,12 +71,16 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
     }
 
     const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
-
     const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
-
     if (!Building)
     {
         return nullptr;
+    }
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (BuildingSubsystem)
+    {
+        IBuildable::Execute_SetProtectPoint(BuildingActor, BuildingSubsystem->GetProtectPoint());
     }
 
     return Building;

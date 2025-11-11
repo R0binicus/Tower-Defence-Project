@@ -1,5 +1,10 @@
 #include "Subsystems/BuildingSubsystem.h"
 
+void UBuildingSubsystem::SetProtectPoint(AActor* NewProtectPoint)
+{
+	ProtectPoint = NewProtectPoint;
+}
+
 void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 {
 	if (!BuildingData)

@@ -6,7 +6,7 @@ void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
-void UEnemySubsystem::InitializeWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime)
+void UEnemySubsystem::InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime)
 {
 	if (WaveData.Num() < 1)
 	{

@@ -2,7 +2,6 @@
 
 AEnemyWaveManager::AEnemyWaveManager()
 {
-	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AEnemyWaveManager::BeginPlay()
@@ -12,6 +11,12 @@ void AEnemyWaveManager::BeginPlay()
 	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
 	if (EnemySubsystem)
 	{
-		EnemySubsystem->InitializeWaves(LevelWaveData, WavePrepTime);
+		EnemySubsystem->InitialiseWaves(LevelWaveData, WavePrepTime);
+	}
+
+	TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+	if (BuildingSubsystem)
+	{
+		BuildingSubsystem->SetProtectPoint(BuildingProtectPoint);
 	}
 }

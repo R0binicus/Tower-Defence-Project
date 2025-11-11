@@ -24,6 +24,14 @@ public:
 	FOnBuildingTypeSelected OnBuildingTypeSelected;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+		meta = (ToolTip = "Sets the point which buildings try to protect"))
+	void SetProtectPoint(AActor* NewProtectPoint);
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+		meta = (ToolTip = "Returns the point which buildings try to protect"))
+	AActor* GetProtectPoint() const { return ProtectPoint; };
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Sets the building subsystem's CurrentPlaceBuildingSelected variable. Used when a player selects the place building button"))
 	void SelectedPlaceBuilding(UBuildingDataAsset* BuildingData);
 
@@ -38,4 +46,7 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")
 	TObjectPtr<UBuildingDataAsset> CurrentPlaceBuildingSelected = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")
+	TObjectPtr<AActor> ProtectPoint;
 };

@@ -29,8 +29,8 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
-		meta = (ToolTip = "Initializes the wave data, then starts the waves"))
-	void InitializeWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime);
+		meta = (ToolTip = "Initialises the wave data, then starts the waves"))
+	void InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
 		meta = (ToolTip = "Gets the the data for the current enemy wave"))
