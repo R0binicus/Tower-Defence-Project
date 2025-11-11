@@ -5,6 +5,7 @@
 #include "EnemyWaveData.h"
 #include "WaveDataObject.h"
 #include "LimitedRepeatTimer.h"
+#include "GameFramework/TowerDefenceGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnemySubsystem.generated.h"
 
@@ -146,7 +147,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Triggers victory when all the waves are complete"))
-	void WavesComplete();
+	void AllWavesComplete();
 
 	// Utility functions
 

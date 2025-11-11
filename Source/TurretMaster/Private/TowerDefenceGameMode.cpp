@@ -3,6 +3,7 @@
 ATowerDefenceGameMode::ATowerDefenceGameMode()
 {
 	PlayerStateClass = ATowerDefencePlayerState::StaticClass();
+	GameStateClass = ATowerDefenceGameState::StaticClass();
 }
 
 void ATowerDefenceGameMode::BeginPlay()

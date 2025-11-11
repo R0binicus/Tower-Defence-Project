@@ -184,11 +184,6 @@ void UEnemySubsystem::OnEnemyDeathHandler(int32 ResourcesGained)
 		return;
 	}
 
-	if (WaveDataObjects.Num() <= CurrentWaveNum)
-	{
-		return;
-	}
-
 	WaveComplete();
 }
 
@@ -196,7 +191,7 @@ void UEnemySubsystem::WaveComplete()
 {
 	if (WaveDataObjects.Num() <= CurrentWaveNum)
 	{
-		WavesComplete();
+		AllWavesComplete();
 		return;
 	}
 
@@ -232,9 +227,13 @@ void UEnemySubsystem::SkipPrepStage()
 	StartNextWave();
 }
 
-void UEnemySubsystem::WavesComplete()
+void UEnemySubsystem::AllWavesComplete()
 {
-	// Trigger victory contitions
+	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	if (GameState)
+	{
+		GameState->TriggerWin();
+	}
 }
 
 template<typename T>

@@ -23,11 +23,11 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameState")
 	FOnGameLose OnGameLose;
 	
-	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the win condition, sending events to everything subscribed"))
 	void TriggerWin();
 
-	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the lose condition, sending events to everything subscribed"))
 	void TwiggerLose();
 };
