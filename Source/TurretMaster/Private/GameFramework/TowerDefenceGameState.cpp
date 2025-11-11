@@ -8,6 +8,12 @@ void ATowerDefenceGameState::TriggerWin()
 
 void ATowerDefenceGameState::TwiggerLose()
 {
+	if (bGameLost)
+	{
+		return;
+	}
+
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("You Lose!!! :(")));
+	bGameLost = true;
 	OnGameLose.Broadcast();
 }

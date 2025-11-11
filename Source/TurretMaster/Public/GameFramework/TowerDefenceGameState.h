@@ -22,6 +22,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameState")
 	FOnGameLose OnGameLose;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameState")
+	bool bGameLost = false;
 	
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the win condition, sending events to everything subscribed"))
