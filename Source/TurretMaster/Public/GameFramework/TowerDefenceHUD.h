@@ -2,9 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "UI/HudWidget.h"
-#include "UI/EndScreenWidget.h"
 #include "TowerDefenceHUD.generated.h"
+
+class UHudWidget;
+class UEndScreenWidget;
+
+// TODO: Fix includes by chaning them to just be class in header files if possible and move the includes to the cpp
 
 /**
  * HUD for the tower defence game.
@@ -14,8 +17,16 @@ class TURRETMASTER_API ATowerDefenceHUD : public AHUD
 {
 	GENERATED_BODY()
 
-protected:
+public:
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
+		meta = (ToolTip = "Makes the victory widget to be visible, or not visible"))
+	void SetVictoryWidgetVisible(bool bIsVisible);
 
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
+		meta = (ToolTip = "Makes the defeat widget to be visible, or not visible"))
+	void SetDefeatWidgetVisible(bool bIsVisible);
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceHUD")
 	TSubclassOf<UHudWidget> HudWidgetClass;
 

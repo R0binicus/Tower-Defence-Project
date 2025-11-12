@@ -17,12 +17,8 @@ class TURRETMASTER_API UEndScreenWidget : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
-		meta = (ToolTip = "Reveals the menu to the player"))
-	void ShowMenu();
-
-	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
-		meta = (ToolTip = "Hides the menu from the player"))
-	void HideMenu();
+		meta = (ToolTip = "Makes the end screen widget to be visible, or not visible"))
+	void SetWidgetVisible(bool bIsVisible);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndScreenWidget")

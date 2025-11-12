@@ -1,4 +1,22 @@
 #include "GameFramework/TowerDefenceHUD.h"
+#include "UI/HudWidget.h"
+#include "UI/EndScreenWidget.h"
+
+void ATowerDefenceHUD::SetVictoryWidgetVisible(bool bIsVisible)
+{
+	if (VictoryWidget)
+	{
+		VictoryWidget->SetWidgetVisible(bIsVisible);
+	}
+}
+
+void ATowerDefenceHUD::SetDefeatWidgetVisible(bool bIsVisible)
+{
+	if (DefeatWidget)
+	{
+		DefeatWidget->SetWidgetVisible(bIsVisible);
+	}
+}
 
 void ATowerDefenceHUD::BeginPlay()
 {
@@ -39,6 +57,6 @@ void ATowerDefenceHUD::BeginPlay()
 	VictoryWidget->AddToPlayerScreen();
 	DefeatWidget->AddToPlayerScreen();
 
-	VictoryWidget->HideMenu();
-	DefeatWidget->HideMenu();
+	VictoryWidget->SetWidgetVisible(false);
+	DefeatWidget->SetWidgetVisible(false);
 }

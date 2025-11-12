@@ -2,8 +2,13 @@
 
 void ATowerDefenceGameState::TriggerWin()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("You Win!!! :)")));
 	OnGameWin.Broadcast();
+
+	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (GameHUD)
+	{
+		GameHUD->SetVictoryWidgetVisible(true);
+	}
 }
 
 void ATowerDefenceGameState::TwiggerLose()
@@ -13,7 +18,12 @@ void ATowerDefenceGameState::TwiggerLose()
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("You Lose!!! :(")));
 	bGameLost = true;
 	OnGameLose.Broadcast();
+
+	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (GameHUD)
+	{
+		GameHUD->SetDefeatWidgetVisible(true);
+	}
 }

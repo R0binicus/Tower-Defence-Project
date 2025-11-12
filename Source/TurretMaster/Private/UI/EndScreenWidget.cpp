@@ -13,14 +13,16 @@ void UEndScreenWidget::NativeConstruct()
 	}
 }
 
-void UEndScreenWidget::ShowMenu()
+void UEndScreenWidget::SetWidgetVisible(bool bIsVisible)
 {
-	SetVisibility(ESlateVisibility::Visible);
-}
-
-void UEndScreenWidget::HideMenu()
-{
-	SetVisibility(ESlateVisibility::Hidden);
+	if (bIsVisible)
+	{
+		SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UEndScreenWidget::OnRestartClicked()
