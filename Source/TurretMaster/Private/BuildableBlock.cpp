@@ -214,7 +214,7 @@ void ABuildableBlock::DisableBuildingPreview()
     BuildingPreviewMeshNew->SetSkeletalMesh(nullptr);
 }
 
-void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState)
+void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState, const EPlayerStateEnum OldState)
 {
     PlayerState = NewState;
 

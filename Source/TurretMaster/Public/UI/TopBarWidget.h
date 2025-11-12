@@ -50,11 +50,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the LivesText. Called when OnLivesChanged event is triggered"))
-	void UpdateLivesText(const int32 NewLives);
+	void UpdateLivesText(const int32 NewLives, const int32 OldLives);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the MoneyText. Called when OnMoneyChanged event is triggered"))
-	void UpdateMoneyText(const int32 NewMoney);
+	void UpdateMoneyText(const int32 NewMoney, const int32 OldMoney);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the EnemiesRemainingText. Called when OnEnemiesRemainingChanged event is triggered"))
