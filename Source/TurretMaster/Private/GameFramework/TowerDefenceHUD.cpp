@@ -7,11 +7,11 @@ void ATowerDefenceHUD::BeginPlay()
 		return;
 	}
 
-	PlayerHUD = CreateWidget<UPlayerHUD>(GetWorld(), PlayerHudClass);
-	if (!PlayerHUD)
+	HudWidget = CreateWidget<UHudWidget>(GetWorld(), PlayerHudClass);
+	if (!HudWidget)
 	{
 		return;
 	}
 
-	PlayerHUD->AddToPlayerScreen();
+	HudWidget->AddToPlayerScreen();
 }
