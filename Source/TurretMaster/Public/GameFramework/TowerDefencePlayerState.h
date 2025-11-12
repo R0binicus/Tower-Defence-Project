@@ -12,9 +12,9 @@ enum class EPlayerStateEnum
 	Building,
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChanged, EPlayerStateEnum, NewPlayerState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerLivesChanged, int32, NewPlayerLives);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerMoneyChanged, int32, NewPlayerMoney);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerStateChanged, EPlayerStateEnum, NewPlayerState, EPlayerStateEnum, OldPlayerState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerLivesChanged, int32, NewPlayerLives, int32, OldPlayerLives);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerMoneyChanged, int32, NewPlayerMoney, int32, OldPlayerMoney);
 
 /**
  * Player state for the tower defence game
@@ -92,7 +92,5 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
-		meta = (ToolTip = "Updates player state and sends the event"))
 	void SetPlayerState(const EPlayerStateEnum NewState);
 };

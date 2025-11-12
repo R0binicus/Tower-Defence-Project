@@ -84,5 +84,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets the internal player state variable"))
-	void SetPlayerState(const EPlayerStateEnum NewState);
+	void SetPlayerState(const EPlayerStateEnum NewState, const EPlayerStateEnum OldState);
 };

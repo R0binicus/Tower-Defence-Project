@@ -17,8 +17,8 @@ void UTopBarWidget::NativeConstruct()
     TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
     if (PlayerState)
     {
-        UpdateLivesText(PlayerState->GetPlayerLivesCurrent());
-        UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent());
+        UpdateLivesText(PlayerState->GetPlayerLivesCurrent(), 0);
+        UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent(), 0);
 
         PlayerState->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
         PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
@@ -54,7 +54,7 @@ void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 New
     UpdateEnemiesRemainingText(TotalWaveEnemies);
 }
 
-void UTopBarWidget::UpdateLivesText(const int32 NewLives)
+void UTopBarWidget::UpdateLivesText(const int32 NewLives, const int32 OldLives)
 {
     if (LivesText)
     {
@@ -63,7 +63,7 @@ void UTopBarWidget::UpdateLivesText(const int32 NewLives)
     }
 }
 
-void UTopBarWidget::UpdateMoneyText(const int32 NewMoney)
+void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
 {
     if (MoneyText)
     {

@@ -27,14 +27,14 @@ bool ATowerDefencePlayerState::TrySetPlayerState(const EPlayerStateEnum NewState
 
 void ATowerDefencePlayerState::SetPlayerState(const EPlayerStateEnum NewState)
 {
+    OnPlayerStateChanged.Broadcast(NewState, PlayerStateEnum);
     PlayerStateEnum = NewState;
-    OnPlayerStateChanged.Broadcast(PlayerStateEnum);
 }
 
 void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
 {
+    OnPlayerLivesChanged.Broadcast(NewLives, PlayerLivesCurrent);
     PlayerLivesCurrent = NewLives;
-    OnPlayerLivesChanged.Broadcast(PlayerLivesCurrent);
 
     if (PlayerLivesCurrent > 0)
     {
@@ -60,8 +60,8 @@ void ATowerDefencePlayerState::ChangeCurrentLives(const int32 LiveChange)
 
 void ATowerDefencePlayerState::SetPlayerMoneyCurrent(const int32 NewMoney)
 {
+    OnPlayerMoneyChanged.Broadcast(NewMoney, PlayerMoneyCurrent);
     PlayerMoneyCurrent = NewMoney;
-    OnPlayerMoneyChanged.Broadcast(PlayerMoneyCurrent);
 }
 
 bool ATowerDefencePlayerState::HasEnoughResources(const int32 Cost) const
