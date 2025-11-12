@@ -92,7 +92,5 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
-		meta = (ToolTip = "Updates player state and sends the event"))
 	void SetPlayerState(const EPlayerStateEnum NewState);
 };

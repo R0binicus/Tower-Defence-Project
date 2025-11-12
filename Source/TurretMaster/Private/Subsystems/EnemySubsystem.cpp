@@ -79,6 +79,11 @@ void UEnemySubsystem::StartNextWave()
 	int32 CurrentWaveIndex = CurrentWaveNum;
 	CurrentWaveNum++;
 
+	if (WaveDataObjects.Num() <= CurrentWaveIndex)
+	{
+		return;
+	}
+
 	TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[CurrentWaveIndex];
 	if (!WaveObject)
 	{
