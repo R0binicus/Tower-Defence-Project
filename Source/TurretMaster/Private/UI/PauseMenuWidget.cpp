@@ -4,7 +4,7 @@ void UPauseMenuWidget::NativeConstruct()
 {
 	if (ResumeButton)
 	{
-		RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnResumeClicked);
+		ResumeButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnResumeClicked);
 	}
 
 	if (RestartButton)
@@ -15,6 +15,12 @@ void UPauseMenuWidget::NativeConstruct()
 	if (MainMenuButton)
 	{
 		MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
+	}
+
+	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	if (GameState)
+	{
+		GameState->OnGamePaused.AddUniqueDynamic(this, &UPauseMenuWidget::SetWidgetVisible);
 	}
 }
 
@@ -30,9 +36,18 @@ void UPauseMenuWidget::SetWidgetVisible(bool bIsVisible)
 	}
 }
 
+void UPauseMenuWidget::SetWidgetPaused(bool bIsNowPaused)
+{
+	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	if (GameState)
+	{
+		GameState->SetGamePaused(bIsNowPaused);
+	}
+}
+
 void UPauseMenuWidget::OnResumeClicked()
 {
-	SetWidgetVisible(false);
+	SetWidgetPaused(false);
 }
 
 void UPauseMenuWidget::OnRestartClicked()

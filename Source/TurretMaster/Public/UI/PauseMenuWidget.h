@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "GameFramework/TowerDefenceGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "PauseMenuWidget.generated.h"
 
@@ -33,6 +34,10 @@ protected:
 	TObjectPtr<UButton> MainMenuButton;
 
 	void NativeConstruct() override;
+
+	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
+		meta = (ToolTip = "Tells the game state to pause the game"))
+	void SetWidgetPaused(bool bIsPause);
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

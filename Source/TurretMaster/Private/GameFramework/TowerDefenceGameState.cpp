@@ -11,7 +11,7 @@ void ATowerDefenceGameState::TriggerWin()
 	}
 }
 
-void ATowerDefenceGameState::TwiggerLose()
+void ATowerDefenceGameState::TriggerLose()
 {
 	if (bGameLost)
 	{
@@ -26,4 +26,10 @@ void ATowerDefenceGameState::TwiggerLose()
 	{
 		GameHUD->SetDefeatWidgetVisible(true);
 	}
+}
+
+void ATowerDefenceGameState::SetGamePaused(bool bIsNowPaused)
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), bIsNowPaused);
+	OnGamePaused.Broadcast(bIsNowPaused);
 }

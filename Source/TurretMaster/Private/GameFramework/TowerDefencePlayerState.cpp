@@ -44,7 +44,7 @@ void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
     TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
     if (GameState)
     {
-        GameState->TwiggerLose();
+        GameState->TriggerLose();
     }
 }
 
