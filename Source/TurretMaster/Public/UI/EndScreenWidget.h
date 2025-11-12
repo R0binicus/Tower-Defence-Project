@@ -15,6 +15,15 @@ class TURRETMASTER_API UEndScreenWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
+		meta = (ToolTip = "Reveals the menu to the player"))
+	void ShowMenu();
+
+	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
+		meta = (ToolTip = "Hides the menu from the player"))
+	void HideMenu();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndScreenWidget")
 	const TSoftObjectPtr<UWorld> MainMenuLevel;
@@ -26,14 +35,6 @@ protected:
 	TObjectPtr<UButton> MainMenuButton;
 
 	void NativeConstruct() override;
-
-	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
-		meta = (ToolTip = "Reveals the menu to the player"))
-	void ShowMenu();
-
-	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
-		meta = (ToolTip = "Hides the menu from the player"))
-	void HideMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
 		meta = (ToolTip = "Restarts the current level"))
