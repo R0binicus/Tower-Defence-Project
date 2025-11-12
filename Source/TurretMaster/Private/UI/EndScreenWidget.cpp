@@ -31,7 +31,7 @@ void UEndScreenWidget::OnRestartClicked()
 
 void UEndScreenWidget::OnMainMenuClicked()
 {
-	if (MainMenuLevel.IsValid())
+	if (!MainMenuLevel.IsNull())
 	{
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), MainMenuLevel);
 	}
