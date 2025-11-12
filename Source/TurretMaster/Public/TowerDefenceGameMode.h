@@ -2,8 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "UI/PlayerHUD.h"
-#include "GameFramework/TowerDefenceGameState.h"
+#include "GameFramework/TowerDefenceHUD.h"
 #include "TowerDefenceGameMode.generated.h"
 
 /**
@@ -16,14 +15,4 @@ class TURRETMASTER_API ATowerDefenceGameMode : public AGameModeBase
 
 public:
 	ATowerDefenceGameMode();
-
-protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameMode")
-	TSubclassOf<UPlayerHUD> PlayerHudClass;
-
-	UPROPERTY(BlueprintReadWrite, Category = "TowerDefenceGameMode")
-	TObjectPtr<UPlayerHUD> PlayerHUD;
-
-	virtual void BeginPlay() override;
 };

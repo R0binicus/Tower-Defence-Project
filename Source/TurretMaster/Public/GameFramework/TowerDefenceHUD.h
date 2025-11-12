@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "UI/PlayerHUD.h"
 #include "TowerDefenceHUD.generated.h"
 
 /**
@@ -11,5 +12,14 @@ UCLASS()
 class TURRETMASTER_API ATowerDefenceHUD : public AHUD
 {
 	GENERATED_BODY()
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceHUD")
+	TSubclassOf<UPlayerHUD> PlayerHudClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = "TowerDefenceHUD")
+	TObjectPtr<UPlayerHUD> PlayerHUD;
 	
+	virtual void BeginPlay() override;
 };
