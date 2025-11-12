@@ -21,21 +21,28 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PauseMenuWidget")
-	const TSoftObjectPtr<UWorld> FirstLevel;
+	const TSoftObjectPtr<UWorld> MainMenuLevel;
 
 	UPROPERTY(BlueprintReadOnly, Category = "PauseMenuWidget", meta = (BindWidget))
-	TObjectPtr<UButton> PlayButton;
+	TObjectPtr<UButton> ResumeButton;
 
 	UPROPERTY(BlueprintReadOnly, Category = "PauseMenuWidget", meta = (BindWidget))
-	TObjectPtr<UButton> QuitButton;
+	TObjectPtr<UButton> RestartButton;
+
+	UPROPERTY(BlueprintReadOnly, Category = "PauseMenuWidget", meta = (BindWidget))
+	TObjectPtr<UButton> MainMenuButton;
 
 	void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Starts the first level"))
-	void OnPlayClicked();
+	void OnResumeClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
+		meta = (ToolTip = "Restarts the current level"))
+	void OnRestartClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Quits the game application"))
-	void OnQuitClicked();
+	void OnMainMenuClicked();
 };

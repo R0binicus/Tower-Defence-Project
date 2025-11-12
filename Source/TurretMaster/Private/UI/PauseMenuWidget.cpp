@@ -2,14 +2,19 @@
 
 void UPauseMenuWidget::NativeConstruct()
 {
-	if (PlayButton)
+	if (ResumeButton)
 	{
-		PlayButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnPlayClicked);
+		RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnResumeClicked);
 	}
 
-	if (QuitButton)
+	if (RestartButton)
 	{
-		QuitButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnQuitClicked);
+		RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnRestartClicked);
+	}
+
+	if (MainMenuButton)
+	{
+		MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
 	}
 }
 
@@ -25,16 +30,22 @@ void UPauseMenuWidget::SetWidgetVisible(bool bIsVisible)
 	}
 }
 
-void UPauseMenuWidget::OnPlayClicked()
+void UPauseMenuWidget::OnResumeClicked()
 {
-	if (FirstLevel.IsValid() || FirstLevel.IsPending())
-	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FirstLevel);
-	}
+	SetWidgetVisible(false);
 }
 
-void UPauseMenuWidget::OnQuitClicked()
+void UPauseMenuWidget::OnRestartClicked()
 {
-	UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(GetWorld(), 0), EQuitPreference::Quit, false);
+	FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	UGameplayStatics::OpenLevel(this, FName(CurrentLevelNameString));
+}
+
+void UPauseMenuWidget::OnMainMenuClicked()
+{
+	if (MainMenuLevel.IsValid() || MainMenuLevel.IsPending())
+	{
+		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), MainMenuLevel);
+	}
 }
 
