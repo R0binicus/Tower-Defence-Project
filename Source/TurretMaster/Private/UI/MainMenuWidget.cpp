@@ -15,7 +15,7 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnPlayClicked()
 {
-	if (!FirstLevel.IsNull())
+	if (FirstLevel.IsValid() || FirstLevel.IsPending())
 	{
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FirstLevel);
 	}

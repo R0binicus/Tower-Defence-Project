@@ -27,7 +27,7 @@ void UPauseMenuWidget::SetWidgetVisible(bool bIsVisible)
 
 void UPauseMenuWidget::OnPlayClicked()
 {
-	if (!FirstLevel.IsNull())
+	if (FirstLevel.IsValid() || FirstLevel.IsPending())
 	{
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FirstLevel);
 	}

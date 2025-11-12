@@ -34,8 +34,6 @@ void AEnemy::Death_Implementation()
 {
 	SetDestination(GetActorLocation());
 
-	// TODO: Discuss, now that the thing using the event has been moved to a subsystem
-	// would it be better to just call 
 	OnEnemyDeath.Broadcast(ResourcesOnKill);
 }
 

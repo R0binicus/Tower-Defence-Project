@@ -7,8 +7,6 @@
 class UHudWidget;
 class UEndScreenWidget;
 
-// TODO: Fix includes by chaning them to just be class in header files if possible and move the includes to the cpp
-
 /**
  * HUD for the tower defence game.
  */
