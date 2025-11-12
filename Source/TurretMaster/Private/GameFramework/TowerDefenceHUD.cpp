@@ -1,6 +1,15 @@
 #include "GameFramework/TowerDefenceHUD.h"
+#include "UI/PauseMenuWidget.h"
 #include "UI/HudWidget.h"
 #include "UI/EndScreenWidget.h"
+
+void ATowerDefenceHUD::SetPauseWidgetVisible(bool bIsVisible)
+{
+	if (PauseWidget)
+	{
+		PauseWidget->SetWidgetVisible(bIsVisible);
+	}
+}
 
 void ATowerDefenceHUD::SetVictoryWidgetVisible(bool bIsVisible)
 {
@@ -25,12 +34,23 @@ void ATowerDefenceHUD::BeginPlay()
 		return;
 	}
 
+	if (!PauseWidgetClass)
+	{
+		return;
+	}
+
 	if (!VictoryWidgetClass)
 	{
 		return;
 	}
 
 	if (!DefeatWidgetClass)
+	{
+		return;
+	}
+
+	PauseWidget = CreateWidget<UPauseMenuWidget>(GetWorld(), PauseWidgetClass);
+	if (!PauseWidget)
 	{
 		return;
 	}
@@ -54,9 +74,11 @@ void ATowerDefenceHUD::BeginPlay()
 	}
 
 	HudWidget->AddToPlayerScreen();
+	PauseWidget->AddToPlayerScreen();
 	VictoryWidget->AddToPlayerScreen();
 	DefeatWidget->AddToPlayerScreen();
 
+	PauseWidget->SetWidgetVisible(false);
 	VictoryWidget->SetWidgetVisible(false);
 	DefeatWidget->SetWidgetVisible(false);
 }

@@ -5,6 +5,7 @@
 #include "TowerDefenceHUD.generated.h"
 
 class UHudWidget;
+class UPauseMenuWidget;
 class UEndScreenWidget;
 
 /**
@@ -16,6 +17,10 @@ class TURRETMASTER_API ATowerDefenceHUD : public AHUD
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
+		meta = (ToolTip = "Makes the pause widget to be visible, or not visible"))
+	void SetPauseWidgetVisible(bool bIsVisible);
+
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
 		meta = (ToolTip = "Makes the victory widget to be visible, or not visible"))
 	void SetVictoryWidgetVisible(bool bIsVisible);
@@ -30,6 +35,12 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "TowerDefenceHUD")
 	TObjectPtr<UHudWidget> HudWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceHUD")
+	TSubclassOf<UPauseMenuWidget> PauseWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite, Category = "TowerDefenceHUD")
+	TObjectPtr<UPauseMenuWidget> PauseWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceHUD")
 	TSubclassOf<UEndScreenWidget> VictoryWidgetClass;
