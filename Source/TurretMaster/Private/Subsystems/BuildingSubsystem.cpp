@@ -1,5 +1,10 @@
 #include "Subsystems/BuildingSubsystem.h"
 
+void UBuildingSubsystem::SetProtectPoint(AActor* NewProtectPoint)
+{
+	ProtectPoint = NewProtectPoint;
+}
+
 void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 {
 	if (!BuildingData)
@@ -9,6 +14,11 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 
 	TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 	if (!PlayerState)
+	{
+		return;
+	}
+
+	if (!PlayerState->HasEnoughResources(BuildingData->Cost))
 	{
 		return;
 	}

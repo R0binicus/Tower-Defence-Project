@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "UI/PlayerHUD.h"
+#include "GameFramework/TowerDefenceGameState.h"
 #include "TowerDefenceGameMode.generated.h"
 
 /**

@@ -19,4 +19,8 @@ class TURRETMASTER_API IBuildable
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Buildable",
+		meta = (ToolTip = "Sets the point which building tries to protect"))
+	void SetProtectPoint(AActor* NewProtectPoint);
+	void SetProtectPoint_Implementation(AActor* NewProtectPoint);
 };

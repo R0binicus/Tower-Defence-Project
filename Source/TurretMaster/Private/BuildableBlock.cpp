@@ -35,21 +35,16 @@ void ABuildableBlock::BeginPlay()
     World = GetWorld();
 
     TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-    if (!BuildingSubsystem)
+    if (BuildingSubsystem)
     {
-        return;
+        BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
     }
 
-    BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
-
-    TObjectPtr<APlayerState> GenericPlayerState = UGameplayStatics::GetPlayerState(GetWorld(), 0);
-    TObjectPtr<ATowerDefencePlayerState> CustomPlayerState = Cast<ATowerDefencePlayerState>(GenericPlayerState);
-    if (!CustomPlayerState)
+    TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    if (PlayerStateClass)
     {
-        return;
+        PlayerStateClass->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
     }
-
-    CustomPlayerState->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
 }
 
 void ABuildableBlock::Tick(float DeltaTime)
@@ -76,12 +71,16 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
     }
 
     const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
-
     const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
-
     if (!Building)
     {
         return nullptr;
+    }
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (BuildingSubsystem)
+    {
+        IBuildable::Execute_SetProtectPoint(BuildingActor, BuildingSubsystem->GetProtectPoint());
     }
 
     return Building;
@@ -155,13 +154,20 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     }
 
     const TSubclassOf<AActor> BuildableClass = BuildingDataAsset->Class;
-
     if (!BuildableClass)
     {
         return;
     }
 
     CreatedBuildable = CreateBuildableActor(BuildableClass);
+
+    TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    if (!PlayerStateClass)
+    {
+        return;
+    }
+
+    PlayerStateClass->ChangeCurrentMoney(-BuildingDataAsset->Cost);
 
     DisableBuildingPreview();
 
@@ -208,7 +214,7 @@ void ABuildableBlock::DisableBuildingPreview()
     BuildingPreviewMeshNew->SetSkeletalMesh(nullptr);
 }
 
-void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState)
+void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState, const EPlayerStateEnum OldState)
 {
     PlayerState = NewState;
 
