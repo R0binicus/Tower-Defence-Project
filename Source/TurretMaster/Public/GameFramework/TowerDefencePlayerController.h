@@ -19,7 +19,7 @@ class TURRETMASTER_API ATowerDefencePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
 	FOnPauseInput OnPauseInput;
 
@@ -29,6 +29,7 @@ protected:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
 	FOnCancelInput OnCancelInput;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputMappingContext> InputMap;
 

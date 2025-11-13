@@ -1,5 +1,16 @@
 #include "GameFramework/TowerDefenceGameState.h"
 
+void ATowerDefenceGameState::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController)
+	{
+		PlayerController->OnPauseInput.AddDynamic(this, &ATowerDefenceGameState::OnPauseInputEvent);
+	}
+}
+
 void ATowerDefenceGameState::TriggerWin()
 {
 	OnGameWin.Broadcast();
@@ -32,4 +43,10 @@ void ATowerDefenceGameState::SetGamePaused(bool bIsNowPaused)
 {
 	UGameplayStatics::SetGamePaused(GetWorld(), bIsNowPaused);
 	OnGamePaused.Broadcast(bIsNowPaused);
+}
+
+void ATowerDefenceGameState::OnPauseInputEvent()
+{
+	bool bIsPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	SetGamePaused(!bIsPaused);
 }
