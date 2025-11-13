@@ -2,7 +2,11 @@
 
 void ATowerDefencePlayerController::BeginPlay()
 {
-
+	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (InputSubsystem)
+	{
+		InputSubsystem->AddMappingContext(InputMap, 0);
+	}
 }
 
 void ATowerDefencePlayerController::SetupInputComponent()
