@@ -2,9 +2,9 @@
 
 void UMainMenuWidget::NativeConstruct()
 {
-	if (PlayButton)
+	if (Level01Button)
 	{
-		PlayButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnPlayClicked);
+		Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
 	}
 
 	if (QuitButton)
@@ -13,11 +13,11 @@ void UMainMenuWidget::NativeConstruct()
 	}
 }
 
-void UMainMenuWidget::OnPlayClicked()
+void UMainMenuWidget::OnLevel01Clicked()
 {
-	if (FirstLevel.IsValid() || FirstLevel.IsPending())
+	if (Level01.IsValid() || Level01.IsPending())
 	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), FirstLevel);
+		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 	}
 }
 

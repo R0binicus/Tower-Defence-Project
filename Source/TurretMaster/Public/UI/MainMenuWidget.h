@@ -16,10 +16,10 @@ class TURRETMASTER_API UMainMenuWidget : public UUserWidget
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MainMenuWidget")
-	const TSoftObjectPtr<UWorld> FirstLevel;
+	const TSoftObjectPtr<UWorld> Level01;
 
 	UPROPERTY(BlueprintReadOnly, Category = "MainMenuWidget", meta = (BindWidget))
-	TObjectPtr<UButton> PlayButton;
+	TObjectPtr<UButton> Level01Button;
 
 	UPROPERTY(BlueprintReadOnly, Category = "MainMenuWidget", meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
@@ -28,7 +28,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "MainMenuWidget",
 		meta = (ToolTip = "Starts the first level"))
-	void OnPlayClicked();
+	void OnLevel01Clicked();
 
 	UFUNCTION(BlueprintCallable, Category = "MainMenuWidget",
 		meta = (ToolTip = "Quits the game application"))
