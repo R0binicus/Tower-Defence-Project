@@ -33,10 +33,10 @@ protected:
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
 
 	// Widget is set in the enemy's HealthBarWidgetComponent inspector, as it refuses to be set in C++
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	UPROPERTY(BlueprintReadOnly, Category = "Enemy")
 	TObjectPtr<UEnemyHealthbarWidget> HealthBarWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enemy")
+	UPROPERTY(BlueprintReadWrite, Category = "Enemy")
 	TObjectPtr<APlayerCameraManager> CameraManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
