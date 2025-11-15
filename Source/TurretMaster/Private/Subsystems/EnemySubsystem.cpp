@@ -13,7 +13,6 @@ void UEnemySubsystem::InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float Ne
 		return;
 	}
 
-	WavePrepTime = NewPrepTime;
 	WaveDataArray = WaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
 

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "EnemyWaveData.h"
 #include "LevelDataAsset.generated.h"
 
 /**
@@ -11,5 +12,11 @@ UCLASS()
 class TURRETMASTER_API ULevelDataAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
+	TArray<FEnemyWaveData> LevelWaveData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
+	TSoftObjectPtr<AActor> BuildingProtectPoint;
 };

@@ -73,8 +73,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 TotalWaveNum;
 
-	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
-	float WavePrepTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
+	float WavePrepTime = 15.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	TArray<FEnemyWaveData> WaveDataArray;
