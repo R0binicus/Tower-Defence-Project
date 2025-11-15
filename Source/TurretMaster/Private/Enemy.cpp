@@ -6,17 +6,54 @@ AEnemy::AEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	HealthBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidget"));
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetupAttachment(RootComponent);
+		HealthBarWidgetComponent->SetCastShadow(false);
+		HealthBarWidgetComponent->SetVisibility(false);
+	}
 }
 
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
+
+	TObjectPtr<APlayerController> PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
+	{
+		CameraManager = PlayerController->PlayerCameraManager;
+	}
+
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidget = Cast<UEnemyHealthbarWidget>(HealthBarWidgetComponent->GetWidget());
+	}
+
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetBarPercent(CurrentHealth/CurrentHealth);
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!CameraManager)
+	{
+		return;
+	}
+
+	if (!HealthBarWidgetComponent)
+	{
+		return;
+	}
+
+	FRotator NewComponentRotation = UKismetMathLibrary::FindLookAtRotation(HealthBarWidgetComponent->GetComponentLocation(), CameraManager->GetCameraLocation());
+	HealthBarWidgetComponent->SetWorldRotation(NewComponentRotation);
 }
 
 void AEnemy::TakeDamage_Implementation(float DamageTaken)
@@ -28,6 +65,11 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 		CurrentHealth = 0;
 		bIsDead = true;
 	}
+
+	if (HealthBarWidget)
+	{
+		HealthBarWidget->SetBarPercent(CurrentHealth/MaxHealth);
+	}
 }
 
 void AEnemy::Death_Implementation()
@@ -35,6 +77,11 @@ void AEnemy::Death_Implementation()
 	SetDestination(GetActorLocation());
 
 	OnEnemyDeath.Broadcast(ResourcesOnKill);
+
+	if (HealthBarWidgetComponent)
+	{
+		HealthBarWidgetComponent->SetVisibility(false);
+	}
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
