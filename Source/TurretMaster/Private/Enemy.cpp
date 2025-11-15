@@ -12,7 +12,6 @@ AEnemy::AEnemy()
 	{
 		HealthBarWidgetComponent->SetupAttachment(RootComponent);
 		HealthBarWidgetComponent->SetCastShadow(false);
-		HealthBarWidgetComponent->SetVisibility(false);
 	}
 }
 
