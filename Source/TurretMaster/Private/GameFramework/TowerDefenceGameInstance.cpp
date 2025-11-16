@@ -1,8 +1,16 @@
 #include "GameFramework/TowerDefenceGameInstance.h"
 
-void UTowerDefenceGameInstance::TestLoadAsset(FPrimaryAssetId AssetId)
+void UTowerDefenceGameInstance::LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorld)
 {
-	UAssetManager* Manager = UAssetManager::GetIfValid();
+	FString WorldName = InWorld.GetAssetName();
+
+	if (!LevelDataIdMap.Contains(WorldName))
+	{
+		return;
+	}
+	FPrimaryAssetId AssetId = LevelDataIdMap[WorldName];
+
+	UAssetManager* Manager = UAssetManager::GetIfInitialized();
 	if (!Manager)
 	{
 		return;
@@ -20,9 +28,14 @@ void UTowerDefenceGameInstance::TestLoadAsset(FPrimaryAssetId AssetId)
 	Manager->LoadPrimaryAsset(AssetId, Bundles, Delegate);
 }
 
+UWorld* UTowerDefenceGameInstance::GetLevel()
+{
+	return GetWorld();
+}
+
 void UTowerDefenceGameInstance::OnAssetLoaded(FPrimaryAssetId LoadedId)
 {
-	UAssetManager* Manager = UAssetManager::GetIfValid();
+	UAssetManager* Manager = UAssetManager::GetIfInitialized();
 	if (!Manager)
 	{
 		return;
@@ -38,7 +51,6 @@ void UTowerDefenceGameInstance::OnAssetLoaded(FPrimaryAssetId LoadedId)
 	if (MyTypedObject)
 	{
 		CurrentLevelData = MyTypedObject;
-
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("String: %s"), *CurrentLevelData->GetPrimaryAssetId().ToString()));
+		OnLevelDataLoaded.Broadcast(CurrentLevelData);
 	}
 }
