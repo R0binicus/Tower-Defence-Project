@@ -8,7 +8,7 @@ void AEnemyWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+	/*TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
 	if (EnemySubsystem)
 	{
 		EnemySubsystem->InitialiseWaves(LevelWaveData, WavePrepTime);
@@ -18,5 +18,5 @@ void AEnemyWaveManager::BeginPlay()
 	if (BuildingSubsystem)
 	{
 		BuildingSubsystem->SetProtectPoint(BuildingProtectPoint);
-	}
+	}*/
 }

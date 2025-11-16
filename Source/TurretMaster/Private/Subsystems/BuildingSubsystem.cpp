@@ -1,8 +1,21 @@
 #include "Subsystems/BuildingSubsystem.h"
 
-void UBuildingSubsystem::SetProtectPoint(AActor* NewProtectPoint)
+void UBuildingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	ProtectPoint = NewProtectPoint;
+	Super::Initialize(Collection);
+
+	TObjectPtr<UWorld> World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->LoadDataUsingLevel(World);
+		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::SetupProtectPoint);
+	}
 }
 
 void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
@@ -46,4 +59,60 @@ void UBuildingSubsystem::CancelPlaceBuilding()
 	}
 
 	PlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
+}
+
+void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
+{
+	if (!LevelData)
+	{
+		return;
+	}
+
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+
+	TSoftObjectPtr<AActor> SoftProtectPoint = LevelData->BuildingProtectPoint;
+	if (SoftProtectPoint.IsValid() || SoftProtectPoint.IsPending())
+	{
+		auto AssetLoadedDelegate = [this, SoftProtectPoint]()
+			{
+				if (!SoftProtectPoint)
+				{
+					return;
+				}
+
+				TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+				if (!NewProtectPoint)
+				{
+					return;
+				}
+
+				ProtectPoint = NewProtectPoint;
+			};
+
+		TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint, AssetLoadedDelegate);
+	}
+
+	/*TArray<TSoftObjectPtr<AActor>> SoftObjArray;
+
+	auto AssetLoadedDelegate2 = [this, SoftProtectPoint]()
+		{
+			if (!SoftProtectPoint)
+			{
+				return;
+			}
+
+			TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+			if (!NewProtectPoint)
+			{
+				return;
+			}
+
+			ProtectPoint = NewProtectPoint;
+		};
+
+	StreamableManager.RequestAsyncLoad(SoftObjArray, AssetLoadedDelegate2);*/
+	
+
+	//TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), AssetLoadedDelegate, 0, false, true);
+	//StreamableManager.CreateCombinedHandle();
 }

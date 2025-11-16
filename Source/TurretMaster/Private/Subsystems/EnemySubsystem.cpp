@@ -4,15 +4,29 @@
 void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-}
 
-void UEnemySubsystem::InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime)
-{
-	if (WaveData.Num() < 1)
+	TObjectPtr<UWorld> World = GetWorld();
+	if (!World)
 	{
 		return;
 	}
 
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->LoadDataUsingLevel(World);
+		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UEnemySubsystem::InitialiseWaves);
+	}
+}
+
+void UEnemySubsystem::InitialiseWaves(ULevelDataAsset* LevelData)
+{
+	if (!LevelData)
+	{
+		return;
+	}
+
+	TArray<FEnemyWaveData>& WaveData = LevelData->LevelWaveData;
 	WaveDataArray = WaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
 
@@ -154,12 +168,12 @@ void UEnemySubsystem::MakeWaveEnemy()
 		return;
 	}
 
-	AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
-	TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
+	//AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
+	//TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
 
-	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
+	//SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 
-	CurrentWaveEnemyIndex++;
+	//CurrentWaveEnemyIndex++;
 }
 
 void UEnemySubsystem::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass)
