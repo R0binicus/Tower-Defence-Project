@@ -21,13 +21,13 @@ struct FEnemyWaveData
 	TMap<TSubclassOf<AEnemy>, int32> EnemyAmounts;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyWaveData")
-	TArray<TObjectPtr<AEnemySpawnArea>> SelectedSpawnAreas;
+	TArray<TSoftObjectPtr<AEnemySpawnArea>> SelectedSpawnAreas;
 
 	FEnemyWaveData() : WaveDelay(0.f), SpawnPeriod(0.f)
 	{
 	}
 
-	FEnemyWaveData(const float InWaveDelay, const float InSpawnPeriod, const TMap<TSubclassOf<AEnemy>, int32>& InEnemyAmounts, const TArray<TObjectPtr<AEnemySpawnArea>>& InSelectedSpawnAreas) :
+	FEnemyWaveData(const float InWaveDelay, const float InSpawnPeriod, const TMap<TSubclassOf<AEnemy>, int32>& InEnemyAmounts, const TArray<TSoftObjectPtr<AEnemySpawnArea>>& InSelectedSpawnAreas) :
 		WaveDelay(InWaveDelay), SpawnPeriod(InSpawnPeriod), EnemyAmounts(InEnemyAmounts), SelectedSpawnAreas(InSelectedSpawnAreas)
 	{
 	}
