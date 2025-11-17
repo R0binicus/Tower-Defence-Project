@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "TopBarWidget.generated.h"
 
+class ULevelDataAsset;
+
 /**
  * Widget which is at the top of the screen. Displays information such as money and player lives
  */
@@ -43,6 +45,9 @@ protected:
 	TObjectPtr<UTextBlock> EnemiesRemainingText;
 
 	void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnLevelDataLoaded(ULevelDataAsset* LevelData);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates values due to a new wave starting. Called when OnWaveChanged event is triggered"))
