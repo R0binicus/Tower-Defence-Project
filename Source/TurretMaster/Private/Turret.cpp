@@ -181,17 +181,19 @@ AActor* ATurret::GetClosestEnemy() const
 
     for (size_t i = 0; i < EnemyRefArray.Num(); i++)
     {
-        if (!EnemyRefArray[i] || !EnemyRefArray[i]->Implements<UDamageable>())
+        const TObjectPtr<AActor> Enemy = EnemyRefArray[i];
+        if (!Enemy || !Enemy->Implements<UDamageable>())
         {
             continue;
         }
 
-        if (IDamageable::Execute_IsDead(EnemyRefArray[i]))
+        if (IDamageable::Execute_IsDead(Enemy))
         {
             continue;
         }
 
-        const float EnemyDistance = FVector::DistSquared(EnemyRefArray[i]->GetActorLocation(), TurretProtectPoint->GetActorLocation());
+        const FVector EnemyLocation = Enemy->GetActorLocation();
+        const float EnemyDistance = FVector::DistSquared(EnemyLocation, TurretProtectPoint->GetActorLocation());
 
         // TurretFireMinimumRadius is already squared, so comparing distances is fine
         if (EnemyDistance < TurretFireMinimumRange)
@@ -204,11 +206,39 @@ AActor* ATurret::GetClosestEnemy() const
             continue;
         }
 
+        if (!IsEnemyInLOS(Enemy, EnemyLocation))
+        {
+
+        }
+
         CurrentClosestDistance = EnemyDistance;
-        PotentialClosestEnemy = EnemyRefArray[i];
+        PotentialClosestEnemy = Enemy;
     }
 
     return PotentialClosestEnemy;
+}
+
+bool ATurret::IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) const
+{
+    if (!Enemy || !BulletSpawnPoint)
+    {
+        return false;
+    }
+
+    FVector GunMuzzleLocation = BulletSpawnPoint->GetComponentLocation();
+
+    FHitResult HitResult;
+    FCollisionQueryParams  COQP;
+    COQP.AddIgnoredActor(this);
+    FCollisionResponseParams CollRes;
+
+    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, ECollisionChannel::ECC_Pawn, COQP, CollRes);
+    if (bActorHit)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("HitResult Name: %s"), *HitResult.GetActor()->GetFName().ToString()));
+    }
+
+    return false;
 }
 
 void ATurret::UpdateTurretValues()

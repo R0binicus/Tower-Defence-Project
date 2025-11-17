@@ -200,6 +200,10 @@ protected:
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy() const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
+		meta = (ToolTip = "Returns true if the enemy is in line of sight from the gun muzzle"))
+	bool IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) const;
+
 	virtual void UpdateTurretValues();
 
 	UFUNCTION(BlueprintCallable, Category = "Turret",
