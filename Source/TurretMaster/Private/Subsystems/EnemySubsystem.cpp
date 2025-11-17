@@ -114,18 +114,45 @@ void UEnemySubsystem::StartNextWave()
 
 	LoadWaveSpawners(CurrentWaveData.SelectedSpawnAreas);
 }
+
 void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
 {
-	// TODO: Discuss whatever TF is happening here
 	CurrentSpawnerArray.Empty();
 	CurrentSpawnerArray.Reserve(SoftSpawnerArray.Num());
+
+	TArray<FSoftObjectPath> SoftPathArray;
+	SoftPathArray.Reserve(SoftSpawnerArray.Num());
 	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
 	{
-		if (!SoftSpawner.IsValid() && !SoftSpawner.IsPending())
+		if (SoftSpawner.IsNull())
 		{
-			return;
+			return; // The data asset probably has an empty entry
 		}
 
+		if (!SoftSpawner.IsPending())
+		{
+			continue; // Object is already loaded
+		}
+
+		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
+	}
+
+	if (SoftPathArray.Num() == 0)
+	{
+		SetSpawnerArray(SoftSpawnerArray);
+	}
+
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+	FStreamableDelegate SetSpawnerArrayDelegate;
+	SetSpawnerArrayDelegate.BindUObject(this, &UEnemySubsystem::SetSpawnerArray, SoftSpawnerArray);
+
+	StreamableManager.RequestAsyncLoad(SoftPathArray, SetSpawnerArrayDelegate);
+}
+
+void UEnemySubsystem::SetSpawnerArray(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
+{
+	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+	{
 		if (!SoftSpawner)
 		{
 			return;
@@ -141,44 +168,6 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 	}
 
 	SetupEnemySpawning();
-
-	
-
-	/*TArray<FSoftObjectPath> SoftPathArray;
-	SoftPathArray.Reserve(SoftSpawnerArray.Num());
-	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
-	{
-		if (!SoftSpawner.IsValid() && !SoftSpawner.IsPending())
-		{
-			return;
-		}
-		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
-	}
-
-	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
-
-	StreamableManager.RequestAsyncLoad(SoftPathArray, [this, SoftSpawnerArray]()
-		{
-			CurrentSpawnerArray.Empty();
-			CurrentSpawnerArray.Reserve(SoftSpawnerArray.Num());
-			for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
-			{
-				if (!SoftSpawner)
-				{
-					return;
-				}
-
-				TObjectPtr<AEnemySpawnArea> NewSpawner = SoftSpawner.Get();
-				if (!NewSpawner)
-				{
-					return;
-				}
-
-				CurrentSpawnerArray.Add(NewSpawner.Get());
-			}
-
-			SetupEnemySpawning();
-		});*/
 }
 
 void UEnemySubsystem::SetupEnemySpawnArray()

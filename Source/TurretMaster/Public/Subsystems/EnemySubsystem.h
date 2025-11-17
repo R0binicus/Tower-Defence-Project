@@ -121,6 +121,9 @@ protected:
 		meta = (ToolTip = "Loads an array of soft pointers"))
 	void LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray);
 
+	UFUNCTION()
+	void SetSpawnerArray(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray);
+
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Sets up the PendingEnemyWaveSpawns array. This adds the enemies from the EnemyWaveData, then shuffles the array"))
 	void SetupEnemySpawnArray();
