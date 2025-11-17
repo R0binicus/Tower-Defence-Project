@@ -29,6 +29,9 @@ protected:
 	TObjectPtr<USphereComponent> RangeSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<USceneComponent> GunParentComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> BulletSpawnPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")

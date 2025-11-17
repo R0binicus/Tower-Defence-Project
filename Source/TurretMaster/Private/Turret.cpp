@@ -15,19 +15,20 @@ ATurret::ATurret()
     RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATurret::OnOverlapEnd);
     RootComponent = RangeSphere;
 
-    BulletSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("BulletSpawnPoint"));
-    BulletSpawnPoint->SetupAttachment(RootComponent);
-
-    MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
-    MuzzleDirectionSocket->SetupAttachment(RootComponent);
-
-    TurretGunMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretGunMeshComp"));
-    TurretGunMeshComp->SetupAttachment(RootComponent);
-    TurretGunMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
-    
     TurretBaseMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretBaseMeshComp"));
     TurretBaseMeshComp->SetupAttachment(RootComponent);
-    TurretBaseMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
+
+    GunParentComponent = CreateDefaultSubobject<USceneComponent>(TEXT("GunParentComponent"));
+    GunParentComponent->SetupAttachment(RootComponent);
+
+    BulletSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("BulletSpawnPoint"));
+    BulletSpawnPoint->SetupAttachment(GunParentComponent);
+
+    MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
+    MuzzleDirectionSocket->SetupAttachment(GunParentComponent);
+
+    TurretGunMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretGunMeshComp"));
+    TurretGunMeshComp->SetupAttachment(GunParentComponent);
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -40,8 +41,16 @@ void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
 void ATurret::BeginPlay()
 {
 	Super::BeginPlay();
+
+    if (!GunParentComponent)
+    {
+        return;
+    }
+
+    InitialRotation = GunParentComponent->GetComponentRotation();
+    CurrentTurretRotation = InitialRotation;
     TurretLocation = GetActorLocation();
-    InitialRotation = GetActorRotation();
+
     World = GetWorld();
 
     if (const UPhysicsSettings* Physics = UPhysicsSettings::Get())
@@ -214,7 +223,11 @@ AActor* ATurret::GetClosestEnemy() const
 
 void ATurret::UpdateTurretValues()
 {
-    CurrentTurretRotation = GetActorRotation();
+    // TODO: Fix these null checks to be in one
+    if (GunParentComponent)
+    {
+        CurrentTurretRotation = GunParentComponent->GetComponentRotation();
+    }
 
     if (MuzzleDirectionSocket)
     {
@@ -245,7 +258,7 @@ FVector ATurret::PredictEnemyLocation(const FVector& EnemyPosition, const FVecto
 #pragma region Turret Rotation
 void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPosition, const FVector& TargetDirection)
 {
-    if (!MuzzleDirectionSocket)
+    if (!MuzzleDirectionSocket || !TurretGunMeshComp)
     {
         return;
     }
@@ -258,7 +271,8 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
 
     // Then set rotation
     const FRotator NewRotation = FMath::RInterpTo(CurrentTurretRotation, ClampedTurretRotation, DeltaTime, TurretTurnSpeed);
-    SetActorRotation(NewRotation);
+    //SetActorRotation(NewRotation);
+    GunParentComponent->SetWorldRotation(NewRotation);
 }
 
 FRotator ATurret::FindDesiredRotation(const FVector& TargetPosition, const FVector& TargetDirection)
