@@ -51,5 +51,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Sets the point which buildings try to protect using a level data asset"))
-	void SetupProtectPoint(ULevelDataAsset* LevelData);
+	void LoadProtectPoint(ULevelDataAsset* LevelData);
+
+	UFUNCTION()
+	void SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint);
 };

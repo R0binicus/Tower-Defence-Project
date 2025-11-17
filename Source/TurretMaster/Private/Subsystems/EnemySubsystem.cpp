@@ -140,6 +140,7 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 	if (SoftPathArray.Num() == 0)
 	{
 		SetSpawnerArray(SoftSpawnerArray);
+		return;
 	}
 
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();

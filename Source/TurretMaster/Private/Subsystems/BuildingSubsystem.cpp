@@ -14,7 +14,7 @@ void UBuildingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	if (GameInstance)
 	{
 		GameInstance->LoadDataUsingLevel(World);
-		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::SetupProtectPoint);
+		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::LoadProtectPoint);
 	}
 }
 
@@ -61,7 +61,7 @@ void UBuildingSubsystem::CancelPlaceBuilding()
 	PlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
 }
 
-void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
+void UBuildingSubsystem::LoadProtectPoint(ULevelDataAsset* LevelData)
 {
 	if (!LevelData)
 	{
@@ -71,13 +71,26 @@ void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
 
 	TSoftObjectPtr<AActor> SoftProtectPoint = LevelData->BuildingProtectPoint;
-	if (!SoftProtectPoint.IsValid() && !SoftProtectPoint.IsPending())
+
+	if (SoftProtectPoint.IsNull())
 	{
+		return; // The data asset probably has an empty entry
+	}
+
+	if (!SoftProtectPoint.IsPending())
+	{
+		SetProtectPoint(SoftProtectPoint); // Object is already loaded
 		return;
 	}
 
-	// TODO: Discuss whatever TF is happening here
+	FStreamableDelegate SetSpawnerArrayDelegate;
+	SetSpawnerArrayDelegate.BindUObject(this, &UBuildingSubsystem::SetProtectPoint, SoftProtectPoint);
 
+	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), SetSpawnerArrayDelegate);
+}
+
+void UBuildingSubsystem::SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint)
+{
 	if (!SoftProtectPoint)
 	{
 		return;
@@ -90,20 +103,4 @@ void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
 	}
 
 	ProtectPoint = NewProtectPoint;
-
-	/*TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), [this, SoftProtectPoint]()
-	{
-		if (!SoftProtectPoint)
-		{
-			return;
-		}
-
-		TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
-		if (!NewProtectPoint)
-		{
-			return;
-		}
-
-		ProtectPoint = NewProtectPoint;
-	});*/
 }
