@@ -116,7 +116,35 @@ void UEnemySubsystem::StartNextWave()
 }
 void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
 {
-	TArray<FSoftObjectPath> SoftPathArray;
+	// TODO: Discuss whatever TF is happening here
+	CurrentSpawnerArray.Empty();
+	CurrentSpawnerArray.Reserve(SoftSpawnerArray.Num());
+	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+	{
+		if (!SoftSpawner.IsValid() && !SoftSpawner.IsPending())
+		{
+			return;
+		}
+
+		if (!SoftSpawner)
+		{
+			return;
+		}
+
+		TObjectPtr<AEnemySpawnArea> NewSpawner = SoftSpawner.Get();
+		if (!NewSpawner)
+		{
+			return;
+		}
+
+		CurrentSpawnerArray.Add(NewSpawner.Get());
+	}
+
+	SetupEnemySpawning();
+
+	
+
+	/*TArray<FSoftObjectPath> SoftPathArray;
 	SoftPathArray.Reserve(SoftSpawnerArray.Num());
 	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
 	{
@@ -150,7 +178,7 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 			}
 
 			SetupEnemySpawning();
-		});
+		});*/
 }
 
 void UEnemySubsystem::SetupEnemySpawnArray()

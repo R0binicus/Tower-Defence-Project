@@ -76,7 +76,22 @@ void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
 		return;
 	}
 
-	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), [this, SoftProtectPoint]()
+	// TODO: Discuss whatever TF is happening here
+
+	if (!SoftProtectPoint)
+	{
+		return;
+	}
+
+	TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+	if (!NewProtectPoint)
+	{
+		return;
+	}
+
+	ProtectPoint = NewProtectPoint;
+
+	/*TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), [this, SoftProtectPoint]()
 	{
 		if (!SoftProtectPoint)
 		{
@@ -90,29 +105,5 @@ void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
 		}
 
 		ProtectPoint = NewProtectPoint;
-	});
-
-	/*TArray<TSoftObjectPtr<AActor>> SoftObjArray;
-
-	auto AssetLoadedDelegate2 = [this, SoftProtectPoint]()
-		{
-			if (!SoftProtectPoint)
-			{
-				return;
-			}
-
-			TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
-			if (!NewProtectPoint)
-			{
-				return;
-			}
-
-			ProtectPoint = NewProtectPoint;
-		};
-
-	StreamableManager.RequestAsyncLoad(SoftObjArray, AssetLoadedDelegate2);*/
-	
-
-	//TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), AssetLoadedDelegate, 0, false, true);
-	//StreamableManager.CreateCombinedHandle();
+	});*/
 }
