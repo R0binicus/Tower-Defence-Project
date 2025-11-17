@@ -39,7 +39,10 @@ protected:
 	TObjectPtr<AActor> TurretProtectPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	TObjectPtr<USkeletalMeshComponent> TurretMeshComp;
+	TObjectPtr<USkeletalMeshComponent> TurretGunMeshComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<UStaticMeshComponent> TurretBaseMeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;

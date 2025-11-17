@@ -21,9 +21,13 @@ ATurret::ATurret()
     MuzzleDirectionSocket = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleDirectionSocket"));
     MuzzleDirectionSocket->SetupAttachment(RootComponent);
 
-    TurretMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretMeshComp"));
-    TurretMeshComp->SetupAttachment(RootComponent);
-    TurretMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
+    TurretGunMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretGunMeshComp"));
+    TurretGunMeshComp->SetupAttachment(RootComponent);
+    TurretGunMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
+    
+    TurretBaseMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretBaseMeshComp"));
+    TurretBaseMeshComp->SetupAttachment(RootComponent);
+    TurretBaseMeshComp->SetRelativeRotation(FRotator(0, 270, 0));
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -358,9 +362,9 @@ void ATurret::Shoot(const FVector& TargetPosition)
         CalculateEnemyFutureLocationValues(TargetPosition, CurrentClosestEnemy->GetVelocity(), ProjectileValues.PredictedLifetime, SpawnRotation);
     }
 
-    if (TurretShootAnimation && TurretMeshComp)
+    if (TurretShootAnimation && TurretGunMeshComp)
     {
-        TurretMeshComp->PlayAnimation(TurretShootAnimation, false);
+        TurretGunMeshComp->PlayAnimation(TurretShootAnimation, false);
     }
 
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
