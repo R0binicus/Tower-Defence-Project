@@ -42,7 +42,7 @@ void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
 {
     // Equation inputs
     const float Height = BulletSpawnLocation.Z - TargetPosition.Z;
-    const float AngleRad = FMath::DegreesToRadians(DesiredTurretRotation.Pitch);
+    const float AngleRad = FMath::DegreesToRadians(DesiredGunRotation.Pitch);
 
     // Set custom projectile velocity if turret was not
     // able to find valid angle with current velocity

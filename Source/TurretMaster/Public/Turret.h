@@ -160,10 +160,10 @@ protected:
 	FVector MuzzleBaseLocation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator CurrentTurretRotation;
+	FRotator CurrentGunRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator DesiredTurretRotation;
+	FRotator DesiredGunRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector BulletSpawnLocation;
