@@ -26,6 +26,8 @@ void UEnemySubsystem::InitialiseWaves(ULevelDataAsset* LevelData)
 		return;
 	}
 
+	WavePrepTime = LevelData->WavePrepTime;
+
 	TArray<FEnemyWaveData>& WaveData = LevelData->LevelWaveData;
 	WaveDataArray = WaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
@@ -109,7 +111,46 @@ void UEnemySubsystem::StartNextWave()
 	CurrentWaveEnemyIndex = 0;
 
 	SetupEnemySpawnArray();
-	SetupEnemySpawning();
+
+	LoadWaveSpawners(CurrentWaveData.SelectedSpawnAreas);
+}
+void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
+{
+	TArray<FSoftObjectPath> SoftPathArray;
+	SoftPathArray.Reserve(SoftSpawnerArray.Num());
+	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+	{
+		if (!SoftSpawner.IsValid() && !SoftSpawner.IsPending())
+		{
+			return;
+		}
+		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
+	}
+
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+
+	StreamableManager.RequestAsyncLoad(SoftPathArray, [this, SoftSpawnerArray]()
+		{
+			CurrentSpawnerArray.Empty();
+			CurrentSpawnerArray.Reserve(SoftSpawnerArray.Num());
+			for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+			{
+				if (!SoftSpawner)
+				{
+					return;
+				}
+
+				TObjectPtr<AEnemySpawnArea> NewSpawner = SoftSpawner.Get();
+				if (!NewSpawner)
+				{
+					return;
+				}
+
+				CurrentSpawnerArray.Add(NewSpawner.Get());
+			}
+
+			SetupEnemySpawning();
+		});
 }
 
 void UEnemySubsystem::SetupEnemySpawnArray()
@@ -129,6 +170,7 @@ void UEnemySubsystem::SetupEnemySpawnArray()
 
 void UEnemySubsystem::SetupEnemySpawning()
 {
+	// TODO: move this to be after the spawn period check
 	FTimerDelegate TimerDelagate;
 	TimerDelagate.BindUObject(this, &UEnemySubsystem::MakeWaveEnemy);
 
@@ -157,7 +199,7 @@ void UEnemySubsystem::SetupEnemySpawning()
 
 void UEnemySubsystem::MakeWaveEnemy()
 {
-	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
+	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentSpawnerArray);
 	if (SpawnAreaIndex == -1)
 	{
 		return;
@@ -168,12 +210,12 @@ void UEnemySubsystem::MakeWaveEnemy()
 		return;
 	}
 
-	//AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
-	//TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
+	AEnemySpawnArea* NextEnemySpawnArea = CurrentSpawnerArray[SpawnAreaIndex];
+	TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
 
-	//SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
+	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 
-	//CurrentWaveEnemyIndex++;
+	CurrentWaveEnemyIndex++;
 }
 
 void UEnemySubsystem::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass)

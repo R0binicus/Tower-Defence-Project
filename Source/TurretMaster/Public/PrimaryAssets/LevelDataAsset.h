@@ -19,4 +19,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
 	TSoftObjectPtr<AActor> BuildingProtectPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
+	float WavePrepTime = 15.f;
 };

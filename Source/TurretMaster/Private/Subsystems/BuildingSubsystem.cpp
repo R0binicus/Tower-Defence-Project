@@ -71,24 +71,26 @@ void UBuildingSubsystem::SetupProtectPoint(ULevelDataAsset* LevelData)
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
 
 	TSoftObjectPtr<AActor> SoftProtectPoint = LevelData->BuildingProtectPoint;
-	if (SoftProtectPoint.IsValid() || SoftProtectPoint.IsPending())
+	if (!SoftProtectPoint.IsValid() && !SoftProtectPoint.IsPending())
 	{
-		TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), [this, SoftProtectPoint]()
-		{
-			if (!SoftProtectPoint)
-			{
-				return;
-			}
-
-			TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
-			if (!NewProtectPoint)
-			{
-				return;
-			}
-
-			ProtectPoint = NewProtectPoint;
-		});
+		return;
 	}
+
+	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), [this, SoftProtectPoint]()
+	{
+		if (!SoftProtectPoint)
+		{
+			return;
+		}
+
+		TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+		if (!NewProtectPoint)
+		{
+			return;
+		}
+
+		ProtectPoint = NewProtectPoint;
+	});
 
 	/*TArray<TSoftObjectPtr<AActor>> SoftObjArray;
 

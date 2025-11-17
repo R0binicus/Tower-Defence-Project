@@ -65,6 +65,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
 	FEnemyWaveData CurrentWaveData;
 
+	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
+	TArray<TObjectPtr<AEnemySpawnArea>> CurrentSpawnerArray;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 EnemiesRemaining;
 
@@ -74,8 +77,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 TotalWaveNum;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelDataAsset")
-	float WavePrepTime = 15.f;
+	UPROPERTY(BlueprintReadWrite, Category = "LevelDataAsset")
+	float WavePrepTime;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	TArray<FEnemyWaveData> WaveDataArray;
@@ -113,6 +116,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
 	void StartNextWave();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
+		meta = (ToolTip = "Loads an array of soft pointers"))
+	void LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Sets up the PendingEnemyWaveSpawns array. This adds the enemies from the EnemyWaveData, then shuffles the array"))
