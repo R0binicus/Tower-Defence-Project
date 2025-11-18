@@ -195,13 +195,15 @@ AActor* ATurret::GetClosestEnemy() const
         const FVector EnemyLocation = Enemy->GetActorLocation();
         const float EnemyDistance = FVector::DistSquared(EnemyLocation, TurretProtectPoint->GetActorLocation());
 
-        // TurretFireMinimumRadius is already squared, so comparing distances is fine
-        if (EnemyDistance < TurretFireMinimumRange)
+        if (EnemyDistance > CurrentClosestDistance)
         {
             continue;
         }
 
-        if (EnemyDistance > CurrentClosestDistance)
+        const float EnemyDistanceTurret = FVector::DistSquared(EnemyLocation, MuzzleBaseLocation);
+
+        // TurretFireMinimumRadius is already squared, so comparing distances is fine
+        if (EnemyDistanceTurret < TurretFireMinimumRange)
         {
             continue;
         }
