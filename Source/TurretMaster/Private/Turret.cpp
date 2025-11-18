@@ -201,14 +201,14 @@ AActor* ATurret::GetClosestEnemy() const
             continue;
         }
 
-        if (EnemyDistance >= CurrentClosestDistance)
+        if (EnemyDistance > CurrentClosestDistance)
         {
             continue;
         }
 
-        if (!IsEnemyInLOS(Enemy, EnemyLocation))
+        if (!IsEnemyInLOS(EnemyLocation))
         {
-
+            continue;
         }
 
         CurrentClosestDistance = EnemyDistance;
@@ -218,9 +218,9 @@ AActor* ATurret::GetClosestEnemy() const
     return PotentialClosestEnemy;
 }
 
-bool ATurret::IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) const
+bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
 {
-    if (!Enemy || !BulletSpawnPoint)
+    if (!BulletSpawnPoint)
     {
         return false;
     }
@@ -228,25 +228,27 @@ bool ATurret::IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) co
     FVector GunMuzzleLocation = BulletSpawnPoint->GetComponentLocation();
 
     FHitResult HitResult;
-    FCollisionQueryParams  QueryParams;
+    FCollisionQueryParams QueryParams;
     QueryParams.AddIgnoredActor(this);
-    FCollisionResponseParams CollRes;
 
-    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, TurretSightTraceChannel, QueryParams, CollRes);
+    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, TurretSightTraceChannel, QueryParams);
     if (!bActorHit)
     {
         return false;
     }
 
-    TObjectPtr<AActor> HitActor = HitResult.GetActor();
-    if (!HitActor)
+    TObjectPtr<UPrimitiveComponent> HitComp = HitResult.GetComponent();
+    if (!HitComp)
     {
         return false;
     }
 
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("HitResult Name: %s"), *HitResult.GetActor()->GetFName().ToString()));
+    if (HitComp->GetCollisionProfileName() != EnemyProfileName.Name)
+    {
+        return false;
+    }
 
-    
+    return true;
 }
 
 void ATurret::UpdateTurretValues()

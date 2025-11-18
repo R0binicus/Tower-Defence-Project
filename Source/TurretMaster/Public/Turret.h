@@ -93,6 +93,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Pawn");
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ExtraTurretFireMinimumRange = 0.f;
@@ -205,7 +208,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns true if the enemy is in line of sight from the gun muzzle"))
-	bool IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) const;
+	bool IsEnemyInLOS(const FVector& EnemyLocation) const;
 
 	virtual void UpdateTurretValues();
 
