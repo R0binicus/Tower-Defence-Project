@@ -28,7 +28,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
 	FOnEnemiesRemainingChanged OnEnemiesRemainingChanged;
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	void StartSubsystem();
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Initialises the wave data, then starts the waves"))

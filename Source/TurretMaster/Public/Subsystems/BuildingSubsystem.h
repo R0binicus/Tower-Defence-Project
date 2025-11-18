@@ -24,7 +24,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
 	FOnBuildingTypeSelected OnBuildingTypeSelected;
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	void StartSubsystem();
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Returns the point which buildings try to protect"))

@@ -1,19 +1,10 @@
 #include "Subsystems/BuildingSubsystem.h"
 
-void UBuildingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UBuildingSubsystem::StartSubsystem()
 {
-	Super::Initialize(Collection);
-
-	TObjectPtr<UWorld> World = GetWorld();
-	if (!World)
-	{
-		return;
-	}
-
-	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
-		GameInstance->LoadDataUsingLevel(World);
 		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::LoadProtectPoint);
 	}
 }

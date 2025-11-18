@@ -1,20 +1,11 @@
 #include "Subsystems/EnemySubsystem.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 
-void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UEnemySubsystem::StartSubsystem()
 {
-	Super::Initialize(Collection);
-
-	TObjectPtr<UWorld> World = GetWorld();
-	if (!World)
-	{
-		return;
-	}
-
-	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
-		GameInstance->LoadDataUsingLevel(World);
 		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UEnemySubsystem::InitialiseWaves);
 	}
 }
@@ -28,8 +19,7 @@ void UEnemySubsystem::InitialiseWaves(ULevelDataAsset* LevelData)
 
 	WavePrepTime = LevelData->WavePrepTime;
 
-	TArray<FEnemyWaveData>& WaveData = LevelData->LevelWaveData;
-	WaveDataArray = WaveData;
+	WaveDataArray = LevelData->LevelWaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
 
 	int32 StartWaveIndex = 0;
@@ -137,12 +127,14 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
 	}
 
+	
 	if (SoftPathArray.Num() == 0)
 	{
 		SetSpawnerArray(SoftSpawnerArray);
 		return;
 	}
 
+	// This is probably overkill to load but it's good practice to learn how
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
 	FStreamableDelegate SetSpawnerArrayDelegate;
 	SetSpawnerArrayDelegate.BindUObject(this, &UEnemySubsystem::SetSpawnerArray, SoftSpawnerArray);

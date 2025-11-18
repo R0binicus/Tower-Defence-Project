@@ -15,4 +15,6 @@ class TURRETMASTER_API ATowerDefenceGameMode : public AGameModeBase
 
 public:
 	ATowerDefenceGameMode();
+
+	virtual void BeginPlay() override;
 };
