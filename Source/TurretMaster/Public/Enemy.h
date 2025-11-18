@@ -28,6 +28,10 @@ public:
 		meta = (ToolTip = "Sets the enemy's destination"))
 	void SetDestination(const FVector NewDestination);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
+	void Death(bool bByTurret);
+	void Death_Implementation(bool bByTurret);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
@@ -58,8 +62,4 @@ protected:
 	void TakeDamage_Implementation(float DamageTaken);
 
 	bool IsDead_Implementation() const { return bIsDead; }
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
-	void Death();
-	void Death_Implementation();
 };
