@@ -228,17 +228,25 @@ bool ATurret::IsEnemyInLOS(const AActor* Enemy, const FVector& EnemyLocation) co
     FVector GunMuzzleLocation = BulletSpawnPoint->GetComponentLocation();
 
     FHitResult HitResult;
-    FCollisionQueryParams  COQP;
-    COQP.AddIgnoredActor(this);
+    FCollisionQueryParams  QueryParams;
+    QueryParams.AddIgnoredActor(this);
     FCollisionResponseParams CollRes;
 
-    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, ECollisionChannel::ECC_Pawn, COQP, CollRes);
-    if (bActorHit)
+    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, TurretSightTraceChannel, QueryParams, CollRes);
+    if (!bActorHit)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("HitResult Name: %s"), *HitResult.GetActor()->GetFName().ToString()));
+        return false;
     }
 
-    return false;
+    TObjectPtr<AActor> HitActor = HitResult.GetActor();
+    if (!HitActor)
+    {
+        return false;
+    }
+
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("HitResult Name: %s"), *HitResult.GetActor()->GetFName().ToString()));
+
+    
 }
 
 void ATurret::UpdateTurretValues()

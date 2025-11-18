@@ -90,6 +90,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
 	float ExtraTurretFireMinimumRange = 0.f;
