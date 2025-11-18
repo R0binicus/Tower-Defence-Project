@@ -225,13 +225,9 @@ bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
         return false;
     }
 
-    FVector GunMuzzleLocation = BulletSpawnPoint->GetComponentLocation();
-
     FHitResult HitResult;
-    FCollisionQueryParams QueryParams;
-    QueryParams.AddIgnoredActor(this);
 
-    bool bActorHit = GetWorld()->LineTraceSingleByChannel(HitResult, GunMuzzleLocation, EnemyLocation, TurretSightTraceChannel, QueryParams);
+    bool bActorHit = World->LineTraceSingleByChannel(HitResult, BulletSpawnLocation, EnemyLocation, TurretSightTraceChannel);
     if (!bActorHit)
     {
         return false;
