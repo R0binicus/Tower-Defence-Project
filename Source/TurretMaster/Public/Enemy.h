@@ -3,6 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Damageable.h"
+#include "Components/WidgetComponent.h"
+#include "UI/EnemyHealthbarWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Enemy.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeath, int32, ResourcesGained);
@@ -25,6 +29,16 @@ public:
 	void SetDestination(const FVector NewDestination);
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
+
+	// Widget is set in the enemy's HealthBarWidgetComponent inspector, as it refuses to be set in C++
+	UPROPERTY(BlueprintReadOnly, Category = "Enemy")
+	TObjectPtr<UEnemyHealthbarWidget> HealthBarWidget;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Enemy")
+	TObjectPtr<APlayerCameraManager> CameraManager;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	float MaxHealth = 100.f;
 

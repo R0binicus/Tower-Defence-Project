@@ -1,19 +1,52 @@
 #include "GameFramework/TowerDefenceGameState.h"
 
-void ATowerDefenceGameState::TriggerWin()
+void ATowerDefenceGameState::BeginPlay()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("You Win!!! :)")));
-	OnGameWin.Broadcast();
+	Super::BeginPlay();
+
+	TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController)
+	{
+		PlayerController->OnPauseInput.AddDynamic(this, &ATowerDefenceGameState::OnPauseInputEvent);
+	}
 }
 
-void ATowerDefenceGameState::TwiggerLose()
+void ATowerDefenceGameState::TriggerWin()
+{
+	OnGameWin.Broadcast();
+
+	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (GameHUD)
+	{
+		GameHUD->SetVictoryWidgetVisible(true);
+	}
+}
+
+void ATowerDefenceGameState::TriggerLose()
 {
 	if (bGameLost)
 	{
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("You Lose!!! :(")));
 	bGameLost = true;
 	OnGameLose.Broadcast();
+
+	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (GameHUD)
+	{
+		GameHUD->SetDefeatWidgetVisible(true);
+	}
+}
+
+void ATowerDefenceGameState::SetGamePaused(bool bIsNowPaused)
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), bIsNowPaused);
+	OnGamePaused.Broadcast(bIsNowPaused);
+}
+
+void ATowerDefenceGameState::OnPauseInputEvent()
+{
+	bool bIsPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	SetGamePaused(!bIsPaused);
 }

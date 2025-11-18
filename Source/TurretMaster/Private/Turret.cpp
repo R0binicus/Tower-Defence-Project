@@ -28,8 +28,6 @@ ATurret::ATurret()
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
 {
-    //TODO: Discuss, why doesn't this trigger???
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("NewProtectPoint: %s"), *NewProtectPoint->GetName()));
     TurretProtectPoint = NewProtectPoint;
 }
 
@@ -37,7 +35,6 @@ void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
 // Called when the game starts or when spawned
 void ATurret::BeginPlay()
 {
-    TurretProtectPoint = this;
 	Super::BeginPlay();
     TurretLocation = GetActorLocation();
     InitialRotation = GetActorRotation();

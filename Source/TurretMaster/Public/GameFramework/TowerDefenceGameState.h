@@ -2,10 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
+#include "GameFramework/TowerDefenceHUD.h"
+#include "GameFramework/TowerDefencePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "TowerDefenceGameState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameWin);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameLose);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePaused, bool, bIsNowPaused);
 
 /**
  * Game state for the tower defence game.
@@ -23,8 +27,13 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameState")
 	FOnGameLose OnGameLose;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameState")
+	FOnGamePaused OnGamePaused;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameState")
 	bool bGameLost = false;
+
+	void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the win condition, sending events to everything subscribed"))
@@ -32,5 +41,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the lose condition, sending events to everything subscribed"))
-	void TwiggerLose();
+	void TriggerLose();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
+		meta = (ToolTip = "Sets the game to be paused or unpaused"))
+	void SetGamePaused(bool bIsNowPaused);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
+		meta = (ToolTip = "Pauses the game if unpaused, unpauses if paused"))
+	void OnPauseInputEvent();
 };
