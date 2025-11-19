@@ -37,7 +37,10 @@ AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
     SpawnLocation.Y += FMath::RandRange(-SpawnVolume.Y, SpawnVolume.Y);
     SpawnLocation.Z += FMath::RandRange(-SpawnVolume.Z, SpawnVolume.Z);
 
-    const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
+    FActorSpawnParameters ActorSpawnParameters;
+    ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation, ActorSpawnParameters);
     if (!NewEnemy)
     {
         return nullptr;
