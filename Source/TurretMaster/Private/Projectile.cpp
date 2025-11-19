@@ -91,7 +91,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	}
 
 	const FName OtherCompName = OtherComp->GetCollisionProfileName();
-	if (OtherCompName != "Pawn")
+	if (OtherCompName != EnemyProfileName.Name)
 	{
 		SetProjectileEnabled(false);
 		return;

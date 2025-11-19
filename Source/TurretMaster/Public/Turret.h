@@ -94,7 +94,7 @@ protected:
 	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Pawn");
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Enemy");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))

@@ -49,6 +49,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Enemy");
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float ProjectileLifetimeTimer;
 
