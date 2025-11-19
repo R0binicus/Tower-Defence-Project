@@ -25,6 +25,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Enemy",
+		meta = (ToolTip = "Sets the enemy's LivesReduction"))
+	int32 GetLivesReduction() const { return LivesReduction;  };
+
+	UFUNCTION(BlueprintCallable, Category = "Enemy",
 		meta = (ToolTip = "Sets the enemy's destination"))
 	void SetDestination(const FVector NewDestination);
 
@@ -44,9 +48,12 @@ protected:
 	TObjectPtr<APlayerCameraManager> CameraManager;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-	float MaxHealth = 100.f;
+	int32 LivesReduction = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	float MaxHealth = 100.f;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Enemy")
 	float CurrentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")

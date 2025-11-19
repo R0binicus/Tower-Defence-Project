@@ -25,16 +25,12 @@ void ALivesLossArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
     }
 
     TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-    if (PlayerState)
-    {
-        PlayerState->ChangeCurrentLives(-1);
-    }
-
     TObjectPtr<AEnemy> Enemy = Cast<AEnemy>(OtherActor);
-    if (!Enemy)
+    if (!Enemy || !PlayerState)
     {
         return;
     }
 
+    PlayerState->ChangeCurrentLives(-Enemy->GetLivesReduction());
     Enemy->Death(false);
 }
