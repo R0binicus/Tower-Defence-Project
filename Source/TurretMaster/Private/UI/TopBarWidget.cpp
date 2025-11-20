@@ -5,16 +5,26 @@ void UTopBarWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+    TObjectPtr<UWorld> World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+
+    UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+    if (GameInstance)
+    {
+        GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UTopBarWidget::OnLevelDataLoaded);
+    }
+
+    TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
     if (EnemySubsystem)
     {
-        TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
-        
         EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
         EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
     }
 
-    TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(World, 0));
     if (PlayerState)
     {
         UpdateLivesText(PlayerState->GetPlayerLivesCurrent(), 0);
@@ -27,6 +37,15 @@ void UTopBarWidget::NativeConstruct()
     // Set default text value
     NewWaveStarted(nullptr, 0);
     UpdateEnemiesRemainingText(0);
+}
+
+void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
+{
+    TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
+    if (EnemySubsystem)
+    {
+        TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
+    }
 }
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)

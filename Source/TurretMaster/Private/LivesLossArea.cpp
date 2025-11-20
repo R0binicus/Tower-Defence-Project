@@ -1,4 +1,5 @@
 #include "LivesLossArea.h"
+#include "Enemy.h"
 
 ALivesLossArea::ALivesLossArea()
 {
@@ -28,4 +29,12 @@ void ALivesLossArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
     {
         PlayerState->ChangeCurrentLives(-1);
     }
+
+    TObjectPtr<AEnemy> Enemy = Cast<AEnemy>(OtherActor);
+    if (!Enemy)
+    {
+        return;
+    }
+
+    Enemy->Death(false);
 }

@@ -5,6 +5,7 @@
 #include "DataAssets/BuildingDataAsset.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/TowerDefencePlayerState.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
 #include "BuildingSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
@@ -23,9 +24,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
 	FOnBuildingTypeSelected OnBuildingTypeSelected;
 
-	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
-		meta = (ToolTip = "Sets the point which buildings try to protect"))
-	void SetProtectPoint(AActor* NewProtectPoint);
+	void StartSubsystem();
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Returns the point which buildings try to protect"))
@@ -49,4 +48,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")
 	TObjectPtr<AActor> ProtectPoint;
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
+		meta = (ToolTip = "Sets the point which buildings try to protect using a level data asset"))
+	void LoadProtectPoint(ULevelDataAsset* LevelData);
+
+	UFUNCTION()
+	void SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint);
 };

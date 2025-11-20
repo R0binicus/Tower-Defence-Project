@@ -61,8 +61,7 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 
 	if (CurrentHealth <= 0.f)
 	{
-		CurrentHealth = 0;
-		bIsDead = true;
+		Death(true);
 	}
 
 	if (HealthBarWidget)
@@ -71,11 +70,20 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 	}
 }
 
-void AEnemy::Death_Implementation()
+void AEnemy::Death_Implementation(bool bByTurret)
 {
 	SetDestination(GetActorLocation());
+	CurrentHealth = 0;
+	bIsDead = true;
 
-	OnEnemyDeath.Broadcast(ResourcesOnKill);
+	if (bByTurret)
+	{
+		OnEnemyDeath.Broadcast(ResourcesOnKill);
+	}
+	else
+	{
+		OnEnemyDeath.Broadcast(0);
+	}
 
 	if (HealthBarWidgetComponent)
 	{
@@ -97,4 +105,3 @@ void AEnemy::SetDestination(const FVector NewDestination)
 	}
 	AIController->MoveToLocation(NewDestination, 5.f, false, true, true, false);
 }
-

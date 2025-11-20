@@ -1,20 +1,25 @@
 #include "Subsystems/EnemySubsystem.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 
-void UEnemySubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UEnemySubsystem::StartSubsystem()
 {
-	Super::Initialize(Collection);
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UEnemySubsystem::InitialiseWaves);
+	}
 }
 
-void UEnemySubsystem::InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime)
+void UEnemySubsystem::InitialiseWaves(ULevelDataAsset* LevelData)
 {
-	if (WaveData.Num() < 1)
+	if (!LevelData)
 	{
 		return;
 	}
 
-	WavePrepTime = NewPrepTime;
-	WaveDataArray = WaveData;
+	WavePrepTime = LevelData->WavePrepTime;
+
+	WaveDataArray = LevelData->LevelWaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
 
 	int32 StartWaveIndex = 0;
@@ -96,6 +101,65 @@ void UEnemySubsystem::StartNextWave()
 	CurrentWaveEnemyIndex = 0;
 
 	SetupEnemySpawnArray();
+
+	LoadWaveSpawners(CurrentWaveData.SelectedSpawnAreas);
+}
+
+void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
+{
+	CurrentSpawnerArray.Empty();
+	CurrentSpawnerArray.Reserve(SoftSpawnerArray.Num());
+
+	TArray<FSoftObjectPath> SoftPathArray;
+	SoftPathArray.Reserve(SoftSpawnerArray.Num());
+	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+	{
+		if (SoftSpawner.IsNull())
+		{
+			return; // The data asset probably has an empty entry
+		}
+
+		if (!SoftSpawner.IsPending())
+		{
+			continue; // Object is already loaded
+		}
+
+		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
+	}
+
+	
+	if (SoftPathArray.Num() == 0)
+	{
+		SetSpawnerArray(SoftSpawnerArray);
+		return;
+	}
+
+	// This is probably overkill to load but it's good practice to learn how
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+	FStreamableDelegate SetSpawnerArrayDelegate;
+	SetSpawnerArrayDelegate.BindUObject(this, &UEnemySubsystem::SetSpawnerArray, SoftSpawnerArray);
+
+	StreamableManager.RequestAsyncLoad(SoftPathArray, SetSpawnerArrayDelegate);
+}
+
+void UEnemySubsystem::SetSpawnerArray(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray)
+{
+	for (TSoftObjectPtr<AEnemySpawnArea> SoftSpawner : SoftSpawnerArray)
+	{
+		if (!SoftSpawner)
+		{
+			return;
+		}
+
+		TObjectPtr<AEnemySpawnArea> NewSpawner = SoftSpawner.Get();
+		if (!NewSpawner)
+		{
+			return;
+		}
+
+		CurrentSpawnerArray.Add(NewSpawner.Get());
+	}
+
 	SetupEnemySpawning();
 }
 
@@ -116,6 +180,7 @@ void UEnemySubsystem::SetupEnemySpawnArray()
 
 void UEnemySubsystem::SetupEnemySpawning()
 {
+	// TODO: move this to be after the spawn period check
 	FTimerDelegate TimerDelagate;
 	TimerDelagate.BindUObject(this, &UEnemySubsystem::MakeWaveEnemy);
 
@@ -144,7 +209,7 @@ void UEnemySubsystem::SetupEnemySpawning()
 
 void UEnemySubsystem::MakeWaveEnemy()
 {
-	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentWaveData.SelectedSpawnAreas);
+	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentSpawnerArray);
 	if (SpawnAreaIndex == -1)
 	{
 		return;
@@ -155,7 +220,7 @@ void UEnemySubsystem::MakeWaveEnemy()
 		return;
 	}
 
-	AEnemySpawnArea* NextEnemySpawnArea = CurrentWaveData.SelectedSpawnAreas[SpawnAreaIndex];
+	AEnemySpawnArea* NextEnemySpawnArea = CurrentSpawnerArray[SpawnAreaIndex];
 	TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
 
 	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);

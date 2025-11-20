@@ -6,6 +6,8 @@ AEnemySpawnArea::AEnemySpawnArea()
 
 	SpawnVolumeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Spawn Volume Box"));
 	SpawnVolumeBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    // TODO: Remove magic number
 	SpawnVolumeBox->SetBoxExtent(FVector(1000, 1000, 0), false);
 }
 

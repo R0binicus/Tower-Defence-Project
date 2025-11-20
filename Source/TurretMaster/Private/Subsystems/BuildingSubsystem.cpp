@@ -1,8 +1,12 @@
 #include "Subsystems/BuildingSubsystem.h"
 
-void UBuildingSubsystem::SetProtectPoint(AActor* NewProtectPoint)
+void UBuildingSubsystem::StartSubsystem()
 {
-	ProtectPoint = NewProtectPoint;
+	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::LoadProtectPoint);
+	}
 }
 
 void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
@@ -46,4 +50,48 @@ void UBuildingSubsystem::CancelPlaceBuilding()
 	}
 
 	PlayerState->TrySetPlayerState(EPlayerStateEnum::Default);
+}
+
+void UBuildingSubsystem::LoadProtectPoint(ULevelDataAsset* LevelData)
+{
+	if (!LevelData)
+	{
+		return;
+	}
+
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+
+	TSoftObjectPtr<AActor> SoftProtectPoint = LevelData->BuildingProtectPoint;
+
+	if (SoftProtectPoint.IsNull())
+	{
+		return; // The data asset probably has an empty entry
+	}
+
+	if (!SoftProtectPoint.IsPending())
+	{
+		SetProtectPoint(SoftProtectPoint); // Object is already loaded
+		return;
+	}
+
+	FStreamableDelegate SetSpawnerArrayDelegate;
+	SetSpawnerArrayDelegate.BindUObject(this, &UBuildingSubsystem::SetProtectPoint, SoftProtectPoint);
+
+	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), SetSpawnerArrayDelegate);
+}
+
+void UBuildingSubsystem::SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint)
+{
+	if (!SoftProtectPoint)
+	{
+		return;
+	}
+
+	TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+	if (!NewProtectPoint)
+	{
+		return;
+	}
+
+	ProtectPoint = NewProtectPoint;
 }

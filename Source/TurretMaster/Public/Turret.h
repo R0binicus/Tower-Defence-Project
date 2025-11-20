@@ -29,6 +29,9 @@ protected:
 	TObjectPtr<USphereComponent> RangeSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<USceneComponent> GunParentComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
 	TObjectPtr<USceneComponent> BulletSpawnPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
@@ -39,7 +42,10 @@ protected:
 	TObjectPtr<AActor> TurretProtectPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
-	TObjectPtr<USkeletalMeshComponent> TurretMeshComp;
+	TObjectPtr<USkeletalMeshComponent> TurretGunMeshComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	TObjectPtr<UStaticMeshComponent> TurretBaseMeshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
@@ -83,6 +89,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Pawn");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
@@ -154,10 +166,10 @@ protected:
 	FVector MuzzleBaseLocation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator CurrentTurretRotation;
+	FRotator CurrentGunRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	FRotator DesiredTurretRotation;
+	FRotator DesiredGunRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	FVector BulletSpawnLocation;
@@ -193,6 +205,10 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
 	AActor* GetClosestEnemy() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
+		meta = (ToolTip = "Returns true if the enemy is in line of sight from the gun muzzle"))
+	bool IsEnemyInLOS(const FVector& EnemyLocation) const;
 
 	virtual void UpdateTurretValues();
 

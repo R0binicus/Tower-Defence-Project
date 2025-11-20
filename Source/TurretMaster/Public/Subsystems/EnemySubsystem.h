@@ -7,6 +7,7 @@
 #include "LimitedRepeatTimer.h"
 #include "GameFramework/TowerDefenceGameState.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
 #include "EnemySubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWaveChanged, UWaveDataObject*, NewWaveData, int32, NewWaveNum);
@@ -27,11 +28,11 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EnemySubsystem")
 	FOnEnemiesRemainingChanged OnEnemiesRemainingChanged;
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	void StartSubsystem();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
+	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Initialises the wave data, then starts the waves"))
-	void InitialiseWaves(TArray<FEnemyWaveData>& WaveData, float NewPrepTime);
+	void InitialiseWaves(ULevelDataAsset* LevelData);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EnemySubsystem",
 		meta = (ToolTip = "Gets the the data for the current enemy wave"))
@@ -64,6 +65,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
 	FEnemyWaveData CurrentWaveData;
 
+	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
+	TArray<TObjectPtr<AEnemySpawnArea>> CurrentSpawnerArray;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 EnemiesRemaining;
 
@@ -73,7 +77,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	int32 TotalWaveNum;
 
-	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
+	UPROPERTY(BlueprintReadWrite, Category = "LevelDataAsset")
 	float WavePrepTime;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
@@ -112,6 +116,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Starts the process of spawning a new enemy wave"))
 	void StartNextWave();
+
+	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
+		meta = (ToolTip = "Loads an array of soft pointers"))
+	void LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray);
+
+	UFUNCTION()
+	void SetSpawnerArray(TArray<TSoftObjectPtr<AEnemySpawnArea>> SoftSpawnerArray);
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Sets up the PendingEnemyWaveSpawns array. This adds the enemies from the EnemyWaveData, then shuffles the array"))
