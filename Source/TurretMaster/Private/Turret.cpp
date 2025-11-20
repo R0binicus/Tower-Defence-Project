@@ -62,6 +62,7 @@ void ATurret::BeginPlay()
     ProjectileValues.Damage = ProjectileDamage;
     ProjectileValues.Speed = ProjectileSpeed;
     ProjectileValues.Lifetime = ProjectileLifetime;
+    ProjectileValues.Scale = ProjectileScale;
     ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
 
     MakeProjectiles(InitialProjectilePoolSize);

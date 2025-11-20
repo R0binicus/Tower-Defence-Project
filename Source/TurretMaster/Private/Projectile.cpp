@@ -43,6 +43,7 @@ void AProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProj
 	TargetEnemy = Enemy;
 	ProjectileValues = InProjectileValues;
 	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
+	SetActorScale3D(FVector(ProjectileValues.Scale, ProjectileValues.Scale, ProjectileValues.Scale));
 	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }

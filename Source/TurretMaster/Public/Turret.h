@@ -154,6 +154,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
+	float ProjectileScale = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
+		meta = (ToolTip = "Only updates at start of level play"))
 	float ProjectileTurnMultiplier = 1.f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Turret")

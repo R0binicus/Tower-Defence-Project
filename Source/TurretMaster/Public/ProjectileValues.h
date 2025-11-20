@@ -21,19 +21,20 @@ struct FProjectileValues
 	float Lifetime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
+	float Scale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
 	float TurnMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
 	float PredictedLifetime;
 
-	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), TurnMultiplier(1.f), PredictedLifetime(2.f)
+	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), Scale(1.f), TurnMultiplier(1.f), PredictedLifetime(2.f)
 	{
-
 	}
 
-	FProjectileValues(const float InDamage, const float InSpeed, const float InLifetime, const float InTurnMultiplier, const float InPredictedLifetime) :
-		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), TurnMultiplier(InTurnMultiplier), PredictedLifetime(InPredictedLifetime)
+	FProjectileValues(const float InDamage, const float InSpeed, const float InLifetime, const float InScale, const float InTurnMultiplier, const float InPredictedLifetime) :
+		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), Scale(InScale), TurnMultiplier(InTurnMultiplier), PredictedLifetime(InPredictedLifetime)
 	{
-		
 	}
 };
