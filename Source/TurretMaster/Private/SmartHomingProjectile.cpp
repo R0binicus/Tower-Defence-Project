@@ -1,17 +1,23 @@
 #include "SmartHomingProjectile.h"
+#include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void ASmartHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
 	const float LifeCountdown = (ProjectileValues.PredictedLifetime - (ProjectileValues.Lifetime - ProjectileLifetimeTimer));
 
-	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
+	const TStrongObjectPtr<AEnemy> LockedTarget = TargetEnemy.Pin();
 	if (!LockedTarget)
 	{
 		return;
 	}
 
 	if (!HomingRateCurve)
+	{
+		return;
+	}
+
+	if (IDamageable::Execute_IsDead(LockedTarget.Get()))
 	{
 		return;
 	}

@@ -6,6 +6,7 @@
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
+class AEnemy;
 
 /**
  * Projectile base class, which moves in the direction it was
@@ -35,13 +36,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Reenabled projectile, and sets its new values"))
-	void SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues);
+	void SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues);
 
 protected:
 	// Variables
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
-	TWeakObjectPtr<AActor> TargetActor = nullptr;
+	TWeakObjectPtr<AEnemy> TargetEnemy = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	TObjectPtr<UStaticMeshComponent> CollisionMesh;

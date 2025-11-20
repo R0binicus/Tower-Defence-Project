@@ -1,6 +1,7 @@
 #include "Projectile.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Engine/EngineTypes.h"
+#include "Enemy.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -37,9 +38,9 @@ void AProjectile::SetProjectileEnabled(const bool bNewEnabled)
 	}
 }
 
-void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
+void AProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues)
 {
-	TargetActor = Target;
+	TargetEnemy = Enemy;
 	ProjectileValues = InProjectileValues;
 	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
 	SetProjectileEnabled(true);

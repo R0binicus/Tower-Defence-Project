@@ -1,5 +1,6 @@
 #include "Turret.h"
 #include "PhysicsEngine/PhysicsSettings.h"
+#include "Enemy.h"
 #include "Damageable.h"
 
 // Sets default values
@@ -169,7 +170,7 @@ AProjectile* ATurret::GetUnusedProjectile() const
 #pragma endregion Projectile Pool
 
 #pragma region Turret Update Values
-AActor* ATurret::GetClosestEnemy() const
+AEnemy* ATurret::GetClosestEnemy() const
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
     float CurrentClosestDistance = INFINITY;
@@ -217,7 +218,7 @@ AActor* ATurret::GetClosestEnemy() const
         PotentialClosestEnemy = Enemy;
     }
 
-    return PotentialClosestEnemy;
+    return Cast<AEnemy>(PotentialClosestEnemy);
 }
 
 bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const

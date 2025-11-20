@@ -8,6 +8,8 @@
 #include "Buildable.h"
 #include "Turret.generated.h"
 
+class AEnemy;
+
 /**
  * Base turret class, which aims in a stright line 
  * towards the target, and ignores gravity
@@ -83,7 +85,7 @@ protected:
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	TObjectPtr<AActor> CurrentClosestEnemy;
+	TObjectPtr<AEnemy> CurrentClosestEnemy;
 
 	// Turret Aiming
 	
@@ -204,7 +206,7 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
-	AActor* GetClosestEnemy() const;
+	AEnemy* GetClosestEnemy() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns true if the enemy is in line of sight from the gun muzzle"))

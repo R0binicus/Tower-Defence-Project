@@ -1,4 +1,5 @@
 #include "HomingProjectile.h"
+#include "Enemy.h"
 
 AHomingProjectile::AHomingProjectile() : AProjectile()
 {
@@ -7,9 +8,14 @@ AHomingProjectile::AHomingProjectile() : AProjectile()
 
 void AHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
-	const TStrongObjectPtr<AActor> LockedTarget = TargetActor.Pin();
+	const TStrongObjectPtr<AEnemy> LockedTarget = TargetEnemy.Pin();
 
 	if (!LockedTarget)
+	{
+		return;
+	}
+
+	if (IDamageable::Execute_IsDead(LockedTarget.Get()))
 	{
 		return;
 	}
