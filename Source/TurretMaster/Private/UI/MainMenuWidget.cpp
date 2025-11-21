@@ -15,10 +15,12 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnLevel01Clicked()
 {
-	if (Level01.IsValid() || Level01.IsPending())
+	if (Level01.IsNull())
 	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
+		return;
 	}
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 }
 
 void UMainMenuWidget::OnQuitClicked()
