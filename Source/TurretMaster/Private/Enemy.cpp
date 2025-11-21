@@ -29,6 +29,13 @@ void AEnemy::BeginPlay()
 	if (HealthBarWidgetComponent)
 	{
 		HealthBarWidget = Cast<UEnemyHealthbarWidget>(HealthBarWidgetComponent->GetWidget());
+
+		// Scale widget to actor size
+		FVector EnemyScale = GetActorScale();
+		float ScaleAvg = (EnemyScale.X + EnemyScale.Y + EnemyScale.Z) / 3;
+		FVector2D NewWidgetScale = FVector2D(HealthbarScaleMin.X + (ScaleAvg * HealthbarScaleMultiplier.X), 
+			HealthbarScaleMin.Y + (ScaleAvg * HealthbarScaleMultiplier.Y));
+		HealthBarWidget->SetRenderScale(NewWidgetScale);
 	}
 
 	if (HealthBarWidget)

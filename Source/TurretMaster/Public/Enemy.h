@@ -47,6 +47,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Enemy")
 	TObjectPtr<APlayerCameraManager> CameraManager;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy")
+	FVector2D HealthbarScaleMultiplier = FVector2D(0.5, 0.3);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy")
+	FVector2D HealthbarScaleMin = FVector2D(0.1, 0.3);
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	int32 LivesReduction = 1;
 
