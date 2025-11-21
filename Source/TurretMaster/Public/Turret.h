@@ -139,29 +139,16 @@ protected:
 	FTimerHandle ShootDelayHandle;
 
 	// Projectile Values
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileSpeed = 3000.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileLifetime = 10.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileScale = 1.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileTurnMultiplier = 1.f;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Turret")
-	FProjectileValues ProjectileValues;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "Only updates when the level starts"))
+	FProjectileValues ProjectileValues = FProjectileValues(
+		25.f,	// Damage
+		3000.f, // Speed
+		10.f,	// Lifetime
+		1.f,	// Scale
+		1.f		// Turn Multiplier
+	);
 
 	// Update Turret Values
 	
