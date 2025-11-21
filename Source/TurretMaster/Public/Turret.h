@@ -89,7 +89,7 @@ protected:
 
 	// Turret Aiming
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
@@ -114,6 +114,9 @@ protected:
 	
 
 	// Turret Aim Restrictions
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	bool bUseLineOfSight = true;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float GiveUpVerticalAimThreshold = 0.8f;

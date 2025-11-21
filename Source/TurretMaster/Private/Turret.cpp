@@ -218,6 +218,11 @@ AEnemy* ATurret::GetClosestEnemy() const
 
 bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
 {
+    if (!bUseLineOfSight)
+    {
+        return true; // We can skip the rest and return true if we aren't using line of sight
+    }
+
     if (!BulletSpawnPoint)
     {
         return false;
