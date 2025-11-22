@@ -94,7 +94,7 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
     }
 
     // Don't create building preview if one already exists
-    if (CreatedBuildable)
+    if (IsValid(CreatedBuildable.GetObject()))
     {
         return;
     }
@@ -122,7 +122,7 @@ void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
     }
 
     // Don't create building preview if one already exists
-    if (CreatedBuildable)
+    if (IsValid(CreatedBuildable.GetObject()))
     {
         return;
     }
@@ -143,7 +143,7 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
     }
 
     // Don't create new building if one already exists
-    if (CreatedBuildable)
+    if (IsValid(CreatedBuildable.GetObject()))
     {
         return;
     }
