@@ -11,6 +11,8 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 	{
 		BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay);
 	}
+
+	HideBuildingDisplay();
 }
 
 void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, const ATurret* Turret)
@@ -26,10 +28,9 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAs
 		return;
 	}
 
-	if (!Turret)
+	if (Turret)
 	{
-		// Hide button
-		return;
+		// Reveal button
 	}
 
 	BuildingName->SetText(BuildingData->Name);
