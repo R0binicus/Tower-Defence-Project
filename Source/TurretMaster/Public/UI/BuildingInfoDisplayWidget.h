@@ -25,9 +25,15 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "BuildingInfoDisplayWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> BuildingDesc;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "BuildingInfoDisplayWidget", meta = (BindWidget))
+	TObjectPtr<UTextBlock> SellButtonText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget", meta = (BindWidget))
 	TObjectPtr<UButton> SellButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
+	FString SellTextPrefix = "Sell for: $";
 
 	// TODO: Change to being in the player state or similar system
 

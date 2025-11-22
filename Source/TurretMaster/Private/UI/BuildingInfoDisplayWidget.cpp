@@ -30,7 +30,7 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 		return;
 	}
 
-	if (!BuildingName || !BuildingDesc)
+	if (!BuildingName || !BuildingDesc || !SellButtonText)
 	{
 		return;
 	}
@@ -38,6 +38,10 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 	SelectedTurret = Turret;
 	if (SelectedTurret)
 	{
+		int32 SellReturnAmount = SelectedTurretData->Cost * SellFraction;
+		FString FormattedNum = FString::Printf(TEXT("%s%i"), *SellTextPrefix, SellReturnAmount);
+		SellButtonText->SetText(FText::FromString(FormattedNum));
+
 		SellButton->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
