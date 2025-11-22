@@ -5,6 +5,7 @@
 #include "BuildingInfoDisplayWidget.generated.h"
 
 class UTextBlock;
+class UButton;
 class UBuildingSubsystem;
 class UBuildingDataAsset;
 class ATurret;
@@ -25,13 +26,25 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "BuildingInfoDisplayWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> BuildingDesc;
 
+	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget", meta = (BindWidget))
+	TObjectPtr<UButton> SellButton;
+
+	// TODO: Change to being in the player state or similar system
+
+	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
+	TObjectPtr<ATurret> SelectedTurret;
+
 	void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Updates the information in the building info display"))
-	void UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, const ATurret* Turret);
+	void UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, ATurret* Turret);
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Hides the building display text and buttons"))
 	void HideBuildingDisplay();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
+		meta = (ToolTip = "Sells the building that is currently selected"))
+	void SellBuildingPressed();
 };

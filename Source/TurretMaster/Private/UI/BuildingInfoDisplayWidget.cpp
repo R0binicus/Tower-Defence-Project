@@ -1,5 +1,6 @@
 #include "UI/BuildingInfoDisplayWidget.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "Turret.h"
@@ -12,10 +13,15 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 		BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay);
 	}
 
+	if (SellButton)
+	{
+		SellButton->OnClicked.AddDynamic(this, &UBuildingInfoDisplayWidget::SellBuildingPressed);
+	}
+
 	HideBuildingDisplay();
 }
 
-void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, const ATurret* Turret)
+void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, ATurret* Turret)
 {
 	if (!BuildingData)
 	{
@@ -28,9 +34,14 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAs
 		return;
 	}
 
-	if (Turret)
+	SelectedTurret = Turret;
+	if (SelectedTurret)
 	{
-		// Reveal button
+		SellButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		SellButton->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	BuildingName->SetText(BuildingData->Name);
@@ -39,6 +50,8 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAs
 
 void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 {
+	SelectedTurret = nullptr;
+
 	if (!BuildingName || !BuildingDesc)
 	{
 		return;
@@ -46,5 +59,20 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 
 	BuildingName->SetText(FText());
 	BuildingDesc->SetText(FText());
-	// Hide button
+
+	if (SellButton)
+	{
+		SellButton->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UBuildingInfoDisplayWidget::SellBuildingPressed()
+{
+	if (!SelectedTurret)
+	{
+		return;
+	}
+
+	SelectedTurret->Destroy();
+	HideBuildingDisplay();
 }

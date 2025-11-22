@@ -11,7 +11,7 @@
 class ATurret;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingHighlighted, const UBuildingDataAsset*, BuildingData, const ATurret*, Turret);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingHighlighted, const UBuildingDataAsset*, BuildingData, ATurret*, Turret);
 
 /**
  * Subsystem for managing resources and building structures
