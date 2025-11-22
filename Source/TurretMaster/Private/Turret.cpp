@@ -1,6 +1,7 @@
 #include "Turret.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Enemy.h"
+#include "Subsystems/BuildingSubsystem.h"
 #include "Damageable.h"
 
 // Sets default values
@@ -30,6 +31,9 @@ ATurret::ATurret()
 
     TurretGunMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretGunMeshComp"));
     TurretGunMeshComp->SetupAttachment(GunParentComponent);
+
+    OnBeginCursorOver.AddDynamic(this, &ATurret::OnCursorOverBegin);
+    OnEndCursorOver.AddDynamic(this, &ATurret::OnCursorOverEnd);
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -64,6 +68,8 @@ void ATurret::BeginPlay()
     UpdateTurretValues();
 
     TurretFireMinimumRange = FVector::DistSquared(MuzzleBaseLocation, BulletSpawnLocation) + pow(ExtraTurretFireMinimumRange, 2);
+
+    BuildingSubsystem = World->GetSubsystem<UBuildingSubsystem>();
 }
 
 // Called every frame
@@ -112,6 +118,22 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
     EnemyRefArray.Remove(OtherActor);
 }
 #pragma endregion Unreal Functions
+
+void ATurret::OnCursorOverBegin(AActor* TouchedActor)
+{
+    if (BuildingSubsystem)
+    {
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, this);
+    }
+}
+
+void ATurret::OnCursorOverEnd(AActor* TouchedActor)
+{
+    if (BuildingSubsystem)
+    {
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr);
+    }
+}
 
 #pragma region Projectile Pool
 void ATurret::MakeProjectiles(const int NewProjectileAmount)

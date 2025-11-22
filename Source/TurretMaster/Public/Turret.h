@@ -9,6 +9,8 @@
 #include "Turret.generated.h"
 
 class AEnemy;
+class UBuildingSubsystem;
+class UBuildingDataAsset;
 
 /**
  * Base turret class, which aims in a stright line 
@@ -52,6 +54,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
 
+	// 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
+
 	// Projectiles pool
 	
 	UPROPERTY(EditAnywhere, Category = "Turret")
@@ -75,6 +82,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
+
+	UPROPERTY()
+	TObjectPtr<UBuildingSubsystem> BuildingSubsystem;
 
 	// Enemy
 	
@@ -181,6 +191,12 @@ protected:
 
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void OnCursorOverBegin(AActor* TouchedActor);
+
+	UFUNCTION()
+	void OnCursorOverEnd(AActor* TouchedActor);
 
 	// Projectile pool
 	
