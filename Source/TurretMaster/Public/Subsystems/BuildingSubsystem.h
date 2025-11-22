@@ -8,7 +8,10 @@
 #include "GameFramework/TowerDefenceGameInstance.h"
 #include "BuildingSubsystem.generated.h"
 
+class ATurret;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingHighlighted, const UBuildingDataAsset*, BuildingData, const ATurret*, Turret);
 
 /**
  * Subsystem for managing resources and building structures
@@ -23,6 +26,9 @@ public:
 	// Sent when the player selects a new building type to be placed
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
 	FOnBuildingTypeSelected OnBuildingTypeSelected;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
+	FOnBuildingHighlighted OnBuildingHighlighted;
 
 	void StartSubsystem();
 
