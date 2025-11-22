@@ -34,7 +34,12 @@ ATurret::ATurret()
 
     OnBeginCursorOver.AddDynamic(this, &ATurret::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ATurret::OnCursorOverEnd);
-    OnClicked.AddDynamic(this, &ATurret::OnActorClicked);
+
+    TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    if (PlayerController)
+    {
+        PlayerController->OnSelectInput.AddUniqueDynamic(this, &ATurret::OnClicked);
+    }
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -122,16 +127,21 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 
 void ATurret::OnCursorOverBegin(AActor* TouchedActor)
 {
-    
+    bMouseHoveringOver = true;
 }
 
 void ATurret::OnCursorOverEnd(AActor* TouchedActor)
 {
-    
+    bMouseHoveringOver = false;
 }
 
-void ATurret::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
+void ATurret::OnClicked()
 {
+    if (!bMouseHoveringOver)
+    {
+        return;
+    }
+
     if (BuildingSubsystem)
     {
         BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, this);

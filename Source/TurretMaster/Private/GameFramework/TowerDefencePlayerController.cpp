@@ -36,6 +36,11 @@ void ATowerDefencePlayerController::SetupInputComponent()
 
 	if (SelectAction)
 	{
+		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::DeselectInputAction);
+	}
+
+	if (SelectAction)
+	{
 		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &ATowerDefencePlayerController::SelectInputAction);
 	}
 }
@@ -53,6 +58,11 @@ void ATowerDefencePlayerController::QueueInputAction()
 void ATowerDefencePlayerController::CancelInputAction()
 {
 	OnCancelInput.Broadcast();
+}
+
+void ATowerDefencePlayerController::DeselectInputAction()
+{
+	OnDeselectInput.Broadcast();
 }
 
 void ATowerDefencePlayerController::SelectInputAction()

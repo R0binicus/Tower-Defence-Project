@@ -16,7 +16,7 @@ void ATowerDefencePlayerState::BeginPlay()
     TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
     if (PlayerController)
     {
-        PlayerController->OnSelectInput.AddDynamic(this, &ATowerDefencePlayerState::OnSelectedAction);
+        PlayerController->OnDeselectInput.AddDynamic(this, &ATowerDefencePlayerState::OnDeselectedAction);
     }
 }
 
@@ -45,9 +45,8 @@ void ATowerDefencePlayerState::SetPlayerState(const EPlayerStateEnum NewState)
     PlayerStateEnum = NewState;
 }
 
-void ATowerDefencePlayerState::OnSelectedAction()
+void ATowerDefencePlayerState::OnDeselectedAction()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnSelectedAction")));
     if (!SelectedTurret)
     {
         return;

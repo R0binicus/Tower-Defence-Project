@@ -124,7 +124,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Cancels current building selection"))
-	void OnSelectedAction();
+	void OnDeselectedAction();
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Updates the current building selection"))

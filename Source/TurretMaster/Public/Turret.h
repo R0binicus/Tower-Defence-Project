@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	bool bMouseHoveringOver;
+
 	// Projectiles pool
 	
 	UPROPERTY(EditAnywhere, Category = "Turret")
@@ -199,7 +202,7 @@ protected:
 	void OnCursorOverEnd(AActor* TouchedActor);
 
 	UFUNCTION()
-	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+	void OnClicked();
 
 	// Projectile pool
 	
