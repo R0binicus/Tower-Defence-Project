@@ -93,6 +93,8 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
         return;
     }
 
+    // TODO: Discuss, IsValid vs !Object and the minimap icon object pooling
+
     // Don't create building preview if one already exists
     if (IsValid(CreatedBuildable.GetObject()))
     {
