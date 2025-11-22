@@ -33,9 +33,20 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> CostTextBlock;
 
+	UPROPERTY()
+	TObjectPtr<UBuildingSubsystem> BuildingSubsystem;
+
 	void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
 		meta = (ToolTip = "Triggered when the button is clicked"))
 	void OnButtonClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
+		meta = (ToolTip = "Triggered when the button is hovered over by the mouse, or is selected"))
+	void OnButtonHovered();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
+		meta = (ToolTip = "Triggered when the button is de-selected"))
+	void OnButtonUnhovered();
 };
