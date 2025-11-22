@@ -21,9 +21,10 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 	HideBuildingDisplay();
 }
 
-void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAsset* BuildingData, ATurret* Turret)
+void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* BuildingData, ATurret* Turret)
 {
-	if (!BuildingData)
+	SelectedTurretData = BuildingData;
+	if (!SelectedTurretData)
 	{
 		HideBuildingDisplay();
 		return;
@@ -44,8 +45,8 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(const UBuildingDataAs
 		SellButton->SetVisibility(ESlateVisibility::Hidden);
 	}
 
-	BuildingName->SetText(BuildingData->Name);
-	BuildingDesc->SetText(BuildingData->Description);
+	BuildingName->SetText(SelectedTurretData->Name);
+	BuildingDesc->SetText(SelectedTurretData->Description);
 }
 
 void UBuildingInfoDisplayWidget::HideBuildingDisplay()
@@ -68,10 +69,20 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 
 void UBuildingInfoDisplayWidget::SellBuildingPressed()
 {
-	if (!SelectedTurret)
+	if (!SelectedTurret || !SelectedTurretData)
 	{
 		return;
 	}
+
+	SelectedTurretData->Cost;
+
+	TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	if (!PlayerStateClass)
+	{
+		return;
+	}
+
+	PlayerStateClass->ChangeCurrentMoney(SelectedTurretData->Cost * SellFraction);
 
 	SelectedTurret->Destroy();
 	HideBuildingDisplay();
