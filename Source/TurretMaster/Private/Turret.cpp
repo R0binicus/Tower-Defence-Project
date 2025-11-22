@@ -34,6 +34,7 @@ ATurret::ATurret()
 
     OnBeginCursorOver.AddDynamic(this, &ATurret::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ATurret::OnCursorOverEnd);
+    OnClicked.AddDynamic(this, &ATurret::OnActorClicked);
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -121,17 +122,19 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 
 void ATurret::OnCursorOverBegin(AActor* TouchedActor)
 {
-    if (BuildingSubsystem)
-    {
-        BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, this);
-    }
+    
 }
 
 void ATurret::OnCursorOverEnd(AActor* TouchedActor)
 {
+    
+}
+
+void ATurret::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
+{
     if (BuildingSubsystem)
     {
-        BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr);
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, this);
     }
 }
 

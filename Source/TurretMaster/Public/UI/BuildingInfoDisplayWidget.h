@@ -8,6 +8,7 @@ class UTextBlock;
 class UButton;
 class UBuildingSubsystem;
 class UBuildingDataAsset;
+class ATowerDefencePlayerState;
 class ATurret;
 
 /**
@@ -35,16 +36,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
 	FString SellTextPrefix = "Sell for: $";
 
-	// TODO: Change to being in the player state or similar system
-
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
-	TObjectPtr<ATurret> SelectedTurret;
-
-	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
-	TObjectPtr<UBuildingDataAsset> SelectedTurretData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	float SellFraction = 0.5f;
+	TObjectPtr<ATowerDefencePlayerState> PlayerState;
 
 	void NativeConstruct() override;
 

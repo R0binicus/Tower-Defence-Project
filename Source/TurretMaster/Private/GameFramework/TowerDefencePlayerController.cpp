@@ -36,7 +36,7 @@ void ATowerDefencePlayerController::SetupInputComponent()
 
 	if (SelectAction)
 	{
-		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::SelectInputAction);
+		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &ATowerDefencePlayerController::SelectInputAction);
 	}
 }
 

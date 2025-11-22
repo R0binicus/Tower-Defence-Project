@@ -3,7 +3,6 @@
 #include "Components/Button.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "DataAssets/BuildingDataAsset.h"
-#include "Turret.h"
 
 void UBuildingInfoDisplayWidget::NativeConstruct()
 {
@@ -12,6 +11,8 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 	{
 		BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay);
 	}
+
+	PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 
 	if (SellButton)
 	{
@@ -23,22 +24,20 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 
 void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* BuildingData, ATurret* Turret)
 {
-	SelectedTurretData = BuildingData;
-	if (!SelectedTurretData)
+	if (!BuildingData)
 	{
 		HideBuildingDisplay();
 		return;
 	}
 
-	if (!BuildingName || !BuildingDesc || !SellButtonText)
+	if (!BuildingName || !BuildingDesc || !SellButtonText || !PlayerState)
 	{
 		return;
 	}
 
-	SelectedTurret = Turret;
-	if (SelectedTurret)
+	if (Turret)
 	{
-		int32 SellReturnAmount = SelectedTurretData->Cost * SellFraction;
+		int32 SellReturnAmount = BuildingData->Cost * PlayerState->GetSellReturnFraction();
 		FString FormattedNum = FString::Printf(TEXT("%s%i"), *SellTextPrefix, SellReturnAmount);
 		SellButtonText->SetText(FText::FromString(FormattedNum));
 
@@ -49,14 +48,12 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 		SellButton->SetVisibility(ESlateVisibility::Hidden);
 	}
 
-	BuildingName->SetText(SelectedTurretData->Name);
-	BuildingDesc->SetText(SelectedTurretData->Description);
+	BuildingName->SetText(BuildingData->Name);
+	BuildingDesc->SetText(BuildingData->Description);
 }
 
 void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 {
-	SelectedTurret = nullptr;
-
 	if (!BuildingName || !BuildingDesc)
 	{
 		return;
@@ -73,21 +70,11 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 
 void UBuildingInfoDisplayWidget::SellBuildingPressed()
 {
-	if (!SelectedTurret || !SelectedTurretData)
+	if (!PlayerState)
 	{
 		return;
 	}
 
-	SelectedTurretData->Cost;
-
-	TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-	if (!PlayerStateClass)
-	{
-		return;
-	}
-
-	PlayerStateClass->ChangeCurrentMoney(SelectedTurretData->Cost * SellFraction);
-
-	SelectedTurret->Destroy();
+	PlayerState->SellBuilding();
 	HideBuildingDisplay();
 }

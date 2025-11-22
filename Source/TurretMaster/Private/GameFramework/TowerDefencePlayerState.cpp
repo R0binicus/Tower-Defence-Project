@@ -1,9 +1,23 @@
 #include "GameFramework/TowerDefencePlayerState.h"
+#include "Subsystems/BuildingSubsystem.h"
+#include "Turret.h"
 
 void ATowerDefencePlayerState::BeginPlay()
 {
     SetPlayerLivesCurrent(PlayerLivesInitial);
     SetPlayerMoneyCurrent(PlayerMoneyInitial);
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (BuildingSubsystem)
+    {
+        BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &ATowerDefencePlayerState::UpdateCurrentSelection);
+    }
+
+    TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    if (PlayerController)
+    {
+        PlayerController->OnSelectInput.AddDynamic(this, &ATowerDefencePlayerState::OnSelectedAction);
+    }
 }
 
 bool ATowerDefencePlayerState::TrySetPlayerState(const EPlayerStateEnum NewState)
@@ -29,6 +43,27 @@ void ATowerDefencePlayerState::SetPlayerState(const EPlayerStateEnum NewState)
 {
     OnPlayerStateChanged.Broadcast(NewState, PlayerStateEnum);
     PlayerStateEnum = NewState;
+}
+
+void ATowerDefencePlayerState::OnSelectedAction()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OnSelectedAction")));
+    if (!SelectedTurret)
+    {
+        return;
+    }
+
+    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    if (BuildingSubsystem)
+    {
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr); // Also calls UpdateCurrentSelection
+    }
+}
+
+void ATowerDefencePlayerState::UpdateCurrentSelection(UBuildingDataAsset* BuildingData, ATurret* Turret)
+{
+    SelectedTurretData = BuildingData;
+    SelectedTurret = Turret;
 }
 
 void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
@@ -75,4 +110,17 @@ bool ATowerDefencePlayerState::HasEnoughResources(const int32 Cost) const
     {
         return true;
     }
+}
+
+void ATowerDefencePlayerState::SellBuilding()
+{
+    if (!SelectedTurretData)
+    {
+        return;
+    }
+
+    ChangeCurrentMoney(SelectedTurretData->Cost * SellReturnFraction);
+
+    SelectedTurret->Destroy();
+    UpdateCurrentSelection(nullptr, nullptr);
 }

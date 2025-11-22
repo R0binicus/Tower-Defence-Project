@@ -198,6 +198,9 @@ protected:
 	UFUNCTION()
 	void OnCursorOverEnd(AActor* TouchedActor);
 
+	UFUNCTION()
+	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+
 	// Projectile pool
 	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
