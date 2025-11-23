@@ -41,11 +41,7 @@ void UTopBarWidget::NativeConstruct()
 
 void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
 {
-    TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
-    if (EnemySubsystem)
-    {
-        TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
-    }
+    TotalWaveNum = LevelData->LevelWaveData.Num();
 }
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
