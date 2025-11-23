@@ -86,7 +86,7 @@ void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
 {
     if (MoneyText)
     {
-        FString FormattedNum = FString::Printf(TEXT("%i"), NewMoney);
+        FString FormattedNum = FString::Printf(TEXT("$%i"), NewMoney);
         MoneyText->SetText(FText::FromString(FormattedNum));
     }
 }
