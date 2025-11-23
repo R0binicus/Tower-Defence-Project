@@ -10,7 +10,7 @@ float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector&
     // Equation taken from: https://www.forrestthewoods.com/blog/solving_ballistic_trajectories/
 
     // Get initial values
-    const float Speed = ProjectileValues.Speed;
+    const float Speed = ProjectileSpeed;
     const FVector MuzzleLocation = BulletSpawnPoint->GetComponentLocation();
     FVector PlaneTarget = TargetPosition;
     PlaneTarget.Z = MuzzleLocation.Z;

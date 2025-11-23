@@ -156,6 +156,8 @@ protected:
 
 	// Projectile Values
 
+	float ProjectileSpeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret",
 		meta = (ToolTip = "Only updates when the level starts"))
 	FProjectileValues ProjectileValues = FProjectileValues(

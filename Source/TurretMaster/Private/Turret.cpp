@@ -69,6 +69,7 @@ void ATurret::BeginPlay()
         Gravity = -Physics->DefaultGravityZ;
     }
 
+    ProjectileSpeed = ProjectileValues.Speed;
     MakeProjectiles(InitialProjectilePoolSize);
 
     UpdateTurretValues();
@@ -450,6 +451,12 @@ void ATurret::Shoot(const FVector& TargetPosition)
             }
 
             Projectile->SetupProjectile(CurrentClosestEnemy, ProjectileValues);
+
+            // Reset ProjectileValues if custom projectile speed was changed (changed in ArcTurret)
+            if (ProjectileValues.Speed != ProjectileSpeed)
+            {
+                ProjectileValues.Speed = ProjectileSpeed;
+            }
         };
 
     GetWorldTimerManager().ClearTimer(ShootDelayHandle);
