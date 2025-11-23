@@ -1,5 +1,6 @@
 #include "Projectiles/ExplosiveProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Damageable.h"
 
 void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -19,6 +20,8 @@ void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 
 		IDamageable::Execute_TakeDamage(OutActors[i], ProjectileValues.Damage);
 	}
-	
+
+	TObjectPtr<UNiagaraComponent> Explosion = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MyNiagaraSystem, GetActorLocation(), GetActorRotation());
+
 	SetProjectileEnabled(false);
 }

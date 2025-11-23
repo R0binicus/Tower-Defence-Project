@@ -14,8 +14,11 @@ class TURRETMASTER_API AExplosiveProjectile : public AProjectile
 	
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ExplosiveProjectile")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExplosiveProjectile")
 	TEnumAsByte<EObjectTypeQuery> EnemyCollsionType = EObjectTypeQuery::ObjectTypeQuery8;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExplosiveProjectile")
+	class UNiagaraSystem* MyNiagaraSystem;
 
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 };
