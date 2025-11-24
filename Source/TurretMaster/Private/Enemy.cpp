@@ -38,6 +38,7 @@ void AEnemy::BeginPlay()
 	const FVector2D NewWidgetScale = FVector2D(HealthbarScaleMin.X + (ScaleAvg * HealthbarScaleMultiplier.X), 
 		HealthbarScaleMin.Y + (ScaleAvg * HealthbarScaleMultiplier.Y));
 	HealthBarWidget->SetRenderScale(NewWidgetScale);
+	HealthBarWidget->SetBarPercent(CurrentHealth / MaxHealth);
 }
 
 void AEnemy::Tick(const float DeltaTime)

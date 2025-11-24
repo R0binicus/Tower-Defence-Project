@@ -16,7 +16,7 @@ UCLASS()
 class TURRETMASTER_API UTopBarWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TopBarWidget")
@@ -42,10 +42,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "TopBarWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> EnemiesRemainingText;
 
-	virtual void NativeConstruct() override;
+	void NativeConstruct() override;
 
 	UFUNCTION()
-	void OnLevelDataLoaded(const ULevelDataAsset* LevelData);
+	void OnLevelDataLoaded(ULevelDataAsset* LevelData);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates values due to a new wave starting. Called when OnWaveChanged event is triggered"))
@@ -61,5 +61,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the EnemiesRemainingText. Called when OnEnemiesRemainingChanged event is triggered"))
-	void UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining) const;
+	void UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining);
 };

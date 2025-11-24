@@ -7,6 +7,7 @@
 class ULevelDataAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelDataLoaded, ULevelDataAsset*, LevelData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTest);
 
 /**
  * Game instance for the tower defence game
@@ -20,6 +21,9 @@ class TURRETMASTER_API UTowerDefenceGameInstance : public UGameInstance
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameInstance")
 	FOnLevelDataLoaded OnLevelDataLoaded;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameInstance")
+	FTest Test;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Loads the appropriate level data, using a soft pointer to a level world"))

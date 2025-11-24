@@ -102,8 +102,8 @@ void ATowerDefencePlayerState::SetPlayerMoneyCurrent(const int32 NewMoney)
 bool ATowerDefencePlayerState::HasEnoughResources(const int32 Cost) const
 {
     const int32 ResourcesAfterCost = PlayerMoneyCurrent - Cost;
-    
-    return ResourcesAfterCost < 0;
+
+    return ResourcesAfterCost >= 0;
 }
 
 void ATowerDefencePlayerState::SellBuilding()

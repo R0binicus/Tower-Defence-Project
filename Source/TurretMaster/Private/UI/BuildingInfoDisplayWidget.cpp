@@ -67,7 +67,7 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay() const
 	SellButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UBuildingInfoDisplayWidget::SellBuildingPressed() const
+void UBuildingInfoDisplayWidget::SellBuildingPressed()
 {
 	if (!PlayerState)
 	{

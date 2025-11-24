@@ -17,14 +17,19 @@ void UTopBarWidget::NativeConstruct()
         return;
     }
 
-    const UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
+    UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
     const TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
     const TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(World, 0));
-    
+
     if (!GameInstance || !EnemySubsystem || !PlayerState)
     {
         return;
     }
+        
+    GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UTopBarWidget::OnLevelDataLoaded);
+
+    EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
+    EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
 
     UpdateLivesText(PlayerState->GetPlayerLivesCurrent(), 0);
     UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent(), 0);
@@ -37,7 +42,7 @@ void UTopBarWidget::NativeConstruct()
     UpdateEnemiesRemainingText(0);
 }
 
-void UTopBarWidget::OnLevelDataLoaded(const ULevelDataAsset* LevelData)
+void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
 {
     TotalWaveNum = LevelData->LevelWaveData.Num();
 }
@@ -48,7 +53,7 @@ void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 New
     {
         return;
     }
-    
+
     const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
     WavesRemainingText->SetText(FText::FromString(FormattedNum));
 
@@ -82,7 +87,7 @@ void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
     }
 }
 
-void UTopBarWidget::UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining) const
+void UTopBarWidget::UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining)
 {
     if (EnemiesRemainingText)
     {

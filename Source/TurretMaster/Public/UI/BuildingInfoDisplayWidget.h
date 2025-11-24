@@ -51,5 +51,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Sells the building that is currently selected"))
-	void SellBuildingPressed() const;
+	void SellBuildingPressed();
 };
