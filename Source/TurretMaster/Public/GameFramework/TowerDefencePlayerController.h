@@ -53,9 +53,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputAction> SelectAction;
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 
-	void SetupInputComponent() override;
+	virtual void SetupInputComponent() override;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
 		meta = (ToolTip = "Broadcasts an event saying that the pause button was pressed"))

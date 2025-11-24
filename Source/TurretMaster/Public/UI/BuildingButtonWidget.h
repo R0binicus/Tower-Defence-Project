@@ -37,7 +37,7 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UBuildingSubsystem> BuildingSubsystem;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
 		meta = (ToolTip = "Triggered when the button is clicked"))

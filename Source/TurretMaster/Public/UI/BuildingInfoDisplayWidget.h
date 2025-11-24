@@ -39,7 +39,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingInfoDisplayWidget")
 	TObjectPtr<ATowerDefencePlayerState> PlayerState;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Updates the information in the building info display"))
@@ -47,9 +47,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Hides the building display text and buttons"))
-	void HideBuildingDisplay();
+	void HideBuildingDisplay() const;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingInfoDisplayWidget",
 		meta = (ToolTip = "Sells the building that is currently selected"))
-	void SellBuildingPressed();
+	void SellBuildingPressed() const;
 };

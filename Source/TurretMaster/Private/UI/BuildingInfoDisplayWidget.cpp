@@ -3,10 +3,12 @@
 #include "Components/Button.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "DataAssets/BuildingDataAsset.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UBuildingInfoDisplayWidget::NativeConstruct()
 {
-	TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+	const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
 	if (BuildingSubsystem)
 	{
 		BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay);
@@ -37,8 +39,8 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 
 	if (Turret)
 	{
-		int32 SellReturnAmount = BuildingData->Cost * PlayerState->GetSellReturnFraction();
-		FString FormattedNum = FString::Printf(TEXT("%s%i"), *SellTextPrefix, SellReturnAmount);
+		const int32 SellReturnAmount = BuildingData->Cost * PlayerState->GetSellReturnFraction();
+		const FString FormattedNum = FString::Printf(TEXT("%s%i"), *SellTextPrefix, SellReturnAmount);
 		SellButtonText->SetText(FText::FromString(FormattedNum));
 
 		SellButton->SetVisibility(ESlateVisibility::Visible);
@@ -52,9 +54,9 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 	BuildingDesc->SetText(BuildingData->Description);
 }
 
-void UBuildingInfoDisplayWidget::HideBuildingDisplay()
+void UBuildingInfoDisplayWidget::HideBuildingDisplay() const
 {
-	if (!BuildingName || !BuildingDesc)
+	if (!BuildingName || !BuildingDesc || !SellButton)
 	{
 		return;
 	}
@@ -62,19 +64,14 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay()
 	BuildingName->SetText(FText());
 	BuildingDesc->SetText(FText());
 
-	if (SellButton)
-	{
-		SellButton->SetVisibility(ESlateVisibility::Hidden);
-	}
+	SellButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UBuildingInfoDisplayWidget::SellBuildingPressed()
+void UBuildingInfoDisplayWidget::SellBuildingPressed() const
 {
 	if (!PlayerState)
 	{
-		return;
+		PlayerState->SellBuilding();
+		HideBuildingDisplay();
 	}
-
-	PlayerState->SellBuilding();
-	HideBuildingDisplay();
 }

@@ -8,9 +8,6 @@ AEnemySpawnArea::AEnemySpawnArea()
 
 	SpawnVolumeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Spawn Volume Box"));
 	SpawnVolumeBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-    // TODO: Remove magic number
-	SpawnVolumeBox->SetBoxExtent(FVector(1000, 1000, 0), false);
 }
 
 void AEnemySpawnArea::BeginPlay()
@@ -25,7 +22,7 @@ void AEnemySpawnArea::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
+AEnemy* AEnemySpawnArea::SpawnEnemy(const TSubclassOf<AEnemy> NewEnemyClass) const
 {
     if (!NewEnemyClass || !EnemyDestination)
     {

@@ -9,58 +9,43 @@ void UBuildingButtonWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    if (Button)
-    {
-        Button->OnClicked.AddDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
-        Button->OnHovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonHovered);
-        Button->OnUnhovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonUnhovered);
-    }
-    
-    if (!BuildingDataAsset)
+    if (!Button || !BuildingIcon || !BuildingDataAsset || !CostTextBlock)
     {
         return;
     }
 
-    if (BuildingIcon)
-    {
-        BuildingIcon->SetBrushFromTexture(BuildingDataAsset->Icon);
-    }
+    Button->OnClicked.AddDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
+    Button->OnHovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonHovered);
+    Button->OnUnhovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonUnhovered);
 
-    if (CostTextBlock)
-    {
-        FString FormattedNum = FString::Printf(TEXT("$%i"), BuildingDataAsset->Cost);
-        CostTextBlock->SetText(FText::FromString(FormattedNum));
-    }
+    BuildingIcon->SetBrushFromTexture(BuildingDataAsset->Icon);
+
+    const FString FormattedNum = FString::Printf(TEXT("$%i"), BuildingDataAsset->Cost);
+    CostTextBlock->SetText(FText::FromString(FormattedNum));
 
     BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
 }
 
 void UBuildingButtonWidget::OnButtonClicked()
 {
-    if (!BuildingSubsystem)
+    if (BuildingSubsystem)
     {
-        return;
+        BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
     }
-
-    BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
 }
 
 void UBuildingButtonWidget::OnButtonHovered()
 {
-    if (!BuildingSubsystem)
+    if (BuildingSubsystem)
     {
-        return;
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, nullptr);
     }
-
-    BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, nullptr);
 }
 
 void UBuildingButtonWidget::OnButtonUnhovered()
 {
-    if (!BuildingSubsystem)
+    if (BuildingSubsystem)
     {
-        return;
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr);
     }
-
-    BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr);
 }

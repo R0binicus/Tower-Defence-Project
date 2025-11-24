@@ -30,7 +30,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "EndScreenWidget", meta = (BindWidget))
 	TObjectPtr<UButton> MainMenuButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
 		meta = (ToolTip = "Restarts the current level"))

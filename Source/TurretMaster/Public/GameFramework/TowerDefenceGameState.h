@@ -30,11 +30,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameState")
 	bool bGameLost = false;
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the win condition, sending events to everything subscribed"))
-	void TriggerWin();
+	void TriggerWin() const;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Triggers the lose condition, sending events to everything subscribed"))
@@ -42,7 +42,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Sets the game to be paused or unpaused"))
-	void SetGamePaused(bool bIsNowPaused);
+	void SetGamePaused(bool bIsNowPaused) const;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameState",
 		meta = (ToolTip = "Pauses the game if unpaused, unpauses if paused"))

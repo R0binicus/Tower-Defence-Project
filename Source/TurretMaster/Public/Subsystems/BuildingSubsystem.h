@@ -38,11 +38,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Tells the building subsystem that a building is placed, then removes appropriate resources"))
-	void BuildingPlaced();
+	void BuildingPlaced() const;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Clears the CurrentPlaceBuildingSelected"))
-	void CancelPlaceBuilding();
+	void CancelPlaceBuilding() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")

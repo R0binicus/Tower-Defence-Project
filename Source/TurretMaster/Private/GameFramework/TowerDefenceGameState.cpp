@@ -7,18 +7,18 @@ void ATowerDefenceGameState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if (PlayerController)
 	{
 		PlayerController->OnPauseInput.AddDynamic(this, &ATowerDefenceGameState::OnPauseInputEvent);
 	}
 }
 
-void ATowerDefenceGameState::TriggerWin()
+void ATowerDefenceGameState::TriggerWin() const
 {
 	OnGameWin.Broadcast();
 
-	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	const TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	if (GameHUD)
 	{
 		GameHUD->SetVictoryWidgetVisible(true);
@@ -35,14 +35,14 @@ void ATowerDefenceGameState::TriggerLose()
 	bGameLost = true;
 	OnGameLose.Broadcast();
 
-	TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	const TObjectPtr<ATowerDefenceHUD> GameHUD = Cast<ATowerDefenceHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	if (GameHUD)
 	{
 		GameHUD->SetDefeatWidgetVisible(true);
 	}
 }
 
-void ATowerDefenceGameState::SetGamePaused(bool bIsNowPaused)
+void ATowerDefenceGameState::SetGamePaused(const bool bIsNowPaused) const
 {
 	UGameplayStatics::SetGamePaused(GetWorld(), bIsNowPaused);
 	OnGamePaused.Broadcast(bIsNowPaused);
@@ -50,6 +50,6 @@ void ATowerDefenceGameState::SetGamePaused(bool bIsNowPaused)
 
 void ATowerDefenceGameState::OnPauseInputEvent()
 {
-	bool bIsPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	const bool bIsPaused = UGameplayStatics::IsGamePaused(GetWorld());
 	SetGamePaused(!bIsPaused);
 }

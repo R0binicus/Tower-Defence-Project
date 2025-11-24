@@ -44,33 +44,21 @@ void ABuildableBlock::BeginPlay()
 
     World = GetWorld();
 
-    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-    if (BuildingSubsystem)
-    {
-        BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
-    }
+    const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    const TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 
-    TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-    if (PlayerStateClass)
+    if (!BuildingSubsystem || !PlayerStateClass)
     {
-        PlayerStateClass->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
+        return;
     }
+    
+    PlayerStateClass->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
+    BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
 }
 
-void ABuildableBlock::Tick(float DeltaTime)
+TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubclassOf<AActor> BuildableClass) const
 {
-	Super::Tick(DeltaTime);
-
-}
-
-TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubclassOf<AActor> BuildableClass)
-{
-    if (!BuildableClass)
-    {
-        return nullptr;
-    }
-
-    if (!World)
+    if (!World || !BuildableClass)
     {
         return nullptr;
     }
@@ -82,16 +70,14 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
 
     const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
     const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
-    if (!Building)
+    const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    
+    if (!Building || !BuildingSubsystem)
     {
         return nullptr;
     }
 
-    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-    if (BuildingSubsystem)
-    {
-        IBuildable::Execute_SetProtectPoint(BuildingActor, BuildingSubsystem->GetProtectPoint());
-    }
+    IBuildable::Execute_SetProtectPoint(BuildingActor, BuildingSubsystem->GetProtectPoint());
 
     return Building;
 }
@@ -176,23 +162,17 @@ void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
 
     CreatedBuildable = CreateBuildableActor(BuildableClass);
 
-    TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-    if (!PlayerStateClass)
+    const TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+    const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+    
+    if (!PlayerStateClass || !BuildingSubsystem)
     {
         return;
     }
 
     PlayerStateClass->ChangeCurrentMoney(-BuildingDataAsset->Cost);
-
-    DisableBuildingPreview();
-
-    TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-    if (!BuildingSubsystem)
-    {
-        return;
-    }
-
     BuildingSubsystem->BuildingPlaced();
+    DisableBuildingPreview();
 }
 
 void ABuildableBlock::SetBuildingAsset(UBuildingDataAsset* NewBuilding)
@@ -200,14 +180,9 @@ void ABuildableBlock::SetBuildingAsset(UBuildingDataAsset* NewBuilding)
     BuildingDataAsset = NewBuilding;
 }
 
-void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)
+void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh) const
 {
-    if (!PreviewMesh)
-    {
-        return;
-    }
-
-    if (!BuildingPreviewMeshNew)
+    if (!PreviewMesh || !BuildingPreviewMeshNew)
     {
         return;
     }
@@ -219,7 +194,7 @@ void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)
     }
 }
 
-void ABuildableBlock::DisableBuildingPreview()
+void ABuildableBlock::DisableBuildingPreview() const
 {
     if (!BuildingPreviewMeshNew || !RangePreviewComponent)
     {

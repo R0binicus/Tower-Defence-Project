@@ -156,13 +156,13 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Triggers victory when all the waves are complete"))
-	void AllWavesComplete();
+	void AllWavesComplete() const;
 
 	// Utility functions
 
 	template<typename T>
-	int32 GetRandomArrayIndex(const TArray<T>& Array) const;
+	static int32 GetRandomArrayIndex(const TArray<T>& Array);
 
 	template<typename T>
-	void ShuffleArray(TArray<T>& Array) const;
+	static void ShuffleArray(TArray<T>& Array);
 };

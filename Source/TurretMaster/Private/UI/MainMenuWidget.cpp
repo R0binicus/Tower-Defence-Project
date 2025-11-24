@@ -17,12 +17,10 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnLevel01Clicked()
 {
-	if (Level01.IsNull())
+	if (!Level01.IsNull())
 	{
-		return;
+		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 	}
-
-	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 }
 
 void UMainMenuWidget::OnQuitClicked()

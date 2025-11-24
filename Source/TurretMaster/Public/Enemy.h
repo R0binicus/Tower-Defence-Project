@@ -8,7 +8,6 @@
 class UWidgetComponent;
 class UEnemyHealthbarWidget;
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeath, int32, ResourcesGained);
 
 UCLASS()
@@ -30,11 +29,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Enemy",
 		meta = (ToolTip = "Sets the enemy's destination"))
-	void SetDestination(const FVector NewDestination);
+	void SetDestination(const FVector NewDestination) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damagable")
-	void Death(bool bByTurret);
-	void Death_Implementation(bool bByTurret);
+	void Death(const bool bByTurret);
+	void Death_Implementation(const bool bByTurret);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
@@ -72,7 +71,7 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void TakeDamage_Implementation(float DamageTaken);
+	void TakeDamage_Implementation(const float DamageTaken);
 
 	bool IsDead_Implementation() const { return bIsDead; }
 };

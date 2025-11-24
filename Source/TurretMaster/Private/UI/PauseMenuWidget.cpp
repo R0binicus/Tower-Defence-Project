@@ -20,14 +20,14 @@ void UPauseMenuWidget::NativeConstruct()
 		MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
 	}
 
-	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)
 	{
 		GameState->OnGamePaused.AddUniqueDynamic(this, &UPauseMenuWidget::SetWidgetVisible);
 	}
 }
 
-void UPauseMenuWidget::SetWidgetVisible(bool bIsVisible)
+void UPauseMenuWidget::SetWidgetVisible(const bool bIsVisible)
 {
 	if (bIsVisible)
 	{
@@ -39,9 +39,9 @@ void UPauseMenuWidget::SetWidgetVisible(bool bIsVisible)
 	}
 }
 
-void UPauseMenuWidget::SetWidgetPaused(bool bIsNowPaused)
+void UPauseMenuWidget::SetWidgetPaused(const bool bIsNowPaused) const
 {
-	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)
 	{
 		GameState->SetGamePaused(bIsNowPaused);
@@ -55,7 +55,7 @@ void UPauseMenuWidget::OnResumeClicked()
 
 void UPauseMenuWidget::OnRestartClicked()
 {
-	FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	const FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	UGameplayStatics::OpenLevel(this, FName(CurrentLevelNameString));
 }
 

@@ -1,7 +1,6 @@
 #include "Projectile.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Engine/EngineTypes.h"
-#include "Enemy.h"
 #include "Damageable.h"
 
 AProjectile::AProjectile()
@@ -82,12 +81,7 @@ void AProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (!OtherActor)
-	{
-		return;
-	}
-	
-	if (!OtherComp)
+	if (!OtherActor || !OtherComp)
 	{
 		return;
 	}

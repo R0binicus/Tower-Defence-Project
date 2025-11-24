@@ -32,11 +32,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "PauseMenuWidget", meta = (BindWidget))
 	TObjectPtr<UButton> MainMenuButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Tells the game state to pause the game"))
-	void SetWidgetPaused(bool bIsPause);
+	void SetWidgetPaused(bool bIsPause) const;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

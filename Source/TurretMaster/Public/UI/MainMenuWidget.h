@@ -24,7 +24,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "MainMenuWidget", meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "MainMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

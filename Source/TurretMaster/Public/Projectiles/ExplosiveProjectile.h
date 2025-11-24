@@ -15,7 +15,7 @@ class TURRETMASTER_API AExplosiveProjectile : public AProjectile
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExplosiveProjectile")
-	TEnumAsByte<EObjectTypeQuery> EnemyCollsionType = EObjectTypeQuery::ObjectTypeQuery8;
+	TEnumAsByte<EObjectTypeQuery> EnemyCollisionType = ObjectTypeQuery8;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExplosiveProjectile")
 	class UNiagaraSystem* MyNiagaraSystem;

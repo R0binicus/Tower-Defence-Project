@@ -13,7 +13,7 @@ void UEndScreenWidget::NativeConstruct()
 	MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
 }
 
-void UEndScreenWidget::SetWidgetVisible(bool bIsVisible)
+void UEndScreenWidget::SetWidgetVisible(const bool bIsVisible)
 {
 	if (bIsVisible)
 	{
@@ -27,7 +27,7 @@ void UEndScreenWidget::SetWidgetVisible(bool bIsVisible)
 
 void UEndScreenWidget::OnRestartClicked()
 {
-	FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	const FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	UGameplayStatics::OpenLevel(this, FName(CurrentLevelNameString));
 }
 

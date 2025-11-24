@@ -33,7 +33,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Buildable Block")
 	TObjectPtr<USphereComponent> RangePreviewComponent;
 
-	//TODO: Disucss, how does this get set to null???
+	//TODO: Discuss, how does this get set to null???
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	//TObjectPtr<USkeletalMeshComponent> BuildingPreviewMesh;
@@ -58,11 +58,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Creates and initialises a buildable actor"))
-	TScriptInterface<IBuildable> CreateBuildableActor(const TSubclassOf<AActor> BuildableClass);
+	TScriptInterface<IBuildable> CreateBuildableActor(const TSubclassOf<AActor> BuildableClass) const;
 
 	UFUNCTION()
 	void OnCursorOverBegin(AActor* TouchedActor);
@@ -79,11 +77,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))
-	void SetBuildingPreview(USkeletalMesh* PreviewMesh);
+	void SetBuildingPreview(USkeletalMesh* PreviewMesh) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Hides the building preview, and sets the mesh to be null"))
-	void DisableBuildingPreview();
+	void DisableBuildingPreview() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets the internal player state variable"))

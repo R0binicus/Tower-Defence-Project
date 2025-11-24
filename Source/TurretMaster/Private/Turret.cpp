@@ -5,6 +5,8 @@
 #include "Damageable.h"
 #include "Components/SphereComponent.h"
 #include "Projectile.h"
+#include "GameFramework/TowerDefencePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATurret::ATurret()
@@ -37,7 +39,7 @@ ATurret::ATurret()
     OnBeginCursorOver.AddDynamic(this, &ATurret::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ATurret::OnCursorOverEnd);
 
-    TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
     if (PlayerController)
     {
         PlayerController->OnSelectInput.AddUniqueDynamic(this, &ATurret::OnClicked);
@@ -109,22 +111,18 @@ void ATurret::Tick(const float DeltaTime)
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if (!OtherActor->ActorHasTag(EnemyTagName))
+    if (OtherActor->ActorHasTag(EnemyTagName))
     {
-        return;
+        EnemyRefArray.Add(OtherActor);
     }
-
-    EnemyRefArray.Add(OtherActor);
 }
 
 void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    if (!OtherActor->ActorHasTag(EnemyTagName))
+    if (OtherActor->ActorHasTag(EnemyTagName))
     {
-        return;
+        EnemyRefArray.Remove(OtherActor);
     }
-
-    EnemyRefArray.Remove(OtherActor);
 }
 #pragma endregion Unreal Functions
 
@@ -278,13 +276,13 @@ bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
 
     FHitResult HitResult;
 
-    bool bActorHit = World->LineTraceSingleByChannel(HitResult, BulletSpawnLocation, EnemyLocation, TurretSightTraceChannel);
+    const bool bActorHit = World->LineTraceSingleByChannel(HitResult, BulletSpawnLocation, EnemyLocation, TurretSightTraceChannel);
     if (!bActorHit)
     {
         return false;
     }
 
-    TObjectPtr<UPrimitiveComponent> HitComp = HitResult.GetComponent();
+    const TObjectPtr<UPrimitiveComponent> HitComp = HitResult.GetComponent();
     if (!HitComp)
     {
         return false;
@@ -306,10 +304,8 @@ void ATurret::UpdateTurretValues()
     }
 
     CurrentGunRotation = GunParentComponent->GetComponentRotation();
-
     MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
     MuzzleBaseLocation = MuzzleDirectionSocket->GetComponentLocation();
-
     BulletSpawnLocation = BulletSpawnPoint->GetComponentLocation();
 }
 

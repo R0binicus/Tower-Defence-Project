@@ -6,13 +6,14 @@
 #include "ProjectileValues.h"
 #include "Turret.generated.h"
 
+class AProjectile;
 class AEnemy;
 class UBuildingSubsystem;
 class UBuildingDataAsset;
 class USphereComponent;
 
 /**
- * Base turret class, which aims in a stright line 
+ * Base turret class, which aims in a straight line 
  * towards the target, and ignores gravity
  */
 UCLASS()
@@ -108,7 +109,7 @@ protected:
 	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Enemy");
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName("Enemy");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))

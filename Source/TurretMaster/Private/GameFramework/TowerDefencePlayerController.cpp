@@ -1,11 +1,10 @@
 #include "GameFramework/TowerDefencePlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 
 void ATowerDefencePlayerController::BeginPlay()
 {
-	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	const TObjectPtr<UEnhancedInputLocalPlayerSubsystem> InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (InputSubsystem)
 	{
 		InputSubsystem->AddMappingContext(InputMap, 0);
@@ -16,36 +15,22 @@ void ATowerDefencePlayerController::SetupInputComponent()
 {
 	APlayerController::SetupInputComponent();
 
-	TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
+	const TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	if (!EnhancedInputComponent)
 	{
 		return;
 	}
 
-	if (PauseAction)
+	if (!PauseAction || !QueueAction || !CancelAction || !SelectAction)
 	{
-		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::PauseInputAction);
+		return;
 	}
 
-	if (QueueAction)
-	{
-		EnhancedInputComponent->BindAction(QueueAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::QueueInputAction);
-	}
-
-	if (CancelAction)
-	{
-		EnhancedInputComponent->BindAction(CancelAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::CancelInputAction);
-	}
-
-	if (SelectAction)
-	{
-		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::DeselectInputAction);
-	}
-
-	if (SelectAction)
-	{
-		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &ATowerDefencePlayerController::SelectInputAction);
-	}
+	EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::PauseInputAction);
+	EnhancedInputComponent->BindAction(QueueAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::QueueInputAction);
+	EnhancedInputComponent->BindAction(CancelAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::CancelInputAction);
+	EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::DeselectInputAction);
+	EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &ATowerDefencePlayerController::SelectInputAction);
 }
 
 void ATowerDefencePlayerController::PauseInputAction()

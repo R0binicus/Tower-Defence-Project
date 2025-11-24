@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "EnemySpawnArea.generated.h"
 
+class AEnemy;
 class UBoxComponent;
 
 UCLASS()

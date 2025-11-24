@@ -2,9 +2,9 @@
 #include "PrimaryAssets/LevelDataAsset.h"
 #include "Engine/AssetManager.h"
 
-void UTowerDefenceGameInstance::LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorld)
+void UTowerDefenceGameInstance::LoadDataUsingLevel(const TSoftObjectPtr<UWorld> InWorld)
 {
-	FString WorldName = InWorld.GetAssetName();
+	const FString WorldName = InWorld.GetAssetName();
 
 	if (!LevelDataIdMap.Contains(WorldName))
 	{
@@ -24,32 +24,32 @@ void UTowerDefenceGameInstance::LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorl
 		CurrentLevelData = nullptr;
 	}
 
-	TArray<FName> Bundles;
-	FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &UTowerDefenceGameInstance::OnAssetLoaded, AssetId);
+	const TArray<FName> Bundles;
+	const FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &UTowerDefenceGameInstance::OnAssetLoaded, AssetId);
 
 	Manager->LoadPrimaryAsset(AssetId, Bundles, Delegate);
 }
 
-UWorld* UTowerDefenceGameInstance::GetLevel()
+UWorld* UTowerDefenceGameInstance::GetLevel() const
 {
 	return GetWorld();
 }
 
-void UTowerDefenceGameInstance::OnAssetLoaded(FPrimaryAssetId LoadedId)
+void UTowerDefenceGameInstance::OnAssetLoaded(const FPrimaryAssetId LoadedId)
 {
-	UAssetManager* Manager = UAssetManager::GetIfInitialized();
+	const UAssetManager* Manager = UAssetManager::GetIfInitialized();
 	if (!Manager)
 	{
 		return;
 	}
 
-	TObjectPtr<UClass> Class = Manager->GetPrimaryAssetObject<UClass>(LoadedId);
+	const TObjectPtr<UClass> Class = Manager->GetPrimaryAssetObject<UClass>(LoadedId);
 	if (!Class)
 	{
 		return;
 	}
 
-	TObjectPtr<ULevelDataAsset> MyTypedObject = Cast<ULevelDataAsset>(Class->GetDefaultObject());
+	const TObjectPtr<ULevelDataAsset> MyTypedObject = Cast<ULevelDataAsset>(Class->GetDefaultObject());
 	if (MyTypedObject)
 	{
 		CurrentLevelData = MyTypedObject;

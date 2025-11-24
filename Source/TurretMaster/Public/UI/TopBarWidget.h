@@ -5,6 +5,7 @@
 #include "EnemyWaveData.h"
 #include "TopBarWidget.generated.h"
 
+class UWaveDataObject;
 class ULevelDataAsset;
 class UTextBlock;
 
@@ -41,10 +42,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "TopBarWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> EnemiesRemainingText;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION()
-	void OnLevelDataLoaded(ULevelDataAsset* LevelData);
+	void OnLevelDataLoaded(const ULevelDataAsset* LevelData);
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates values due to a new wave starting. Called when OnWaveChanged event is triggered"))
@@ -60,5 +61,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TopBarWidget",
 		meta = (ToolTip = "Updates the EnemiesRemainingText. Called when OnEnemiesRemainingChanged event is triggered"))
-	void UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining);
+	void UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining) const;
 };

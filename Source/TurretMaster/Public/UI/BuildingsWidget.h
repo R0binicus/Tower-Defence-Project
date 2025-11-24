@@ -6,7 +6,6 @@
 
 class UBuildingButtonWidget;
 class UBuildingDataAsset;
-class UBuildingButtonWidget;
 class UCanvasPanel;
 
 /**

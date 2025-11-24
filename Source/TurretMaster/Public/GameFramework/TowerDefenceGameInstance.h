@@ -23,11 +23,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Loads the appropriate level data, using a soft pointer to a level world"))
-	void LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorld);
+	void LoadDataUsingLevel(const TSoftObjectPtr<UWorld> InWorld);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Gets a world soft pointer. For use in blueprints"))
-	UWorld* GetLevel();
+	UWorld* GetLevel() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameInstance")
@@ -38,5 +38,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Sends an event when the level data asset has been loaded"))
-	void OnAssetLoaded(FPrimaryAssetId LoadedId);
+	void OnAssetLoaded(const FPrimaryAssetId LoadedId);
 };
