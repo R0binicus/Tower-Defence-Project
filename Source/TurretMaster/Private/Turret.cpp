@@ -129,11 +129,21 @@ void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 void ATurret::OnCursorOverBegin(AActor* TouchedActor)
 {
     bMouseHoveringOver = true;
+
+    if (RangeSphere)
+    {
+        RangeSphere->SetHiddenInGame(false);
+    }
 }
 
 void ATurret::OnCursorOverEnd(AActor* TouchedActor)
 {
     bMouseHoveringOver = false;
+
+    if (RangeSphere)
+    {
+        RangeSphere->SetHiddenInGame(true);
+    }
 }
 
 void ATurret::OnClicked()
