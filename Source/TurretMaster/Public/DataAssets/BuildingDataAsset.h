@@ -29,7 +29,7 @@ public:
 	FColor Colour;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
-	float RangePreview;
+	float RangePreview = 3000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
 	TObjectPtr<USkeletalMesh> SkeletalMesh;

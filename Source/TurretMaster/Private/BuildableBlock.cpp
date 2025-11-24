@@ -217,12 +217,13 @@ void ABuildableBlock::SetBuildingPreview(USkeletalMesh* PreviewMesh)
 
 void ABuildableBlock::DisableBuildingPreview()
 {
-    if (!BuildingPreviewMeshNew)
+    if (!BuildingPreviewMeshNew || !RangePreviewComponent)
     {
         return;
     }
 
     BuildingPreviewMeshNew->SetSkeletalMesh(nullptr);
+    RangePreviewComponent->SetHiddenInGame(true);
 }
 
 void ABuildableBlock::SetPlayerState(const EPlayerStateEnum NewState, const EPlayerStateEnum OldState)
