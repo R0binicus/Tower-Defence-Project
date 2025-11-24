@@ -2,10 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CanvasPanel.h"
-#include "UI/BuildingButtonWidget.h"
-#include "DataAssets/BuildingDataAsset.h"
 #include "BuildingsWidget.generated.h"
+
+class UBuildingButtonWidget;
+class UBuildingDataAsset;
+class UBuildingButtonWidget;
+class UCanvasPanel;
 
 /**
  * Widget parent, which contains a button widget for each building type
@@ -30,6 +32,4 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingsWidget", meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> MainCanvasPanel;
-
-	void NativeConstruct() override;
 };

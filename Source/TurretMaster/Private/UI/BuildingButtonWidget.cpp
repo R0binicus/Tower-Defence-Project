@@ -1,4 +1,9 @@
 #include "UI/BuildingButtonWidget.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
+#include "Components/Button.h"
+#include "DataAssets/BuildingDataAsset.h"
+#include "Subsystems/BuildingSubsystem.h"
 
 void UBuildingButtonWidget::NativeConstruct()
 {

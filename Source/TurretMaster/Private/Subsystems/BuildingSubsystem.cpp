@@ -1,4 +1,8 @@
 #include "Subsystems/BuildingSubsystem.h"
+#include "DataAssets/BuildingDataAsset.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
 
 void UBuildingSubsystem::StartSubsystem()
 {

@@ -2,9 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "GameFramework/TowerDefenceHUD.h"
-#include "GameFramework/TowerDefencePlayerController.h"
-#include "Kismet/GameplayStatics.h"
 #include "TowerDefenceGameState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameWin);

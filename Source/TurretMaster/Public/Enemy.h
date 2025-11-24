@@ -3,11 +3,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Damageable.h"
-#include "Components/WidgetComponent.h"
-#include "UI/EnemyHealthbarWidget.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Enemy.generated.h"
+
+class UWidgetComponent;
+class UEnemyHealthbarWidget;
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeath, int32, ResourcesGained);
 

@@ -2,6 +2,7 @@
 #include "GameFramework/TowerDefenceGameInstance.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "Subsystems/EnemySubsystem.h"
+#include "GameFramework/TowerDefenceHUD.h"
 
 ATowerDefenceGameMode::ATowerDefenceGameMode()
 {

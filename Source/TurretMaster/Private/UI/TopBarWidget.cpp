@@ -1,5 +1,9 @@
 #include "UI/TopBarWidget.h"
 #include "Subsystems/EnemySubsystem.h"
+#include "Components/TextBlock.h"
+#include "WaveDataObject.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UTopBarWidget::NativeConstruct()
 {

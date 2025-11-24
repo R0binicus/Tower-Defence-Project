@@ -2,9 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CanvasPanel.h"
-#include "UI/BuildingsWidget.h"
 #include "HudWidget.generated.h"
+
+class UCanvasPanel;
+class UBuildingsWidget;
 
 /**
  * Heads up display that appears on the players screen during gameplay
@@ -16,7 +17,6 @@ class TURRETMASTER_API UHudWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-
 	// Bind Widget
 
 	UPROPERTY(BlueprintReadOnly, Category = "HUD Widget", meta = (BindWidget))

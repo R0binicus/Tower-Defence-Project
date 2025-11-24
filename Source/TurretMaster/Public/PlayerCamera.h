@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Camera/CameraComponent.h"
 #include "PlayerCamera.generated.h"
+
+class UCameraComponent;
 
 UCLASS()
 class TURRETMASTER_API APlayerCamera : public APawn
@@ -18,6 +19,4 @@ protected:
 	TObjectPtr<UCameraComponent> PlayerCamera;
 
 	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaTime) override;
 };

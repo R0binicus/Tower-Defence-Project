@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/ProgressBar.h"
 #include "EnemyHealthbarWidget.generated.h"
+
+class UProgressBar;
 
 /**
  * Health bar widget, which displays an enemy's health over its head

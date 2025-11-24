@@ -1,16 +1,16 @@
 #include "UI/EndScreenWidget.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
 void UEndScreenWidget::NativeConstruct()
 {
-	if (RestartButton)
+	if (!RestartButton || !MainMenuButton)
 	{
-		RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
+		return;
 	}
 
-	if (MainMenuButton)
-	{
-		MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
-	}
+	RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
+	MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
 }
 
 void UEndScreenWidget::SetWidgetVisible(bool bIsVisible)

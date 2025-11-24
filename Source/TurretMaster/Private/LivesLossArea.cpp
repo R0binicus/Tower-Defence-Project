@@ -1,5 +1,8 @@
 #include "LivesLossArea.h"
 #include "Enemy.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 ALivesLossArea::ALivesLossArea()
 {
@@ -9,12 +12,6 @@ ALivesLossArea::ALivesLossArea()
     EnemyDetectionBox->SetBoxExtent(FVector(500, 500, 100), false);
     EnemyDetectionBox->OnComponentBeginOverlap.AddDynamic(this, &ALivesLossArea::OnOverlapBegin);
     RootComponent = EnemyDetectionBox;
-}
-
-void ALivesLossArea::BeginPlay()
-{
-	Super::BeginPlay();
-	
 }
 
 void ALivesLossArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

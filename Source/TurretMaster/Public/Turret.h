@@ -2,15 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "ProjectileValues.h"
-#include "Projectile.h"
 #include "Buildable.h"
+#include "ProjectileValues.h"
 #include "Turret.generated.h"
 
 class AEnemy;
 class UBuildingSubsystem;
 class UBuildingDataAsset;
+class USphereComponent;
 
 /**
  * Base turret class, which aims in a stright line 

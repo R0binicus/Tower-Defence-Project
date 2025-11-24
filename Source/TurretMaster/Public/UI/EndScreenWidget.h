@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
 #include "EndScreenWidget.generated.h"
+
+class UButton;
 
 /**
  * Widget that appears when the player reaches an end game state

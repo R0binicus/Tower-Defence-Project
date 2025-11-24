@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "PrimaryAssets/LevelDataAsset.h"
-#include "Engine/AssetManager.h"
 #include "TowerDefenceGameInstance.generated.h"
+
+class ULevelDataAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelDataLoaded, ULevelDataAsset*, LevelData);
 

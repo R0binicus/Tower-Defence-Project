@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
-#include "GameFramework/TowerDefenceGameState.h"
 #include "TowerDefencePlayerState.generated.h"
 
 class UBuildingDataAsset;

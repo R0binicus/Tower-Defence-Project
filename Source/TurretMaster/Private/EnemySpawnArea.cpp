@@ -1,4 +1,6 @@
 #include "EnemySpawnArea.h"
+#include "Components/BoxComponent.h"
+#include "Enemy.h"
 
 AEnemySpawnArea::AEnemySpawnArea()
 {
@@ -25,7 +27,7 @@ void AEnemySpawnArea::Tick(const float DeltaTime)
 
 AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
 {
-    if (!NewEnemyClass)
+    if (!NewEnemyClass || !EnemyDestination)
     {
         return nullptr;
     }
@@ -42,11 +44,6 @@ AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
 
     const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation, ActorSpawnParameters);
     if (!NewEnemy)
-    {
-        return nullptr;
-    }
-
-    if (!EnemyDestination)
     {
         return nullptr;
     }

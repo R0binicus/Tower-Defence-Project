@@ -1,4 +1,6 @@
 #include "MainMenuEnemySpawner.h"
+#include "Components/BoxComponent.h"
+#include "Enemy.h"
 
 AMainMenuEnemySpawner::AMainMenuEnemySpawner()
 {

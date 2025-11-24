@@ -3,6 +3,8 @@
 #include "Enemy.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "Damageable.h"
+#include "Components/SphereComponent.h"
+#include "Projectile.h"
 
 // Sets default values
 ATurret::ATurret()

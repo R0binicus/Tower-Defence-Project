@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
-#include "Enemy.h"
 #include "EnemySpawnArea.generated.h"
+
+class UBoxComponent;
 
 UCLASS()
 class TURRETMASTER_API AEnemySpawnArea : public AActor

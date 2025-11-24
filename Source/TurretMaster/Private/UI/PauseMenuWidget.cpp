@@ -1,4 +1,7 @@
 #include "UI/PauseMenuWidget.h"
+#include "Components/Button.h"
+#include "GameFramework/TowerDefenceGameState.h"
+#include "Kismet/GameplayStatics.h"
 
 void UPauseMenuWidget::NativeConstruct()
 {

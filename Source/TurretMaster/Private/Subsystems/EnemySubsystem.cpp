@@ -1,5 +1,11 @@
 #include "Subsystems/EnemySubsystem.h"
 #include "GameFramework/TowerDefencePlayerState.h"
+#include "WaveDataObject.h"
+#include "EnemyWaveData.h"
+#include "LimitedRepeatTimer.h"
+#include "GameFramework/TowerDefenceGameState.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
 
 void UEnemySubsystem::StartSubsystem()
 {

@@ -2,13 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/TowerDefencePlayerState.h"
-#include "GameFramework/TowerDefenceGameInstance.h"
 #include "BuildingSubsystem.generated.h"
 
-class ATurret;
+class UBuildingDataAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingHighlighted, UBuildingDataAsset*, BuildingData, ATurret*, Turret);

@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "EnemyWaveData.h"
 #include "LevelDataAsset.generated.h"
+
+struct FEnemyWaveData;
 
 /**
  * Primary data asset for storing level data

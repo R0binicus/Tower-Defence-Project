@@ -1,4 +1,6 @@
 #include "UI/MainMenuWidget.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
 void UMainMenuWidget::NativeConstruct()
 {

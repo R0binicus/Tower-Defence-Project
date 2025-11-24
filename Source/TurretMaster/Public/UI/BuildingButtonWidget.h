@@ -2,12 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Image.h"
-#include "Components/TextBlock.h"
-#include "Components/Button.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Subsystems/BuildingSubsystem.h"
 #include "BuildingButtonWidget.generated.h"
+
+class UBuildingDataAsset;
+class UButton;
+class UImage;
+class UTextBlock;
+class UBuildingSubsystem;
 
 /**
  * Widget which displays a button for creating a new building

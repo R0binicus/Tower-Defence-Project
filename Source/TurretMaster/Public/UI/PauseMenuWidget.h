@@ -2,10 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "GameFramework/TowerDefenceGameState.h"
-#include "Kismet/GameplayStatics.h"
 #include "PauseMenuWidget.generated.h"
+
+class UButton;
 
 /**
  * Widget that appears when the player pauses the game

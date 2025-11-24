@@ -1,4 +1,7 @@
 #include "GameFramework/TowerDefencePlayerController.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
 
 void ATowerDefencePlayerController::BeginPlay()
 {

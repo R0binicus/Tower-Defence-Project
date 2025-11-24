@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
 #include "MainMenuWidget.generated.h"
+
+class UButton;
 
 /**
  * The primary widget in the main menu

@@ -14,8 +14,6 @@ class TURRETMASTER_API UWaveDataObject : public UObject
 	GENERATED_BODY()
 	
 public:
-	UWaveDataObject();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveDataObject")
 	FEnemyWaveData WaveData;
 };

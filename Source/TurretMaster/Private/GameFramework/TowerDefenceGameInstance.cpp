@@ -1,4 +1,6 @@
 #include "GameFramework/TowerDefenceGameInstance.h"
+#include "PrimaryAssets/LevelDataAsset.h"
+#include "Engine/AssetManager.h"
 
 void UTowerDefenceGameInstance::LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorld)
 {

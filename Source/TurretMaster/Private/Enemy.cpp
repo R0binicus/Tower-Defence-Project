@@ -1,5 +1,9 @@
 #include "Enemy.h"
 #include "AIController.h"
+#include "Components/WidgetComponent.h"
+#include "UI/EnemyHealthbarWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AEnemy::AEnemy()
 {

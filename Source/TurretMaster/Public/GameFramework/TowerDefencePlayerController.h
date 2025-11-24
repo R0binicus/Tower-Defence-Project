@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 #include "TowerDefencePlayerController.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPauseInput);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQueueInput);

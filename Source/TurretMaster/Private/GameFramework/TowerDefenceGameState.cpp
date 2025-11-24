@@ -1,4 +1,7 @@
 #include "GameFramework/TowerDefenceGameState.h"
+#include "GameFramework/TowerDefenceHUD.h"
+#include "GameFramework/TowerDefencePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATowerDefenceGameState::BeginPlay()
 {

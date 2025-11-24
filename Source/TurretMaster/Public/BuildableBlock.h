@@ -2,14 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Buildable.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Subsystems/BuildingSubsystem.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
 class USphereComponent;
+class UBuildable;
+class UBuildingDataAsset;
 
 UCLASS()
 class TURRETMASTER_API ABuildableBlock : public AActor

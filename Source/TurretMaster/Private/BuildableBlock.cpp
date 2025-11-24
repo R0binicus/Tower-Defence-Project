@@ -1,5 +1,9 @@
 #include "BuildableBlock.h"
+#include "Buildable.h"
+#include "DataAssets/BuildingDataAsset.h"
+#include "Subsystems/BuildingSubsystem.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ABuildableBlock::ABuildableBlock()
 {

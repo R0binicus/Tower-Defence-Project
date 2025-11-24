@@ -1,9 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enemy.h"
-#include "EnemySpawnArea.h"
 #include "EnemyWaveData.generated.h"
+
+class AEnemy;
+class AEnemySpawnArea;
 
 USTRUCT(BlueprintType)
 struct FEnemyWaveData
