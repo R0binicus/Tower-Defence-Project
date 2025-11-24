@@ -1,4 +1,5 @@
 #include "BuildableBlock.h"
+#include "Components/SphereComponent.h"
 
 ABuildableBlock::ABuildableBlock()
 {
@@ -13,6 +14,11 @@ ABuildableBlock::ABuildableBlock()
 	
 	TurretHardpoint = CreateDefaultSubobject<USceneComponent>(TEXT("Turret Hardpoint"));
 	TurretHardpoint->SetupAttachment(RootComponent);
+
+    RangePreviewComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RangePreviewComponent"));
+    RangePreviewComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    RangePreviewComponent->SetGenerateOverlapEvents(false);
+    RangePreviewComponent->SetupAttachment(TurretHardpoint);
 
     //BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
     //BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
@@ -101,19 +107,21 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
         return;
     }
 
-    if (!BuildingDataAsset)
+    if (!BuildingDataAsset || !RangePreviewComponent)
     {
         return;
     }
 
     const TObjectPtr<USkeletalMesh> SkeletalMesh = BuildingDataAsset->SkeletalMesh;
-
     if (!SkeletalMesh)
     {
         return;
     }
 
     SetBuildingPreview(SkeletalMesh);
+
+    RangePreviewComponent->SetSphereRadius(BuildingDataAsset->RangePreview);
+    RangePreviewComponent->SetHiddenInGame(false);
 }
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
@@ -129,12 +137,13 @@ void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
         return;
     }
 
-    if (!BuildingPreviewMeshNew)
+    if (!BuildingPreviewMeshNew || !RangePreviewComponent)
     {
         return;
     }
 
     DisableBuildingPreview();
+    RangePreviewComponent->SetHiddenInGame(true);
 }
 
 void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)

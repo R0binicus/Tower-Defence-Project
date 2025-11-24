@@ -9,6 +9,7 @@
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
+class USphereComponent;
 
 UCLASS()
 class TURRETMASTER_API ABuildableBlock : public AActor
@@ -29,6 +30,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<UStaticMeshComponent> BlockMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Buildable Block")
+	TObjectPtr<USphereComponent> RangePreviewComponent;
 
 	//TODO: Disucss, how does this get set to null???
 

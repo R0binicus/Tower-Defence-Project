@@ -29,6 +29,9 @@ public:
 	FColor Colour;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
+	float RangePreview;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "BuildingDataAsset")
 	TObjectPtr<USkeletalMesh> SkeletalMesh;
 
 	//TODO: Disucss, is there a better way of doing this so it requires IBuildable?
