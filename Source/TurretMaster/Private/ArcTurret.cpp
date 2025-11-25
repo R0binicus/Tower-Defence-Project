@@ -40,7 +40,6 @@ float AArcTurret::FindDesiredPitch(const FVector& TargetPosition, const FVector&
 
 void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
 {
-    // Equation inputs
     const float Height = BulletSpawnLocation.Z - TargetPosition.Z;
     const float AngleRad = FMath::DegreesToRadians(DesiredGunRotation.Pitch);
 
@@ -48,7 +47,6 @@ void AArcTurret::PreBulletSpawnSetValues(const FVector& TargetPosition)
     // able to find valid angle with current velocity
     if (AngleIsNAN)
     {
-        // Function input pre calculations
         FVector PlaneTarget = TargetPosition;
         PlaneTarget.Z = BulletSpawnLocation.Z;
         const float FlatDistToEnemy = FVector::Distance(BulletSpawnLocation, PlaneTarget);

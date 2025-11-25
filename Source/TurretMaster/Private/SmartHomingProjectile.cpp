@@ -7,12 +7,7 @@ void ASmartHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTi
 	const float LifeCountdown = (ProjectileValues.PredictedLifetime - (ProjectileValues.Lifetime - ProjectileLifetimeTimer));
 
 	const TStrongObjectPtr<AEnemy> LockedTarget = TargetEnemy.Pin();
-	if (!LockedTarget)
-	{
-		return;
-	}
-
-	if (!HomingRateCurve)
+	if (!LockedTarget || !HomingRateCurve)
 	{
 		return;
 	}

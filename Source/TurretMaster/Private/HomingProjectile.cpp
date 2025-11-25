@@ -9,7 +9,6 @@ AHomingProjectile::AHomingProjectile() : AProjectile()
 void AHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 {
 	const TStrongObjectPtr<AEnemy> LockedTarget = TargetEnemy.Pin();
-
 	if (!LockedTarget)
 	{
 		return;

@@ -339,7 +339,6 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
 
     // Then set rotation
     const FRotator NewRotation = FMath::RInterpTo(CurrentGunRotation, ClampedGunRotation, DeltaTime, TurretTurnSpeed);
-    //SetActorRotation(NewRotation);
     GunParentComponent->SetWorldRotation(NewRotation);
 }
 
