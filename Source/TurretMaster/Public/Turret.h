@@ -59,7 +59,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
 	bool bMouseHoveringOver;
 
 	// Projectiles pool

@@ -56,6 +56,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	EPlayerStateEnum PlayerState = EPlayerStateEnum::Default;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	bool bMouseHoveringOver;
+
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
@@ -69,7 +72,7 @@ protected:
 	void OnCursorOverEnd(AActor* TouchedActor);
 
 	UFUNCTION()
-	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+	void OnActorClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))

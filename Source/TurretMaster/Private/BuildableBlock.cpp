@@ -3,6 +3,7 @@
 #include "DataAssets/BuildingDataAsset.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/TowerDefencePlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 ABuildableBlock::ABuildableBlock()
@@ -35,7 +36,6 @@ ABuildableBlock::ABuildableBlock()
 
     OnBeginCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverBegin);
     OnEndCursorOver.AddDynamic(this, &ABuildableBlock::OnCursorOverEnd);
-    OnClicked.AddDynamic(this, &ABuildableBlock::OnActorClicked);
 }
 
 void ABuildableBlock::BeginPlay()
@@ -46,14 +46,15 @@ void ABuildableBlock::BeginPlay()
 
     const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
     const TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-
-    if (!BuildingSubsystem || !PlayerStateClass)
+    const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    if (!BuildingSubsystem || !PlayerStateClass || !PlayerController)
     {
         return;
     }
     
     PlayerStateClass->OnPlayerStateChanged.AddUniqueDynamic(this, &ABuildableBlock::SetPlayerState);
     BuildingSubsystem->OnBuildingTypeSelected.AddUniqueDynamic(this, &ABuildableBlock::SetBuildingAsset);
+    PlayerController->OnSelectInput.AddUniqueDynamic(this, &ABuildableBlock::OnActorClicked);
 }
 
 TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubclassOf<AActor> BuildableClass) const
@@ -71,8 +72,7 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
     const TObjectPtr<AActor> BuildingActor = World->SpawnActor<AActor>(BuildableClass, TurretHardpoint->GetComponentLocation(), FRotator::ZeroRotator);
     const TScriptInterface<IBuildable> Building = TScriptInterface<IBuildable>(BuildingActor);
     const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-    
-    if (!Building || !BuildingSubsystem)
+    if (!BuildingActor || !Building || !BuildingSubsystem)
     {
         return nullptr;
     }
@@ -84,6 +84,8 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
 
 void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
 {
+    bMouseHoveringOver = true;
+
     if (PlayerState != EPlayerStateEnum::Building)
     {
         return;
@@ -114,6 +116,8 @@ void ABuildableBlock::OnCursorOverBegin(AActor* TouchedActor)
 
 void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
 {
+    bMouseHoveringOver = false;
+
     if (PlayerState != EPlayerStateEnum::Building)
     {
         return;
@@ -134,8 +138,13 @@ void ABuildableBlock::OnCursorOverEnd(AActor* TouchedActor)
     RangePreviewComponent->SetHiddenInGame(true);
 }
 
-void ABuildableBlock::OnActorClicked(AActor* TouchedActor, FKey ButtonPressed)
+void ABuildableBlock::OnActorClicked()
 {
+    if (!bMouseHoveringOver)
+    {
+        return;
+    }
+
     if (PlayerState != EPlayerStateEnum::Building)
     {
         return;
