@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "Subsystems/BuildingSubsystem.h"
+#include "Framework/Application/SlateApplication.h"
 
 void UBuildingButtonWidget::NativeConstruct()
 {
@@ -20,6 +21,7 @@ void UBuildingButtonWidget::NativeConstruct()
 
     BuildingIcon->SetBrushFromTexture(BuildingDataAsset->Icon);
 
+
     const FString FormattedNum = FString::Printf(TEXT("$%i"), BuildingDataAsset->Cost);
     CostTextBlock->SetText(FText::FromString(FormattedNum));
 
@@ -28,10 +30,13 @@ void UBuildingButtonWidget::NativeConstruct()
 
 void UBuildingButtonWidget::OnButtonClicked()
 {
-    if (BuildingSubsystem)
+    if (!BuildingSubsystem || !Button)
     {
-        BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
+        return;
     }
+    BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
+
+    FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
 }
 
 void UBuildingButtonWidget::OnButtonHovered()
