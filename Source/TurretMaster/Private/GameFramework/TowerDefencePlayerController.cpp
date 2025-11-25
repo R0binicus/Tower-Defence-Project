@@ -21,7 +21,7 @@ void ATowerDefencePlayerController::SetupInputComponent()
 		return;
 	}
 
-	if (!PauseAction || !QueueAction || !CancelAction || !SelectAction)
+	if (!PauseAction || !QueueAction || !CancelAction || !SelectAction || !ThumbstickMoveAction)
 	{
 		return;
 	}
@@ -31,6 +31,7 @@ void ATowerDefencePlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(CancelAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::CancelInputAction);
 	EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Started, this, &ATowerDefencePlayerController::DeselectInputAction);
 	EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &ATowerDefencePlayerController::SelectInputAction);
+	EnhancedInputComponent->BindAction(ThumbstickMoveAction, ETriggerEvent::Triggered, this, &ATowerDefencePlayerController::SelectThumbstickMoveAction);
 }
 
 void ATowerDefencePlayerController::PauseInputAction()
@@ -56,4 +57,17 @@ void ATowerDefencePlayerController::DeselectInputAction()
 void ATowerDefencePlayerController::SelectInputAction()
 {
 	OnSelectInput.Broadcast();
+}
+
+void ATowerDefencePlayerController::SelectThumbstickMoveAction(const FInputActionValue& Value)
+{
+	FVector2D ThumbstickVector = Value.Get<FVector2D>();
+
+	float NewMouseXPos;
+	float NewMouseYPos;
+	GetMousePosition(NewMouseXPos, NewMouseYPos);
+	NewMouseXPos = NewMouseXPos + (ThumbstickVector.X * ThumbstickMoveMultiplier);
+	NewMouseYPos = NewMouseYPos - (ThumbstickVector.Y * ThumbstickMoveMultiplier);
+
+	SetMouseLocation(NewMouseXPos, NewMouseYPos);
 }

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "InputActionValue.h"
 #include "TowerDefencePlayerController.generated.h"
 
 class UInputMappingContext;
@@ -37,6 +38,9 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
 	FOnSelectInput OnSelectInput;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
+	FOnSelectInput OnThumbstickMoveInput;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputMappingContext> InputMap;
@@ -52,6 +56,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputAction> SelectAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
+	TObjectPtr<UInputAction> ThumbstickMoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
+	float ThumbstickMoveMultiplier = 0.7f;
 
 	virtual void BeginPlay() override;
 
@@ -76,4 +86,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
 		meta = (ToolTip = "Broadcasts an event saying that the select button was pressed"))
 	void SelectInputAction();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
+		meta = (ToolTip = "Broadcasts an event saying that the thumbstick was moved"))
+	void SelectThumbstickMoveAction(const FInputActionValue& Value);
 };
