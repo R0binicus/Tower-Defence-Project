@@ -15,8 +15,14 @@ void UEndScreenWidget::NativeConstruct()
 
 void UEndScreenWidget::SetWidgetVisible(const bool bIsVisible)
 {
+	if (!RestartButton)
+	{
+		return;
+	}
+
 	if (bIsVisible)
 	{
+		RestartButton->SetFocus();
 		SetVisibility(ESlateVisibility::Visible);
 	}
 	else

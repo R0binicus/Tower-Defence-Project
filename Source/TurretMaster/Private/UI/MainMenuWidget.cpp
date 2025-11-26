@@ -6,6 +6,7 @@ void UMainMenuWidget::NativeConstruct()
 {
 	if (Level01Button)
 	{
+		Level01Button->SetFocus();
 		Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
 	}
 

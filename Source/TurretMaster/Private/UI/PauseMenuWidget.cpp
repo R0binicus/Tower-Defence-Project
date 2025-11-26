@@ -29,8 +29,14 @@ void UPauseMenuWidget::NativeConstruct()
 
 void UPauseMenuWidget::SetWidgetVisible(const bool bIsVisible)
 {
+	if (!ResumeButton)
+	{
+		return;
+	}
+
 	if (bIsVisible)
 	{
+		ResumeButton->SetFocus();
 		SetVisibility(ESlateVisibility::Visible);
 	}
 	else
