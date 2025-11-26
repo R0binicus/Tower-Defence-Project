@@ -15,6 +15,7 @@ void UPauseMenuWidget::NativeConstruct()
 	MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
 	RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnRestartClicked);
 
+	DefaultButton = ResumeButton;
 
 	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)

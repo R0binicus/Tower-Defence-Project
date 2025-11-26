@@ -11,6 +11,8 @@ void UEndScreenWidget::NativeConstruct()
 		return;
 	}
 
+	DefaultButton = RestartButton;
+
 	RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
 	MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
 }

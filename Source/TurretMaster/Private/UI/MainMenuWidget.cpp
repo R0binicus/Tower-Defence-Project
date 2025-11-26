@@ -11,9 +11,11 @@ void UMainMenuWidget::NativeConstruct()
 		return;
 	}
 
-	Level01Button->SetFocus();
 	Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
 	QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
+
+	DefaultButton = Level01Button;
+	FocusDefaultButton();
 }
 
 void UMainMenuWidget::OnLevel01Clicked()

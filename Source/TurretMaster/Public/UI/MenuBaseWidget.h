@@ -20,8 +20,8 @@ public:
 	void SetWidgetVisible(bool bIsVisible);
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "EndScreenWidget")
-	TObjectPtr<UButton> DefaultButton = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "EndScreenWidget")
+	TObjectPtr<UButton> DefaultButton;
 
 	UPROPERTY(BlueprintReadOnly, Category = "EndScreenWidget", meta = (BindWidget))
 	TObjectPtr<UButton> BackgroundButton;
