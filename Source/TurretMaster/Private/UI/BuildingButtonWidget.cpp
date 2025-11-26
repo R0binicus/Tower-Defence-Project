@@ -4,6 +4,8 @@
 #include "Components/Button.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "Subsystems/BuildingSubsystem.h"
+#include "GameFramework/TowerDefencePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Framework/Application/SlateApplication.h"
 
 void UBuildingButtonWidget::NativeConstruct()
@@ -26,6 +28,12 @@ void UBuildingButtonWidget::NativeConstruct()
     CostTextBlock->SetText(FText::FromString(FormattedNum));
 
     BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
+
+    const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    if (PlayerController)
+    {
+        PlayerController->OnSelectInput.AddUniqueDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
+    }
 }
 
 void UBuildingButtonWidget::OnButtonClicked()
@@ -34,6 +42,12 @@ void UBuildingButtonWidget::OnButtonClicked()
     {
         return;
     }
+
+    if (!IsHovered())
+    {
+        return;
+    }
+
     BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
 
     FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
