@@ -5,7 +5,14 @@
 
 ATeslaProjectile::ATeslaProjectile()
 {
+	if (!CollisionMesh)
+	{
+		return;
+	}
 
+	CollisionMesh->SetVisibility(bEnabled);
+	CollisionMesh->SetSimulatePhysics(bEnabled);
+	CollisionMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATeslaProjectile::SetProjectileEnabled(bool bNewEnabled)
