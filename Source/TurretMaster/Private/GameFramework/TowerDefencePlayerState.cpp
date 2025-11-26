@@ -68,8 +68,9 @@ void ATowerDefencePlayerState::UpdateCurrentSelection(UBuildingDataAsset* Buildi
 
 void ATowerDefencePlayerState::SetPlayerLivesCurrent(const int32 NewLives)
 {
-    OnPlayerLivesChanged.Broadcast(NewLives, PlayerLivesCurrent);
+    const int32 PlayerLivesPrevious = PlayerLivesCurrent;
     PlayerLivesCurrent = NewLives;
+    OnPlayerLivesChanged.Broadcast(PlayerLivesCurrent, PlayerLivesPrevious);
 
     if (PlayerLivesCurrent > 0)
     {

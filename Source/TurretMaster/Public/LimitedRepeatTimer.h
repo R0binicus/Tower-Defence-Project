@@ -24,5 +24,5 @@ protected:
 
 	TObjectPtr<UWorld> World;
 
-	void RepeatFunction(FTimerDelegate CallerDelagate, float RepeatRate);
+	void RepeatTimer(FTimerDelegate CallerDelagate, float RepeatRate);
 };

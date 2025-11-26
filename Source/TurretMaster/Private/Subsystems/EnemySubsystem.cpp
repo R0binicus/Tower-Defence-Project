@@ -137,7 +137,6 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 
 		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
 	}
-
 	
 	if (SoftPathArray.Num() == 0)
 	{
