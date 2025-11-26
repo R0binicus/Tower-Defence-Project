@@ -18,7 +18,7 @@ protected:
 	TEnumAsByte<EObjectTypeQuery> EnemyCollisionType = ObjectTypeQuery8;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExplosiveProjectile")
-	class UNiagaraSystem* MyNiagaraSystem;
+	class UNiagaraSystem* ExplosionVFX;
 
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 };

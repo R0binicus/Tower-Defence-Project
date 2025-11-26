@@ -21,7 +21,7 @@ void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		IDamageable::Execute_TakeDamage(OutActors[i], ProjectileValues.Damage);
 	}
 
-	TObjectPtr<UNiagaraComponent> Explosion = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MyNiagaraSystem, GetActorLocation(), GetActorRotation());
+	TObjectPtr<UNiagaraComponent> Explosion = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionVFX, GetActorLocation(), GetActorRotation());
 
 	SetProjectileEnabled(false);
 }
