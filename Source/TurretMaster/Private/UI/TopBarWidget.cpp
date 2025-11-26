@@ -38,24 +38,29 @@ void UTopBarWidget::NativeConstruct()
     PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
 
     // Set default text value
-    NewWaveStarted(nullptr, 0);
     UpdateEnemiesRemainingText(0);
 }
 
 void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
 {
     TotalWaveNum = LevelData->LevelWaveData.Num();
+    NewWaveStarted(nullptr, 0);
 }
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
-    if (!WavesRemainingText || !NewWaveData)
+    if (!WavesRemainingText) // Do not add NewWaveData null check
     {
         return;
     }
 
     const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
     WavesRemainingText->SetText(FText::FromString(FormattedNum));
+
+    if (!NewWaveData)
+    {
+        return;
+    }
 
     FEnemyWaveData& WaveData = NewWaveData->WaveData;
 
