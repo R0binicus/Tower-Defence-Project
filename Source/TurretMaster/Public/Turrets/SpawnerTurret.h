@@ -11,5 +11,7 @@ UCLASS()
 class TURRETMASTER_API ASpawnerTurret : public ATurret
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void BeginPlay() override;
 };

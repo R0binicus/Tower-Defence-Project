@@ -5,6 +5,7 @@
 #include "TeslaProjectile.generated.h"
 
 class UNiagaraSystem;
+class UNiagaraComponent;
 
 // TODO: Make this into a class which doesn't inherit from AProjectile, and make a 'TurretSpawnable' interface
 
@@ -29,7 +30,7 @@ protected:
 	int32 AllowedTeslaBounces = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
-	TArray<TObjectPtr<UNiagaraSystem>> LightningBeamVFXArray;
+	TArray<TObjectPtr<UNiagaraComponent>> LightningBeamVFXArray;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
 	TEnumAsByte<EObjectTypeQuery> EnemyCollisionType = ObjectTypeQuery8;
@@ -43,9 +44,13 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
 		meta = (ToolTip = "Finds a set number of valid enemies, deals damage to them, and makes lightning VFX appear between them"))
-	void BounceToTargets(int32 NumberOfTargets);
+	void BounceToTargets(const int32 NumberOfTargets);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
 		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))
-	AEnemy* BounceToTarget(FVector& StartPosition, const TArray<AEnemy*>& AlreadyAttackedEnemies);
+	AEnemy* FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
+		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))
+	void CreateLightningVFX(const FVector& StartPosition, const FVector& EndPosition);
 };

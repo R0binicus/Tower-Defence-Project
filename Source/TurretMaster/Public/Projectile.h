@@ -24,7 +24,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Sets the projectile to be enabled or disabled"))
-	void SetProjectileEnabled(bool bNewEnabled);
+	virtual void SetProjectileEnabled(bool bNewEnabled);
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Returns if the projectile is enabled or disabled"))
@@ -36,7 +36,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile",
 		meta = (ToolTip = "Reenabled projectile, and sets its new values"))
-	void SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues);
+	virtual void SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues);
 
 protected:
 	// Variables
