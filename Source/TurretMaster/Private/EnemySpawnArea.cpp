@@ -1,4 +1,6 @@
 #include "EnemySpawnArea.h"
+#include "Components/BoxComponent.h"
+#include "Enemy.h"
 
 AEnemySpawnArea::AEnemySpawnArea()
 {
@@ -6,9 +8,6 @@ AEnemySpawnArea::AEnemySpawnArea()
 
 	SpawnVolumeBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Spawn Volume Box"));
 	SpawnVolumeBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-    // TODO: Remove magic number
-	SpawnVolumeBox->SetBoxExtent(FVector(1000, 1000, 0), false);
 }
 
 void AEnemySpawnArea::BeginPlay()
@@ -23,9 +22,9 @@ void AEnemySpawnArea::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
+AEnemy* AEnemySpawnArea::SpawnEnemy(const TSubclassOf<AEnemy> NewEnemyClass) const
 {
-    if (!NewEnemyClass)
+    if (!NewEnemyClass || !EnemyDestination)
     {
         return nullptr;
     }
@@ -37,13 +36,11 @@ AEnemy* AEnemySpawnArea::SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const
     SpawnLocation.Y += FMath::RandRange(-SpawnVolume.Y, SpawnVolume.Y);
     SpawnLocation.Z += FMath::RandRange(-SpawnVolume.Z, SpawnVolume.Z);
 
-    const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation);
-    if (!NewEnemy)
-    {
-        return nullptr;
-    }
+    FActorSpawnParameters ActorSpawnParameters;
+    ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    if (!EnemyDestination)
+    const TObjectPtr<AEnemy> NewEnemy = GetWorld()->SpawnActor<AEnemy>(NewEnemyClass, SpawnLocation, CollectibleRotation, ActorSpawnParameters);
+    if (!NewEnemy)
     {
         return nullptr;
     }

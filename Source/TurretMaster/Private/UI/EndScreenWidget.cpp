@@ -1,33 +1,25 @@
 #include "UI/EndScreenWidget.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
 void UEndScreenWidget::NativeConstruct()
 {
-	if (RestartButton)
+	Super::NativeConstruct();
+
+	if (!RestartButton || !MainMenuButton)
 	{
-		RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
+		return;
 	}
 
-	if (MainMenuButton)
-	{
-		MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
-	}
-}
+	DefaultButton = RestartButton;
 
-void UEndScreenWidget::SetWidgetVisible(bool bIsVisible)
-{
-	if (bIsVisible)
-	{
-		SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		SetVisibility(ESlateVisibility::Hidden);
-	}
+	RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
+	MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
 }
 
 void UEndScreenWidget::OnRestartClicked()
 {
-	FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	const FString CurrentLevelNameString = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	UGameplayStatics::OpenLevel(this, FName(CurrentLevelNameString));
 }
 

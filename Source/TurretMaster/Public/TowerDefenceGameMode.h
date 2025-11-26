@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "GameFramework/TowerDefenceHUD.h"
 #include "TowerDefenceGameMode.generated.h"
 
 /**

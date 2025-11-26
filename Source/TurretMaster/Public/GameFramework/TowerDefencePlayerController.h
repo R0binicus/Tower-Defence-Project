@@ -2,14 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "TowerDefencePlayerController.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPauseInput);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQueueInput);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCancelInput);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeselectInput);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSelectInput);
 
 /**
  * Player Controller for the tower defence game.
@@ -29,6 +32,15 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
 	FOnCancelInput OnCancelInput;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
+	FOnDeselectInput OnDeselectInput;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
+	FOnSelectInput OnSelectInput;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefencePlayerController")
+	FOnSelectInput OnThumbstickMoveInput;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputMappingContext> InputMap;
@@ -42,9 +54,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
 	TObjectPtr<UInputAction> CancelAction;
 
-	void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
+	TObjectPtr<UInputAction> SelectAction;
 
-	void SetupInputComponent() override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
+	TObjectPtr<UInputAction> ThumbstickMoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TowerDefencePlayerController")
+	float ThumbstickMoveMultiplier = 0.7f;
+
+	virtual void BeginPlay() override;
+
+	virtual void SetupInputComponent() override;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
 		meta = (ToolTip = "Broadcasts an event saying that the pause button was pressed"))
@@ -57,4 +78,16 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
 		meta = (ToolTip = "Broadcasts an event saying that the cancel button was pressed"))
 	void CancelInputAction();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
+		meta = (ToolTip = "Broadcasts an event saying that the deselect button was pressed"))
+	void DeselectInputAction();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
+		meta = (ToolTip = "Broadcasts an event saying that the select button was pressed"))
+	void SelectInputAction();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerController",
+		meta = (ToolTip = "Broadcasts an event saying that the thumbstick was moved"))
+	void SelectThumbstickMoveAction(const FInputActionValue& Value);
 };

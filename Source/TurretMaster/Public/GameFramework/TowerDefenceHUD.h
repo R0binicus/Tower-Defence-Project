@@ -19,15 +19,15 @@ class TURRETMASTER_API ATowerDefenceHUD : public AHUD
 public:
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
 		meta = (ToolTip = "Makes the pause widget to be visible, or not visible"))
-	void SetPauseWidgetVisible(bool bIsVisible);
+	void SetPauseWidgetVisible(bool bIsVisible) const;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
 		meta = (ToolTip = "Makes the victory widget to be visible, or not visible"))
-	void SetVictoryWidgetVisible(bool bIsVisible);
+	void SetVictoryWidgetVisible(bool bIsVisible) const;
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceHUD",
 		meta = (ToolTip = "Makes the defeat widget to be visible, or not visible"))
-	void SetDefeatWidgetVisible(bool bIsVisible);
+	void SetDefeatWidgetVisible(bool bIsVisible) const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceHUD")

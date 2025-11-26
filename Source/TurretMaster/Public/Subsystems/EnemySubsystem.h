@@ -3,12 +3,10 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "EnemyWaveData.h"
-#include "WaveDataObject.h"
-#include "LimitedRepeatTimer.h"
-#include "GameFramework/TowerDefenceGameState.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/TowerDefenceGameInstance.h"
 #include "EnemySubsystem.generated.h"
+
+class UWaveDataObject;
+class ULimitedRepeatTimer;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWaveChanged, UWaveDataObject*, NewWaveData, int32, NewWaveNum);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemiesRemainingChanged, int32, NewEnemiesRemaining);
@@ -158,13 +156,13 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "EnemySubsystem",
 		meta = (ToolTip = "Triggers victory when all the waves are complete"))
-	void AllWavesComplete();
+	void AllWavesComplete() const;
 
 	// Utility functions
 
 	template<typename T>
-	int32 GetRandomArrayIndex(const TArray<T>& Array) const;
+	static int32 GetRandomArrayIndex(const TArray<T>& Array);
 
 	template<typename T>
-	void ShuffleArray(TArray<T>& Array) const;
+	static void ShuffleArray(TArray<T>& Array);
 };

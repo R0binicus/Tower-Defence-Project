@@ -2,13 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Buildable.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Subsystems/BuildingSubsystem.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "BuildableBlock.generated.h"
 
 class UStaticMeshComponent;
+class USphereComponent;
+class UBuildable;
+class UBuildingDataAsset;
 
 UCLASS()
 class TURRETMASTER_API ABuildableBlock : public AActor
@@ -30,7 +30,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<UStaticMeshComponent> BlockMesh;
 
-	//TODO: Disucss, how does this get set to null???
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Buildable Block")
+	TObjectPtr<USphereComponent> RangePreviewComponent;
+
+	//TODO: Discuss, how does this get set to null???
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	//TObjectPtr<USkeletalMeshComponent> BuildingPreviewMesh;
@@ -53,13 +56,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	EPlayerStateEnum PlayerState = EPlayerStateEnum::Default;
 
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	bool bMouseHoveringOver;
 
-	virtual void Tick(float DeltaTime) override;
+	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Creates and initialises a buildable actor"))
-	TScriptInterface<IBuildable> CreateBuildableActor(const TSubclassOf<AActor> BuildableClass);
+	TScriptInterface<IBuildable> CreateBuildableActor(const TSubclassOf<AActor> BuildableClass) const;
 
 	UFUNCTION()
 	void OnCursorOverBegin(AActor* TouchedActor);
@@ -68,7 +72,7 @@ protected:
 	void OnCursorOverEnd(AActor* TouchedActor);
 
 	UFUNCTION()
-	void OnActorClicked(AActor* TouchedActor, FKey ButtonPressed);
+	void OnActorClicked();
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))
@@ -76,11 +80,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets building preview mesh"))
-	void SetBuildingPreview(USkeletalMesh* PreviewMesh);
+	void SetBuildingPreview(USkeletalMesh* PreviewMesh) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Hides the building preview, and sets the mesh to be null"))
-	void DisableBuildingPreview();
+	void DisableBuildingPreview() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Buildable Block",
 		meta = (ToolTip = "Sets the internal player state variable"))

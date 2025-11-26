@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "UObject/NoExportTypes.h"
 #include "LimitedRepeatTimer.generated.h"
 
@@ -25,5 +24,5 @@ protected:
 
 	TObjectPtr<UWorld> World;
 
-	void RepeatFunction(FTimerDelegate CallerDelagate, float RepeatRate);
+	void RepeatTimer(FTimerDelegate CallerDelagate, float RepeatRate);
 };

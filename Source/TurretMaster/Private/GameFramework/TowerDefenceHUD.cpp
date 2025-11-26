@@ -3,7 +3,7 @@
 #include "UI/HudWidget.h"
 #include "UI/EndScreenWidget.h"
 
-void ATowerDefenceHUD::SetPauseWidgetVisible(bool bIsVisible)
+void ATowerDefenceHUD::SetPauseWidgetVisible(const bool bIsVisible) const
 {
 	if (PauseWidget)
 	{
@@ -11,7 +11,7 @@ void ATowerDefenceHUD::SetPauseWidgetVisible(bool bIsVisible)
 	}
 }
 
-void ATowerDefenceHUD::SetVictoryWidgetVisible(bool bIsVisible)
+void ATowerDefenceHUD::SetVictoryWidgetVisible(const bool bIsVisible) const
 {
 	if (VictoryWidget)
 	{
@@ -19,7 +19,7 @@ void ATowerDefenceHUD::SetVictoryWidgetVisible(bool bIsVisible)
 	}
 }
 
-void ATowerDefenceHUD::SetDefeatWidgetVisible(bool bIsVisible)
+void ATowerDefenceHUD::SetDefeatWidgetVisible(const bool bIsVisible) const
 {
 	if (DefeatWidget)
 	{
@@ -29,46 +29,17 @@ void ATowerDefenceHUD::SetDefeatWidgetVisible(bool bIsVisible)
 
 void ATowerDefenceHUD::BeginPlay()
 {
-	if (!HudWidgetClass)
-	{
-		return;
-	}
-
-	if (!PauseWidgetClass)
-	{
-		return;
-	}
-
-	if (!VictoryWidgetClass)
-	{
-		return;
-	}
-
-	if (!DefeatWidgetClass)
+	if (!HudWidgetClass || !PauseWidgetClass || !VictoryWidgetClass || !DefeatWidgetClass)
 	{
 		return;
 	}
 
 	PauseWidget = CreateWidget<UPauseMenuWidget>(GetWorld(), PauseWidgetClass);
-	if (!PauseWidget)
-	{
-		return;
-	}
-
 	HudWidget = CreateWidget<UHudWidget>(GetWorld(), HudWidgetClass);
-	if (!HudWidget)
-	{
-		return;
-	}
-
 	VictoryWidget = CreateWidget<UEndScreenWidget>(GetWorld(), VictoryWidgetClass);
-	if (!VictoryWidget)
-	{
-		return;
-	}
-
 	DefeatWidget = CreateWidget<UEndScreenWidget>(GetWorld(), DefeatWidgetClass);
-	if (!DefeatWidget)
+	
+	if (!PauseWidget || !HudWidget || !VictoryWidget || !DefeatWidget)
 	{
 		return;
 	}

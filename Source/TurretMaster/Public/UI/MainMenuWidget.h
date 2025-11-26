@@ -1,16 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
+#include "UI/MenuBaseWidget.h"
 #include "MainMenuWidget.generated.h"
+
+class UButton;
 
 /**
  * The primary widget in the main menu
  */
 UCLASS()
-class TURRETMASTER_API UMainMenuWidget : public UUserWidget
+class TURRETMASTER_API UMainMenuWidget : public UMenuBaseWidget
 {
 	GENERATED_BODY()
 
@@ -24,7 +24,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "MainMenuWidget", meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "MainMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

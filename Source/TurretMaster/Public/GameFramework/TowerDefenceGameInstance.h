@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "PrimaryAssets/LevelDataAsset.h"
-#include "Engine/AssetManager.h"
 #include "TowerDefenceGameInstance.generated.h"
 
+class ULevelDataAsset;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelDataLoaded, ULevelDataAsset*, LevelData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTest);
 
 /**
  * Game instance for the tower defence game
@@ -21,13 +22,16 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameInstance")
 	FOnLevelDataLoaded OnLevelDataLoaded;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "TowerDefenceGameInstance")
+	FTest Test;
+
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Loads the appropriate level data, using a soft pointer to a level world"))
-	void LoadDataUsingLevel(TSoftObjectPtr<UWorld> InWorld);
+	void LoadDataUsingLevel(const TSoftObjectPtr<UWorld> InWorld);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Gets a world soft pointer. For use in blueprints"))
-	UWorld* GetLevel();
+	UWorld* GetLevel() const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefenceGameInstance")
@@ -38,5 +42,5 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "TowerDefenceGameInstance",
 		meta = (ToolTip = "Sends an event when the level data asset has been loaded"))
-	void OnAssetLoaded(FPrimaryAssetId LoadedId);
+	void OnAssetLoaded(const FPrimaryAssetId LoadedId);
 };

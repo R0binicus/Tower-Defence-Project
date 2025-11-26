@@ -2,13 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/TowerDefencePlayerState.h"
-#include "GameFramework/TowerDefenceGameInstance.h"
 #include "BuildingSubsystem.generated.h"
 
+class UBuildingDataAsset;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingTypeSelected, UBuildingDataAsset*, BuildingType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBuildingHighlighted, UBuildingDataAsset*, BuildingData, ATurret*, Turret);
 
 /**
  * Subsystem for managing resources and building structures
@@ -24,6 +23,9 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
 	FOnBuildingTypeSelected OnBuildingTypeSelected;
 
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
+	FOnBuildingHighlighted OnBuildingHighlighted;
+
 	void StartSubsystem();
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
@@ -36,11 +38,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Tells the building subsystem that a building is placed, then removes appropriate resources"))
-	void BuildingPlaced();
+	void BuildingPlaced() const;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Clears the CurrentPlaceBuildingSelected"))
-	void CancelPlaceBuilding();
+	void CancelPlaceBuilding() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")

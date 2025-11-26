@@ -1,24 +1,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
+#include "UI/MenuBaseWidget.h"
 #include "EndScreenWidget.generated.h"
+
+class UButton;
 
 /**
  * Widget that appears when the player reaches an end game state
  * such as victory or defeat
  */
 UCLASS()
-class TURRETMASTER_API UEndScreenWidget : public UUserWidget
+class TURRETMASTER_API UEndScreenWidget : public UMenuBaseWidget
 {
 	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
-		meta = (ToolTip = "Makes the end screen widget to be visible, or not visible"))
-	void SetWidgetVisible(bool bIsVisible);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EndScreenWidget")
@@ -30,7 +25,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "EndScreenWidget", meta = (BindWidget))
 	TObjectPtr<UButton> MainMenuButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "EndScreenWidget",
 		meta = (ToolTip = "Restarts the current level"))

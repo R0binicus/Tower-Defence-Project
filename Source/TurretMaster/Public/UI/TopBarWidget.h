@@ -2,14 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/TextBlock.h"
 #include "EnemyWaveData.h"
-#include "WaveDataObject.h"
-#include "GameFramework/TowerDefencePlayerState.h"
-#include "Kismet/GameplayStatics.h"
 #include "TopBarWidget.generated.h"
 
+class UWaveDataObject;
 class ULevelDataAsset;
+class UTextBlock;
 
 /**
  * Widget which is at the top of the screen. Displays information such as money and player lives
@@ -18,7 +16,7 @@ UCLASS()
 class TURRETMASTER_API UTopBarWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TopBarWidget")

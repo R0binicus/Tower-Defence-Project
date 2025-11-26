@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "EnemyWaveData.h"
 #include "WaveDataObject.generated.h"
 
@@ -14,8 +13,6 @@ class TURRETMASTER_API UWaveDataObject : public UObject
 	GENERATED_BODY()
 	
 public:
-	UWaveDataObject();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WaveDataObject")
 	FEnemyWaveData WaveData;
 };

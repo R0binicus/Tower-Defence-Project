@@ -2,10 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
-#include "GameFramework/TowerDefencePlayerState.h"
-#include "Kismet/GameplayStatics.h"
 #include "LivesLossArea.generated.h"
+
+class UBoxComponent;
 
 /**
  * Area in the level which reduces player lives whenan enemy enters it
@@ -24,8 +23,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
 	FName EnemyTagName = "Enemy";
-
-	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

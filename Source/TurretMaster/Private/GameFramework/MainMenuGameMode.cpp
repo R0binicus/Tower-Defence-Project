@@ -1,4 +1,5 @@
 #include "GameFramework/MainMenuGameMode.h"
+#include "UI/MainMenuWidget.h"
 
 void AMainMenuGameMode::BeginPlay()
 {

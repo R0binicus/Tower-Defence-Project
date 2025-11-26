@@ -1,6 +1,12 @@
 #include "Turret.h"
 #include "PhysicsEngine/PhysicsSettings.h"
+#include "Enemy.h"
+#include "Subsystems/BuildingSubsystem.h"
 #include "Damageable.h"
+#include "Components/SphereComponent.h"
+#include "Projectile.h"
+#include "GameFramework/TowerDefencePlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATurret::ATurret()
@@ -29,6 +35,15 @@ ATurret::ATurret()
 
     TurretGunMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TurretGunMeshComp"));
     TurretGunMeshComp->SetupAttachment(GunParentComponent);
+
+    OnBeginCursorOver.AddDynamic(this, &ATurret::OnCursorOverBegin);
+    OnEndCursorOver.AddDynamic(this, &ATurret::OnCursorOverEnd);
+
+    const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+    if (PlayerController)
+    {
+        PlayerController->OnSelectInput.AddUniqueDynamic(this, &ATurret::OnClicked);
+    }
 }
 
 void ATurret::SetProtectPoint_Implementation(AActor* NewProtectPoint)
@@ -58,16 +73,14 @@ void ATurret::BeginPlay()
         Gravity = -Physics->DefaultGravityZ;
     }
 
-    ProjectileValues.Damage = ProjectileDamage;
-    ProjectileValues.Speed = ProjectileSpeed;
-    ProjectileValues.Lifetime = ProjectileLifetime;
-    ProjectileValues.TurnMultiplier = ProjectileTurnMultiplier;
-
+    ProjectileSpeed = ProjectileValues.Speed;
     MakeProjectiles(InitialProjectilePoolSize);
 
     UpdateTurretValues();
 
     TurretFireMinimumRange = FVector::DistSquared(MuzzleBaseLocation, BulletSpawnLocation) + pow(ExtraTurretFireMinimumRange, 2);
+
+    BuildingSubsystem = World->GetSubsystem<UBuildingSubsystem>();
 }
 
 // Called every frame
@@ -98,24 +111,53 @@ void ATurret::Tick(const float DeltaTime)
 
 void ATurret::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    if (!OtherActor->ActorHasTag(EnemyTagName))
+    if (OtherActor->ActorHasTag(EnemyTagName))
     {
-        return;
+        EnemyRefArray.Add(OtherActor);
     }
-
-    EnemyRefArray.Add(OtherActor);
 }
 
 void ATurret::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    if (!OtherActor->ActorHasTag(EnemyTagName))
+    if (OtherActor->ActorHasTag(EnemyTagName))
+    {
+        EnemyRefArray.Remove(OtherActor);
+    }
+}
+#pragma endregion Unreal Functions
+
+void ATurret::OnCursorOverBegin(AActor* TouchedActor)
+{
+    bMouseHoveringOver = true;
+
+    if (RangeSphere)
+    {
+        RangeSphere->SetHiddenInGame(false);
+    }
+}
+
+void ATurret::OnCursorOverEnd(AActor* TouchedActor)
+{
+    bMouseHoveringOver = false;
+
+    if (RangeSphere)
+    {
+        RangeSphere->SetHiddenInGame(true);
+    }
+}
+
+void ATurret::OnClicked()
+{
+    if (!bMouseHoveringOver)
     {
         return;
     }
 
-    EnemyRefArray.Remove(OtherActor);
+    if (BuildingSubsystem)
+    {
+        BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, this);
+    }
 }
-#pragma endregion Unreal Functions
 
 #pragma region Projectile Pool
 void ATurret::MakeProjectiles(const int NewProjectileAmount)
@@ -169,7 +211,7 @@ AProjectile* ATurret::GetUnusedProjectile() const
 #pragma endregion Projectile Pool
 
 #pragma region Turret Update Values
-AActor* ATurret::GetClosestEnemy() const
+AEnemy* ATurret::GetClosestEnemy() const
 {
     TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
     float CurrentClosestDistance = INFINITY;
@@ -217,11 +259,16 @@ AActor* ATurret::GetClosestEnemy() const
         PotentialClosestEnemy = Enemy;
     }
 
-    return PotentialClosestEnemy;
+    return Cast<AEnemy>(PotentialClosestEnemy);
 }
 
 bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
 {
+    if (!bUseLineOfSight)
+    {
+        return true; // We can skip the rest and return true if we aren't using line of sight
+    }
+
     if (!BulletSpawnPoint)
     {
         return false;
@@ -229,13 +276,13 @@ bool ATurret::IsEnemyInLOS(const FVector& EnemyLocation) const
 
     FHitResult HitResult;
 
-    bool bActorHit = World->LineTraceSingleByChannel(HitResult, BulletSpawnLocation, EnemyLocation, TurretSightTraceChannel);
+    const bool bActorHit = World->LineTraceSingleByChannel(HitResult, BulletSpawnLocation, EnemyLocation, TurretSightTraceChannel);
     if (!bActorHit)
     {
         return false;
     }
 
-    TObjectPtr<UPrimitiveComponent> HitComp = HitResult.GetComponent();
+    const TObjectPtr<UPrimitiveComponent> HitComp = HitResult.GetComponent();
     if (!HitComp)
     {
         return false;
@@ -257,10 +304,8 @@ void ATurret::UpdateTurretValues()
     }
 
     CurrentGunRotation = GunParentComponent->GetComponentRotation();
-
     MuzzleForward = MuzzleDirectionSocket->GetForwardVector();
     MuzzleBaseLocation = MuzzleDirectionSocket->GetComponentLocation();
-
     BulletSpawnLocation = BulletSpawnPoint->GetComponentLocation();
 }
 
@@ -294,7 +339,6 @@ void ATurret::RotateTowardsTarget(const float DeltaTime, const FVector& TargetPo
 
     // Then set rotation
     const FRotator NewRotation = FMath::RInterpTo(CurrentGunRotation, ClampedGunRotation, DeltaTime, TurretTurnSpeed);
-    //SetActorRotation(NewRotation);
     GunParentComponent->SetWorldRotation(NewRotation);
 }
 

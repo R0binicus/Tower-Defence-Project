@@ -37,11 +37,12 @@ void AProjectile::SetProjectileEnabled(const bool bNewEnabled)
 	}
 }
 
-void AProjectile::SetupProjectile(AActor* Target, const FProjectileValues& InProjectileValues)
+void AProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues)
 {
-	TargetActor = Target;
+	TargetEnemy = Enemy;
 	ProjectileValues = InProjectileValues;
 	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
+	SetActorScale3D(FVector(ProjectileValues.Scale, ProjectileValues.Scale, ProjectileValues.Scale));
 	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
@@ -80,18 +81,13 @@ void AProjectile::UpdateTargetDest_Implementation(const float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (!OtherActor)
-	{
-		return;
-	}
-	
-	if (!OtherComp)
+	if (!OtherActor || !OtherComp)
 	{
 		return;
 	}
 
 	const FName OtherCompName = OtherComp->GetCollisionProfileName();
-	if (OtherCompName != "Pawn")
+	if (OtherCompName != EnemyProfileName.Name)
 	{
 		SetProjectileEnabled(false);
 		return;

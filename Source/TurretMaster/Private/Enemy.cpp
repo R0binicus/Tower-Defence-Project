@@ -1,5 +1,9 @@
 #include "Enemy.h"
 #include "AIController.h"
+#include "Components/WidgetComponent.h"
+#include "UI/EnemyHealthbarWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AEnemy::AEnemy()
 {
@@ -20,24 +24,24 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
 
-	TObjectPtr<APlayerController> PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (PlayerController)
+	const TObjectPtr<APlayerController> PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PlayerController || !HealthBarWidgetComponent || !HealthBarWidget)
 	{
 		CameraManager = PlayerController->PlayerCameraManager;
 	}
 
-	if (HealthBarWidgetComponent)
-	{
-		HealthBarWidget = Cast<UEnemyHealthbarWidget>(HealthBarWidgetComponent->GetWidget());
-	}
+	HealthBarWidget = Cast<UEnemyHealthbarWidget>(HealthBarWidgetComponent->GetWidget());
 
-	if (HealthBarWidget)
-	{
-		HealthBarWidget->SetBarPercent(CurrentHealth/CurrentHealth);
-	}
+	// Scale widget to actor size
+	const FVector EnemyScale = GetActorScale();
+	const float ScaleAvg = (EnemyScale.X + EnemyScale.Y + EnemyScale.Z) / 3;
+	const FVector2D NewWidgetScale = FVector2D(HealthbarScaleMin.X + (ScaleAvg * HealthbarScaleMultiplier.X), 
+		HealthbarScaleMin.Y + (ScaleAvg * HealthbarScaleMultiplier.Y));
+	HealthBarWidget->SetRenderScale(NewWidgetScale);
+	HealthBarWidget->SetBarPercent(CurrentHealth / MaxHealth);
 }
 
-void AEnemy::Tick(float DeltaTime)
+void AEnemy::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -51,11 +55,11 @@ void AEnemy::Tick(float DeltaTime)
 		return;
 	}
 
-	FRotator NewComponentRotation = UKismetMathLibrary::FindLookAtRotation(HealthBarWidgetComponent->GetComponentLocation(), CameraManager->GetCameraLocation());
+	const FRotator NewComponentRotation = UKismetMathLibrary::FindLookAtRotation(HealthBarWidgetComponent->GetComponentLocation(), CameraManager->GetCameraLocation());
 	HealthBarWidgetComponent->SetWorldRotation(NewComponentRotation);
 }
 
-void AEnemy::TakeDamage_Implementation(float DamageTaken)
+void AEnemy::TakeDamage_Implementation(const float DamageTaken)
 {
 	CurrentHealth = CurrentHealth - DamageTaken;
 
@@ -70,7 +74,7 @@ void AEnemy::TakeDamage_Implementation(float DamageTaken)
 	}
 }
 
-void AEnemy::Death_Implementation(bool bByTurret)
+void AEnemy::Death_Implementation(const bool bByTurret)
 {
 	SetDestination(GetActorLocation());
 	CurrentHealth = 0;
@@ -96,12 +100,12 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void AEnemy::SetDestination(const FVector NewDestination)
+void AEnemy::SetDestination(const FVector NewDestination) const
 {
 	AAIController* AIController = Cast<AAIController>(GetController());
-	if (!AIController)
+	if (AIController)
 	{
-		return;
+		AIController->MoveToLocation(NewDestination, 5.f, false, true, true, false);
 	}
-	AIController->MoveToLocation(NewDestination, 5.f, false, true, true, false);
+	
 }

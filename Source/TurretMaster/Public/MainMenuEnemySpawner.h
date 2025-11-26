@@ -2,9 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
-#include "Enemy.h"
 #include "MainMenuEnemySpawner.generated.h"
+
+class UBoxComponent;
+class AEnemy;
 
 /**
  * Simple actor class which spawns enemies infinitely for the main menu

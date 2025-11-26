@@ -1,5 +1,16 @@
 #include "Subsystems/EnemySubsystem.h"
+#include "Enemy.h"
+#include "EnemySpawnArea.h"
 #include "GameFramework/TowerDefencePlayerState.h"
+#include "WaveDataObject.h"
+#include "EnemyWaveData.h"
+#include "LimitedRepeatTimer.h"
+#include "Engine/AssetManager.h"
+#include "Engine/StreamableManager.h"
+#include "GameFramework/TowerDefenceGameState.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
+#include "PrimaryAssets/LevelDataAsset.h"
 
 void UEnemySubsystem::StartSubsystem()
 {
@@ -22,11 +33,11 @@ void UEnemySubsystem::InitialiseWaves(ULevelDataAsset* LevelData)
 	WaveDataArray = LevelData->LevelWaveData;
 	WaveDataObjects = MakeWaveObjectArray(WaveDataArray);
 
-	int32 StartWaveIndex = 0;
+	constexpr int32 StartWaveIndex = 0;
 
 	// If the first wave is fired without any delay, it can cause minor UI issues
-	// Howver this shouldn't occur normally, but just in case, here is a quick fix
-	float NextWaveDelay = WaveDataArray[StartWaveIndex].WaveDelay + WavePrepTime;
+	// However this shouldn't occur normally, but just in case, here is a quick fix
+	const float NextWaveDelay = WaveDataArray[StartWaveIndex].WaveDelay + WavePrepTime;
 	if (NextWaveDelay > 0.f)
 	{
 		StartWavePrepStage(StartWaveIndex);
@@ -81,7 +92,7 @@ TArray<UWaveDataObject*> UEnemySubsystem::MakeWaveObjectArray(const TArray<FEnem
 
 void UEnemySubsystem::StartNextWave()
 {
-	int32 CurrentWaveIndex = CurrentWaveNum;
+	const int32 CurrentWaveIndex = CurrentWaveNum;
 	CurrentWaveNum++;
 
 	if (WaveDataObjects.Num() <= CurrentWaveIndex)
@@ -89,7 +100,7 @@ void UEnemySubsystem::StartNextWave()
 		return;
 	}
 
-	TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[CurrentWaveIndex];
+	const TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[CurrentWaveIndex];
 	if (!WaveObject)
 	{
 		return;
@@ -126,7 +137,6 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 
 		SoftPathArray.Add(SoftSpawner.ToSoftObjectPath());
 	}
-
 	
 	if (SoftPathArray.Num() == 0)
 	{
@@ -134,7 +144,7 @@ void UEnemySubsystem::LoadWaveSpawners(TArray<TSoftObjectPtr<AEnemySpawnArea>> S
 		return;
 	}
 
-	// This is probably overkill to load but it's good practice to learn how
+	// This is probably overkill to load, but it's good practice to learn how
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
 	FStreamableDelegate SetSpawnerArrayDelegate;
 	SetSpawnerArrayDelegate.BindUObject(this, &UEnemySubsystem::SetSpawnerArray, SoftSpawnerArray);
@@ -168,7 +178,7 @@ void UEnemySubsystem::SetupEnemySpawnArray()
 	PendingEnemyWaveSpawns.Empty();
 	for (const TPair<TSubclassOf<AEnemy>, int32>& Pair : CurrentWaveData.EnemyAmounts)
 	{
-		int32 Number = Pair.Value;
+		const int32 Number = Pair.Value;
 		PendingEnemyWaveSpawns.Reserve(PendingEnemyWaveSpawns.Num() + Number);
 		for (size_t i = 0; i < Number; i++)
 		{
@@ -180,10 +190,6 @@ void UEnemySubsystem::SetupEnemySpawnArray()
 
 void UEnemySubsystem::SetupEnemySpawning()
 {
-	// TODO: move this to be after the spawn period check
-	FTimerDelegate TimerDelagate;
-	TimerDelagate.BindUObject(this, &UEnemySubsystem::MakeWaveEnemy);
-
 	WaveSpawnTimer = NewObject<ULimitedRepeatTimer>();
 	if (!WaveSpawnTimer)
 	{
@@ -202,14 +208,17 @@ void UEnemySubsystem::SetupEnemySpawning()
 	}
 	else
 	{
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUObject(this, &UEnemySubsystem::MakeWaveEnemy);
+		
 		float DelayBetweenEnemySpawn = CurrentWaveData.SpawnPeriod / PendingEnemyWaveSpawns.Num();
-		WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelagate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
+		WaveSpawnTimer->SetupTimer(GetWorld(), TimerDelegate, DelayBetweenEnemySpawn, PendingEnemyWaveSpawns.Num());
 	}
 }
 
 void UEnemySubsystem::MakeWaveEnemy()
 {
-	int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentSpawnerArray);
+	const int32 SpawnAreaIndex = GetRandomArrayIndex(CurrentSpawnerArray);
 	if (SpawnAreaIndex == -1)
 	{
 		return;
@@ -221,29 +230,29 @@ void UEnemySubsystem::MakeWaveEnemy()
 	}
 
 	AEnemySpawnArea* NextEnemySpawnArea = CurrentSpawnerArray[SpawnAreaIndex];
-	TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
+	const TSubclassOf<AEnemy> NextEnemyClass = PendingEnemyWaveSpawns[CurrentWaveEnemyIndex];
 
 	SpawnNewEnemy(NextEnemySpawnArea, NextEnemyClass);
 
 	CurrentWaveEnemyIndex++;
 }
 
-void UEnemySubsystem::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, TSubclassOf<AEnemy> NewEnemyClass)
+void UEnemySubsystem::SpawnNewEnemy(AEnemySpawnArea* SpawnArea, const TSubclassOf<AEnemy> NewEnemyClass)
 {
 	if (!SpawnArea)
 	{
 		return;
 	}
 
-	TObjectPtr<AEnemy> TempEnemy = SpawnArea->SpawnEnemy(NewEnemyClass);
+	const TObjectPtr<AEnemy> TempEnemy = SpawnArea->SpawnEnemy(NewEnemyClass);
 	TempEnemy->OnEnemyDeath.AddUniqueDynamic(this, &UEnemySubsystem::OnEnemyDeathHandler);
 }
 
-void UEnemySubsystem::OnEnemyDeathHandler(int32 ResourcesGained)
+void UEnemySubsystem::OnEnemyDeathHandler(const int32 ResourcesGained)
 {
 	SetEnemiesRemaining(--EnemiesRemaining);
 
-	TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	const TObjectPtr<ATowerDefencePlayerState> PlayerStateClass = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 	if (PlayerStateClass)
 	{
 		PlayerStateClass->ChangeCurrentMoney(ResourcesGained);
@@ -269,17 +278,17 @@ void UEnemySubsystem::WaveComplete()
 	// Also trigger some juice when a wave is complete
 }
 
-void UEnemySubsystem::StartWavePrepStage(int32 WaveIndex)
+void UEnemySubsystem::StartWavePrepStage(const int32 WaveIndex)
 {
 	GetWorld()->GetTimerManager().ClearTimer(EnemySpawnTimer);
 
-	TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[WaveIndex];
+	const TObjectPtr<UWaveDataObject> WaveObject = WaveDataObjects[WaveIndex];
 	if (!WaveObject)
 	{
 		return;
 	}
 
-	float NextWaveDelay = WaveObject->WaveData.WaveDelay + WavePrepTime;
+	const float NextWaveDelay = WaveObject->WaveData.WaveDelay + WavePrepTime;
 	if (NextWaveDelay <= 0.f)
 	{
 		StartNextWave();
@@ -297,9 +306,9 @@ void UEnemySubsystem::SkipPrepStage()
 	StartNextWave();
 }
 
-void UEnemySubsystem::AllWavesComplete()
+void UEnemySubsystem::AllWavesComplete() const
 {
-	TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
+	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)
 	{
 		GameState->TriggerWin();
@@ -307,21 +316,21 @@ void UEnemySubsystem::AllWavesComplete()
 }
 
 template<typename T>
-int32 UEnemySubsystem::GetRandomArrayIndex(const TArray<T>& Array) const
+int32 UEnemySubsystem::GetRandomArrayIndex(const TArray<T>& Array)
 {
 	if (Array.IsEmpty())
 	{
 		return -1;
 	}
 
-	int RandomIndex = FMath::RandRange(0, Array.Num() - 1);
+	const int RandomIndex = FMath::RandRange(0, Array.Num() - 1);
 	return RandomIndex;
 }
 
 template<typename T>
-void UEnemySubsystem::ShuffleArray(TArray<T>& Array) const
+void UEnemySubsystem::ShuffleArray(TArray<T>& Array)
 {
-	int32 LastIndex = Array.Num() - 1;
+	const int32 LastIndex = Array.Num() - 1;
 	for (int32 i = 0; i <= LastIndex; ++i)
 	{
 		int32 RandIndex = FMath::RandRange(i, LastIndex);

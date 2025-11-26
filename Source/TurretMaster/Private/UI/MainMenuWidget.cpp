@@ -1,21 +1,26 @@
 #include "UI/MainMenuWidget.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
 void UMainMenuWidget::NativeConstruct()
 {
-	if (Level01Button)
+	Super::NativeConstruct();
+
+	if (!Level01Button || !QuitButton)
 	{
-		Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
+		return;
 	}
 
-	if (QuitButton)
-	{
-		QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
-	}
+	Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
+	QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
+
+	DefaultButton = Level01Button;
+	FocusDefaultButton();
 }
 
 void UMainMenuWidget::OnLevel01Clicked()
 {
-	if (Level01.IsValid() || Level01.IsPending())
+	if (!Level01.IsNull())
 	{
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 	}

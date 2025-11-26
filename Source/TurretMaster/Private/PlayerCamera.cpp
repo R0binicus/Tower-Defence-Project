@@ -1,4 +1,5 @@
 #include "PlayerCamera.h"
+#include "Camera/CameraComponent.h"
 
 APlayerCamera::APlayerCamera()
 {
@@ -20,10 +21,4 @@ void APlayerCamera::BeginPlay()
 		PlayerController->bEnableClickEvents = true;
 		PlayerController->bEnableMouseOverEvents = true;
 	}
-}
-
-void APlayerCamera::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }

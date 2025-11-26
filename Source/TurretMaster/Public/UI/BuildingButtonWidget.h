@@ -2,12 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/Image.h"
-#include "Components/TextBlock.h"
-#include "Components/Button.h"
-#include "DataAssets/BuildingDataAsset.h"
-#include "Subsystems/BuildingSubsystem.h"
 #include "BuildingButtonWidget.generated.h"
+
+class UBuildingDataAsset;
+class UButton;
+class UImage;
+class UTextBlock;
+class UBuildingSubsystem;
 
 /**
  * Widget which displays a button for creating a new building
@@ -33,9 +34,20 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "BuildingButtonWidget", meta = (BindWidget))
 	TObjectPtr<UTextBlock> CostTextBlock;
 
-	void NativeConstruct() override;
+	UPROPERTY()
+	TObjectPtr<UBuildingSubsystem> BuildingSubsystem;
+
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
 		meta = (ToolTip = "Triggered when the button is clicked"))
 	void OnButtonClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
+		meta = (ToolTip = "Triggered when the button is hovered over by the mouse, or is selected"))
+	void OnButtonHovered();
+
+	UFUNCTION(BlueprintCallable, Category = "BuildingButtonWidget",
+		meta = (ToolTip = "Triggered when the button is de-selected"))
+	void OnButtonUnhovered();
 };

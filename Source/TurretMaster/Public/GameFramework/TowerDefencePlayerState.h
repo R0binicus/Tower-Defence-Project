@@ -2,8 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
-#include "GameFramework/TowerDefenceGameState.h"
 #include "TowerDefencePlayerState.generated.h"
+
+class UBuildingDataAsset;
+class ATurret;
 
 UENUM()
 enum class EPlayerStateEnum
@@ -73,6 +75,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
 		meta = (ToolTip = "Checks if the player has enough resources for the cost"))
 	bool HasEnoughResources(const int32 Cost) const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Gets sell return fraction multiplier"))
+	const float GetSellReturnFraction() const { return SellReturnFraction; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+	meta = (ToolTip = "Gets the current selected turret"))
+	const ATurret* GetSelectedTurret() const { return SelectedTurret; };
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Gets the data for current selected turret"))
+	const UBuildingDataAsset* GetSelectedTurretData() const { return SelectedTurretData; };
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Sells a building, removing it and refunding a portion of its cost"))
+	void SellBuilding();
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
@@ -90,7 +108,24 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
 	int32 PlayerMoneyCurrent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TowerDefencePlayerState")
+	float SellReturnFraction = 0.5f;
+
+	UPROPERTY(BlueprintReadOnly, Category = "TowerDefencePlayerState")
+	TObjectPtr<ATurret> SelectedTurret;
+
+	UPROPERTY(BlueprintReadOnly, Category = "TowerDefencePlayerState")
+	TObjectPtr<UBuildingDataAsset> SelectedTurretData;
+
 	virtual void BeginPlay() override;
 
 	void SetPlayerState(const EPlayerStateEnum NewState);
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Cancels current building selection"))
+	void OnDeselectedAction();
+
+	UFUNCTION(BlueprintCallable, Category = "TowerDefencePlayerState",
+		meta = (ToolTip = "Updates the current building selection"))
+	void UpdateCurrentSelection(UBuildingDataAsset* BuildingData, ATurret* Turret);
 };

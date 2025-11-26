@@ -1,5 +1,8 @@
 #include "LivesLossArea.h"
 #include "Enemy.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 ALivesLossArea::ALivesLossArea()
 {
@@ -11,12 +14,6 @@ ALivesLossArea::ALivesLossArea()
     RootComponent = EnemyDetectionBox;
 }
 
-void ALivesLossArea::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
 void ALivesLossArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (!OtherActor->ActorHasTag(EnemyTagName))
@@ -25,16 +22,12 @@ void ALivesLossArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
     }
 
     TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
-    if (PlayerState)
-    {
-        PlayerState->ChangeCurrentLives(-1);
-    }
-
     TObjectPtr<AEnemy> Enemy = Cast<AEnemy>(OtherActor);
-    if (!Enemy)
+    if (!Enemy || !PlayerState)
     {
         return;
     }
 
+    PlayerState->ChangeCurrentLives(-Enemy->GetLivesReduction());
     Enemy->Death(false);
 }

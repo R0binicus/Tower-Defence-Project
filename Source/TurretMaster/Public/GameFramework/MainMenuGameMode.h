@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "UI/MainMenuWidget.h"
 #include "MainMenuGameMode.generated.h"
+
+class UMainMenuWidget;
 
 /**
  * Game mode for the tower defence game's main menu

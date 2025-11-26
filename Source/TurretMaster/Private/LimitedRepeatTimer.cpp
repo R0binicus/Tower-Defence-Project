@@ -15,13 +15,13 @@ void ULimitedRepeatTimer::SetupTimer(TObjectPtr<UWorld> InWorld, FTimerDelegate&
 	World = InWorld;
 	RemainingRepeats = InRepeats;
 
-	TimerDelagate.BindUObject(this, &ULimitedRepeatTimer::RepeatFunction, InCallerDelagate, InRate);
+	TimerDelagate.BindUObject(this, &ULimitedRepeatTimer::RepeatTimer, InCallerDelagate, InRate);
 
 	World->GetTimerManager().ClearTimer(TimerHandle);
 	World->GetTimerManager().SetTimer(TimerHandle, TimerDelagate, InRate, false);
 }
 
-void ULimitedRepeatTimer::RepeatFunction(FTimerDelegate CallerDelagate, float RepeatRate)
+void ULimitedRepeatTimer::RepeatTimer(FTimerDelegate CallerDelagate, float RepeatRate)
 {
 	CallerDelagate.ExecuteIfBound();
 

@@ -1,25 +1,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
-#include "GameFramework/TowerDefenceGameState.h"
-#include "Kismet/GameplayStatics.h"
+#include "UI/MenuBaseWidget.h"
 #include "PauseMenuWidget.generated.h"
+
+class UButton;
 
 /**
  * Widget that appears when the player pauses the game
  */
 UCLASS()
-class TURRETMASTER_API UPauseMenuWidget : public UUserWidget
+class TURRETMASTER_API UPauseMenuWidget : public UMenuBaseWidget
 {
 	GENERATED_BODY()
 	
-public:
-	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
-		meta = (ToolTip = "Makes the pause menu widget to be visible, or not visible"))
-	void SetWidgetVisible(bool bIsVisible);
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PauseMenuWidget")
 	const TSoftObjectPtr<UWorld> MainMenuLevel;
@@ -33,11 +27,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "PauseMenuWidget", meta = (BindWidget))
 	TObjectPtr<UButton> MainMenuButton;
 
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Tells the game state to pause the game"))
-	void SetWidgetPaused(bool bIsPause);
+	void SetWidgetPaused(bool bIsPause) const;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

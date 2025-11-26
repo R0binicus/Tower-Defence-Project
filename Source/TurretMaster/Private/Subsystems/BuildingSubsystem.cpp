@@ -1,4 +1,11 @@
 #include "Subsystems/BuildingSubsystem.h"
+#include "DataAssets/BuildingDataAsset.h"
+#include "Engine/AssetManager.h"
+#include "Engine/StreamableManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
+#include "PrimaryAssets/LevelDataAsset.h"
 
 void UBuildingSubsystem::StartSubsystem()
 {
@@ -16,7 +23,7 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 		return;
 	}
 
-	TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	const TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 	if (!PlayerState)
 	{
 		return;
@@ -36,14 +43,14 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 	OnBuildingTypeSelected.Broadcast(CurrentPlaceBuildingSelected);
 }
 
-void UBuildingSubsystem::BuildingPlaced()
+void UBuildingSubsystem::BuildingPlaced() const
 {
 	CancelPlaceBuilding();
 }
 
-void UBuildingSubsystem::CancelPlaceBuilding()
+void UBuildingSubsystem::CancelPlaceBuilding() const
 {
-	TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
+	const TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 	if (!PlayerState)
 	{
 		return;
@@ -87,7 +94,7 @@ void UBuildingSubsystem::SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint
 		return;
 	}
 
-	TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
+	const TObjectPtr<AActor> NewProtectPoint = SoftProtectPoint.Get();
 	if (!NewProtectPoint)
 	{
 		return;

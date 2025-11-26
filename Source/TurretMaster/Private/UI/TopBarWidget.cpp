@@ -1,60 +1,61 @@
 #include "UI/TopBarWidget.h"
 #include "Subsystems/EnemySubsystem.h"
+#include "Components/TextBlock.h"
+#include "WaveDataObject.h"
+#include "GameFramework/TowerDefenceGameInstance.h"
+#include "GameFramework/TowerDefencePlayerState.h"
+#include "Kismet/GameplayStatics.h"
+#include "PrimaryAssets/LevelDataAsset.h"
 
 void UTopBarWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    TObjectPtr<UWorld> World = GetWorld();
+    const TObjectPtr<UWorld> World = GetWorld();
     if (!World)
     {
         return;
     }
 
     UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
-    if (GameInstance)
-    {
-        GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UTopBarWidget::OnLevelDataLoaded);
-    }
+    const TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
+    const TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(World, 0));
 
-    TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
-    if (EnemySubsystem)
+    if (!GameInstance || !EnemySubsystem || !PlayerState)
     {
-        EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
-        EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
+        return;
     }
+        
+    GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UTopBarWidget::OnLevelDataLoaded);
 
-    TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(World, 0));
-    if (PlayerState)
-    {
-        UpdateLivesText(PlayerState->GetPlayerLivesCurrent(), 0);
-        UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent(), 0);
+    EnemySubsystem->OnWaveChanged.AddUniqueDynamic(this, &UTopBarWidget::NewWaveStarted);
+    EnemySubsystem->OnEnemiesRemainingChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateEnemiesRemainingText);
 
-        PlayerState->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
-        PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
-    }
+    UpdateLivesText(PlayerState->GetPlayerLivesCurrent(), 0);
+    UpdateMoneyText(PlayerState->GetPlayerMoneyCurrent(), 0);
+
+    PlayerState->OnPlayerLivesChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateLivesText);
+    PlayerState->OnPlayerMoneyChanged.AddUniqueDynamic(this, &UTopBarWidget::UpdateMoneyText);
 
     // Set default text value
-    NewWaveStarted(nullptr, 0);
     UpdateEnemiesRemainingText(0);
 }
 
 void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
 {
-    TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
-    if (EnemySubsystem)
-    {
-        TotalWaveNum = EnemySubsystem->GetTotalWaveNum();
-    }
+    TotalWaveNum = LevelData->LevelWaveData.Num();
+    NewWaveStarted(nullptr, 0);
 }
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
-    if (WavesRemainingText)
+    if (!WavesRemainingText) // Do not add NewWaveData null check
     {
-        FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
-        WavesRemainingText->SetText(FText::FromString(FormattedNum));
+        return;
     }
+
+    const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
+    WavesRemainingText->SetText(FText::FromString(FormattedNum));
 
     if (!NewWaveData)
     {
@@ -77,7 +78,7 @@ void UTopBarWidget::UpdateLivesText(const int32 NewLives, const int32 OldLives)
 {
     if (LivesText)
     {
-        FString FormattedNum = FString::Printf(TEXT("%i"), NewLives);
+        const FString FormattedNum = FString::Printf(TEXT("%i"), NewLives);
         LivesText->SetText(FText::FromString(FormattedNum));
     }
 }
@@ -86,7 +87,7 @@ void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
 {
     if (MoneyText)
     {
-        FString FormattedNum = FString::Printf(TEXT("%i"), NewMoney);
+        const FString FormattedNum = FString::Printf(TEXT("$%i"), NewMoney);
         MoneyText->SetText(FText::FromString(FormattedNum));
     }
 }
@@ -95,7 +96,7 @@ void UTopBarWidget::UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining)
 {
     if (EnemiesRemainingText)
     {
-        FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewEnemiesRemaining, TotalWaveEnemies);
+        const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewEnemiesRemaining, TotalWaveEnemies);
         EnemiesRemainingText->SetText(FText::FromString(FormattedNum));
     }
 }

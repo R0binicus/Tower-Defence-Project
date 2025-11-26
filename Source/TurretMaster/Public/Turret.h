@@ -2,14 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "ProjectileValues.h"
-#include "Projectile.h"
 #include "Buildable.h"
+#include "ProjectileValues.h"
 #include "Turret.generated.h"
 
+class AProjectile;
+class AEnemy;
+class UBuildingSubsystem;
+class UBuildingDataAsset;
+class USphereComponent;
+
 /**
- * Base turret class, which aims in a stright line 
+ * Base turret class, which aims in a straight line 
  * towards the target, and ignores gravity
  */
 UCLASS()
@@ -50,6 +54,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
 
+	// 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
+	bool bMouseHoveringOver;
+
 	// Projectiles pool
 	
 	UPROPERTY(EditAnywhere, Category = "Turret")
@@ -74,6 +86,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 
+	UPROPERTY()
+	TObjectPtr<UBuildingSubsystem> BuildingSubsystem;
+
 	// Enemy
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Turret")
@@ -83,18 +98,18 @@ protected:
 	TArray<TObjectPtr<AActor>> EnemyRefArray;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turret")
-	TObjectPtr<AActor> CurrentClosestEnemy;
+	TObjectPtr<AEnemy> CurrentClosestEnemy;
 
 	// Turret Aiming
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(BlueprintReadWrite, Category = "Turret")
 	float TurretRange = 3000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TEnumAsByte<ECollisionChannel> TurretSightTraceChannel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
-	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Pawn");
+	FCollisionProfileName EnemyProfileName = FCollisionProfileName("Enemy");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
 		meta = (ToolTip = "Only updates at start of level play"))
@@ -112,6 +127,9 @@ protected:
 	
 
 	// Turret Aim Restrictions
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+	bool bUseLineOfSight = true;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 	float GiveUpVerticalAimThreshold = 0.8f;
@@ -137,25 +155,18 @@ protected:
 	FTimerHandle ShootDelayHandle;
 
 	// Projectile Values
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileDamage = 25.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileSpeed = 3000.f;
+	float ProjectileSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileLifetime = 10.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret",
-		meta = (ToolTip = "Only updates at start of level play"))
-	float ProjectileTurnMultiplier = 1.f;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Turret")
-	FProjectileValues ProjectileValues;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret",
+		meta = (ToolTip = "Only updates when the level starts"))
+	FProjectileValues ProjectileValues = FProjectileValues(
+		25.f,	// Damage
+		3000.f, // Speed
+		10.f,	// Lifetime
+		1.f,	// Scale
+		1.f		// Turn Multiplier
+	);
 
 	// Update Turret Values
 	
@@ -186,6 +197,15 @@ protected:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+	void OnCursorOverBegin(AActor* TouchedActor);
+
+	UFUNCTION()
+	void OnCursorOverEnd(AActor* TouchedActor);
+
+	UFUNCTION()
+	void OnClicked();
+
 	// Projectile pool
 	
 	UFUNCTION(BlueprintCallable, Category = "Turret",
@@ -204,7 +224,7 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns the closest enemy in the RangeSphere"))
-	AActor* GetClosestEnemy() const;
+	AEnemy* GetClosestEnemy() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Turret",
 		meta = (ToolTip = "Returns true if the enemy is in line of sight from the gun muzzle"))
