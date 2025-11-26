@@ -3,16 +3,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Enemy.h"
 
-ATeslaProjectile::ATeslaProjectile()
+ATeslaProjectile::ATeslaProjectile() : AProjectile()
 {
-	if (!CollisionMesh)
-	{
-		return;
-	}
-
-	CollisionMesh->SetVisibility(bEnabled);
-	CollisionMesh->SetSimulatePhysics(bEnabled);
-	CollisionMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATeslaProjectile::SetProjectileEnabled(bool bNewEnabled)
@@ -83,7 +75,7 @@ AEnemy* ATeslaProjectile::FindClosestEnemy(const FVector& CheckOriginPoint, cons
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(EnemyCollisionType);
 
-	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ProjectileValues.HitExplosionRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), CheckOriginPoint, ProjectileValues.HitExplosionRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
 
 	for (size_t i = 0; i < OutActors.Num(); i++)
 	{
