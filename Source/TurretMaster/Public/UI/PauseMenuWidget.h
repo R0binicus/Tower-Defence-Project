@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/MenuBaseWidget.h"
 #include "PauseMenuWidget.generated.h"
 
 class UButton;
@@ -10,15 +10,10 @@ class UButton;
  * Widget that appears when the player pauses the game
  */
 UCLASS()
-class TURRETMASTER_API UPauseMenuWidget : public UUserWidget
+class TURRETMASTER_API UPauseMenuWidget : public UMenuBaseWidget
 {
 	GENERATED_BODY()
 	
-public:
-	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
-		meta = (ToolTip = "Makes the pause menu widget to be visible, or not visible"))
-	void SetWidgetVisible(bool bIsVisible);
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PauseMenuWidget")
 	const TSoftObjectPtr<UWorld> MainMenuLevel;

@@ -5,43 +5,21 @@
 
 void UPauseMenuWidget::NativeConstruct()
 {
-	if (ResumeButton)
-	{
-		ResumeButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnResumeClicked);
-	}
+	Super::NativeConstruct();
 
-	if (RestartButton)
+	if (!ResumeButton || !RestartButton || !MainMenuButton)
 	{
-		RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnRestartClicked);
+		return;
 	}
+	ResumeButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnResumeClicked);
+	MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
+	RestartButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnRestartClicked);
 
-	if (MainMenuButton)
-	{
-		MainMenuButton->OnClicked.AddDynamic(this, &UPauseMenuWidget::OnMainMenuClicked);
-	}
 
 	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)
 	{
 		GameState->OnGamePaused.AddUniqueDynamic(this, &UPauseMenuWidget::SetWidgetVisible);
-	}
-}
-
-void UPauseMenuWidget::SetWidgetVisible(const bool bIsVisible)
-{
-	if (!ResumeButton)
-	{
-		return;
-	}
-
-	if (bIsVisible)
-	{
-		ResumeButton->SetFocus();
-		SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 

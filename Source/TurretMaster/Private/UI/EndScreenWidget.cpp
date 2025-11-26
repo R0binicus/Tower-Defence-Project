@@ -4,6 +4,8 @@
 
 void UEndScreenWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	if (!RestartButton || !MainMenuButton)
 	{
 		return;
@@ -11,24 +13,6 @@ void UEndScreenWidget::NativeConstruct()
 
 	RestartButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnRestartClicked);
 	MainMenuButton->OnClicked.AddDynamic(this, &UEndScreenWidget::OnMainMenuClicked);
-}
-
-void UEndScreenWidget::SetWidgetVisible(const bool bIsVisible)
-{
-	if (!RestartButton)
-	{
-		return;
-	}
-
-	if (bIsVisible)
-	{
-		RestartButton->SetFocus();
-		SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		SetVisibility(ESlateVisibility::Hidden);
-	}
 }
 
 void UEndScreenWidget::OnRestartClicked()

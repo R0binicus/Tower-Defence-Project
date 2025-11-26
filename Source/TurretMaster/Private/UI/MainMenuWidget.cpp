@@ -4,16 +4,16 @@
 
 void UMainMenuWidget::NativeConstruct()
 {
-	if (Level01Button)
+	Super::NativeConstruct();
+
+	if (!Level01Button || !QuitButton)
 	{
-		Level01Button->SetFocus();
-		Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
+		return;
 	}
 
-	if (QuitButton)
-	{
-		QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
-	}
+	Level01Button->SetFocus();
+	Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
+	QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
 }
 
 void UMainMenuWidget::OnLevel01Clicked()

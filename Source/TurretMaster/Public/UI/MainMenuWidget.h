@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/MenuBaseWidget.h"
 #include "MainMenuWidget.generated.h"
 
 class UButton;
@@ -10,7 +10,7 @@ class UButton;
  * The primary widget in the main menu
  */
 UCLASS()
-class TURRETMASTER_API UMainMenuWidget : public UUserWidget
+class TURRETMASTER_API UMainMenuWidget : public UMenuBaseWidget
 {
 	GENERATED_BODY()
 
