@@ -26,6 +26,7 @@ void UPauseMenuWidget::NativeConstruct()
 
 void UPauseMenuWidget::SetWidgetPaused(const bool bIsNowPaused) const
 {
+	FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
 	const TObjectPtr<ATowerDefenceGameState> GameState = Cast<ATowerDefenceGameState>(GetWorld()->GetGameState());
 	if (GameState)
 	{

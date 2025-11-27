@@ -50,7 +50,7 @@ void UBuildingButtonWidget::OnButtonClicked()
 
     BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
 
-    FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
+    //FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
 }
 
 void UBuildingButtonWidget::OnButtonHovered()
