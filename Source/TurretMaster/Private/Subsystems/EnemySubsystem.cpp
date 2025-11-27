@@ -258,16 +258,24 @@ void UEnemySubsystem::OnEnemyDeathHandler(const int32 ResourcesGained)
 		PlayerStateClass->ChangeCurrentMoney(ResourcesGained);
 	}
 
+	// Quick and dirty fix to bug as I haven't had time to test exactly what is causing the issue
+	if (EnemiesRemaining < 2)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(NextWaveStartTimer);
+		GetWorld()->GetTimerManager().SetTimer(NextWaveStartTimer, this, &UEnemySubsystem::WaveComplete, 10.f, false);
+	}
+
 	if (EnemiesRemaining > 0)
 	{
 		return;
 	}
 
-	WaveComplete();
+	//WaveComplete();
 }
 
 void UEnemySubsystem::WaveComplete()
 {
+	GetWorld()->GetTimerManager().ClearTimer(NextWaveStartTimer);
 	if (WaveDataObjects.Num() <= CurrentWaveNum)
 	{
 		AllWavesComplete();

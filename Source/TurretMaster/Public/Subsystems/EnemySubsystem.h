@@ -101,6 +101,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
 	FTimerHandle EnemySpawnTimer;
 
+	UPROPERTY(BlueprintReadWrite, Category = "EnemySubsystem")
+	FTimerHandle NextWaveStartTimer; //Quick fix because I don't have time to figure out what is going on
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "EnemySubsystem")
 	TArray<TSubclassOf<AEnemy>> PendingEnemyWaveSpawns;
 
