@@ -27,7 +27,10 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
-	int32 AllowedTeslaBounces = 3;
+	int32 AllowedTeslaBounces = 6;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
+	float BounceDamageReductionMultiplier = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
 	TArray<TObjectPtr<UNiagaraComponent>> LightningBeamVFXArray;
