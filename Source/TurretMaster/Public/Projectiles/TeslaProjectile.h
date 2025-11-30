@@ -48,7 +48,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
 		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))
-	AEnemy* FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies);
+	AEnemy* FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
 		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))

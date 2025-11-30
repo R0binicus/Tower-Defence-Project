@@ -1,13 +1,14 @@
 #include "Projectiles/TeslaProjectile.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
 #include "Enemy.h"
 
 ATeslaProjectile::ATeslaProjectile() : AProjectile()
 {
 }
 
-void ATeslaProjectile::SetProjectileEnabled(bool bNewEnabled)
+void ATeslaProjectile::SetProjectileEnabled(const bool bNewEnabled)
 {
 	bEnabled = bNewEnabled;
 }
@@ -31,7 +32,7 @@ void ATeslaProjectile::Tick(float DeltaTime)
 {
 }
 
-void ATeslaProjectile::BounceToTargets(int32 NumberOfTargets)
+void ATeslaProjectile::BounceToTargets(const int32 NumberOfTargets)
 {
 	TArray<TObjectPtr<AEnemy>> TargetedEnemies;
 	TargetedEnemies.Reserve(NumberOfTargets + 1);
@@ -66,7 +67,7 @@ void ATeslaProjectile::BounceToTargets(int32 NumberOfTargets)
 	}
 }
 
-AEnemy* ATeslaProjectile::FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies)
+AEnemy* ATeslaProjectile::FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies) const
 {
 	TObjectPtr<AActor> PotentialClosestEnemy = nullptr;
 	float CurrentClosestDistance = INFINITY;
@@ -116,7 +117,8 @@ void ATeslaProjectile::CreateLightningVFX(const FVector& StartPosition, const FV
 		return;
 	}
 
-	TObjectPtr<UNiagaraComponent> Lightning = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), LightningVFX, EndPosition, GetActorRotation());
+	const TObjectPtr<UNiagaraComponent> Lightning = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), LightningVFX, StartPosition, GetActorRotation());
+	Lightning->SetVariableVec3(FName("BeamEnd"), EndPosition);
 	LightningBeamVFXArray.Add(Lightning);
 }
 
