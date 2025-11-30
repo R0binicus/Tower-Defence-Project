@@ -63,7 +63,7 @@ void ATeslaProjectile::BounceToTargets(const int32 NumberOfTargets)
 
 	for (size_t i = 0; i < TargetedEnemies.Num(); i++)
 	{
-		IDamageable::Execute_TakeDamage(TargetedEnemies[i], ProjectileValues.Damage/i+1);
+		IDamageable::Execute_TakeDamage(TargetedEnemies[i], ProjectileValues.Damage/(i + 1));
 	}
 }
 
