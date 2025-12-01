@@ -31,7 +31,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Tells the game state to pause the game"))
-	void SetWidgetPaused(bool bIsPause) const;
+	void SetWidgetPaused(bool bIsNowPaused) const;
 
 	UFUNCTION(BlueprintCallable, Category = "PauseMenuWidget",
 		meta = (ToolTip = "Starts the first level"))

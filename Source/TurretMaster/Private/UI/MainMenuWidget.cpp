@@ -20,7 +20,6 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnLevel01Clicked()
 {
-	FSlateApplication::Get().SetUserFocusToGameViewport(0, EFocusCause::Cleared);
 	if (!Level01.IsNull())
 	{
 		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
