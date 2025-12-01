@@ -17,6 +17,4 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Camera")
 	TObjectPtr<UCameraComponent> PlayerCamera;
-
-	virtual void BeginPlay() override;
 };

@@ -9,6 +9,11 @@ void ATowerDefencePlayerController::BeginPlay()
 	{
 		InputSubsystem->AddMappingContext(InputMap, 0);
 	}
+
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
 }
 
 void ATowerDefencePlayerController::SetupInputComponent()
