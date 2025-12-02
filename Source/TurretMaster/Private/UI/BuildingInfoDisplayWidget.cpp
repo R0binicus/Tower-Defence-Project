@@ -69,7 +69,7 @@ void UBuildingInfoDisplayWidget::HideBuildingDisplay() const
 
 void UBuildingInfoDisplayWidget::SellBuildingPressed()
 {
-	if (!PlayerState)
+	if (PlayerState)
 	{
 		PlayerState->SellBuilding();
 		HideBuildingDisplay();
