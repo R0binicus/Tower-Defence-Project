@@ -270,7 +270,7 @@ void UEnemySubsystem::OnEnemyDeathHandler(const int32 ResourcesGained)
 		return;
 	}
 
-	//WaveComplete();
+	WaveComplete();
 }
 
 void UEnemySubsystem::WaveComplete()
