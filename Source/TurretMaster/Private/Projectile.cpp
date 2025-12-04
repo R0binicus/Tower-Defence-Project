@@ -41,8 +41,8 @@ void AProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProj
 {
 	TargetEnemy = Enemy;
 	ProjectileValues = InProjectileValues;
-	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
-	SetActorScale3D(FVector(ProjectileValues.Scale, ProjectileValues.Scale, ProjectileValues.Scale));
+	SetProjectileLifetime(ProjectileValues.Lifetime);
+	SetActorScale3D(FVector(ProjectileValues.Scale));
 	SetProjectileEnabled(true);
 	CollisionMesh->SetPhysicsLinearVelocity(GetActorForwardVector() * ProjectileValues.Speed, false);
 }
@@ -59,20 +59,19 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(const float DeltaTime)
 {
-	if (!bEnabled)
+	if (bEnabled)
 	{
-		return;
+		UpdateTargetDest(DeltaTime);
 	}
+}
 
-	// TODO: make this a timer, rather than being in tick
-	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
+void AProjectile::SetProjectileLifetime(const float NewLifetime)
+{
+	FTimerDelegate LifeTimeDelegate;
+	LifeTimeDelegate.BindUObject(this, &AProjectile::SetProjectileEnabled, false);
 
-	if (ProjectileLifetimeTimer <= 0 )
-	{
-		SetProjectileEnabled(false);
-	}
-
-	UpdateTargetDest(DeltaTime);
+	GetWorld()->GetTimerManager().ClearTimer(LifetimeTimer);
+	GetWorld()->GetTimerManager().SetTimer(LifetimeTimer, LifeTimeDelegate, NewLifetime, false);
 }
 
 void AProjectile::UpdateTargetDest_Implementation(const float DeltaTime)

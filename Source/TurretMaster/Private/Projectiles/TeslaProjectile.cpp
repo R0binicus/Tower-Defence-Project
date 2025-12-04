@@ -17,7 +17,7 @@ void ATeslaProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& I
 {
 	TargetEnemy = Enemy;
 	ProjectileValues = InProjectileValues;
-	ProjectileLifetimeTimer = ProjectileValues.Lifetime;
+	SetProjectileLifetime(ProjectileValues.Lifetime);
 	SetActorScale3D(FVector(ProjectileValues.Scale, ProjectileValues.Scale, ProjectileValues.Scale));
 	SetProjectileEnabled(true);
 

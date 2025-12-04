@@ -50,23 +50,27 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FProjectileValues ProjectileValues;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FCollisionProfileName EnemyProfileName = FCollisionProfileName::FCollisionProfileName("Enemy");
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
-	float ProjectileLifetimeTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 	bool bEnabled = true;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
 	float Gravity;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
+	FTimerHandle LifetimeTimer;
 
 	// Functions
 
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Projectile",
+		meta = (ToolTip = "Sets the projectile's lifetime timer"))
+	void SetProjectileLifetime(const float NewLifetime);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Projectile",
 		meta = (ToolTip = "Updates the target's destination. Not used by base projectile, but may be for other projectile types"))
