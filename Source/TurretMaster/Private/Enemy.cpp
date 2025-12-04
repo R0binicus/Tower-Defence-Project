@@ -63,7 +63,7 @@ void AEnemy::TakeDamage_Implementation(const float DamageTaken)
 {
 	CurrentHealth = CurrentHealth - DamageTaken;
 
-	if (CurrentHealth <= 0.f)
+	if (CurrentHealth <= 0.f && !bIsDead)
 	{
 		Death(true);
 	}
@@ -76,6 +76,11 @@ void AEnemy::TakeDamage_Implementation(const float DamageTaken)
 
 void AEnemy::Death_Implementation(const bool bByTurret)
 {
+	if (bIsDead)
+	{
+		return;
+	}
+
 	SetDestination(GetActorLocation());
 	CurrentHealth = 0;
 	bIsDead = true;
