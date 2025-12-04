@@ -39,7 +39,7 @@ protected:
 	TEnumAsByte<EObjectTypeQuery> EnemyCollisionType = ObjectTypeQuery8;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
-	class UNiagaraSystem* LightningVFX;
+	class UNiagaraSystem* LightningVFXType;
 
 	virtual void BeginPlay() override;
 
@@ -53,7 +53,17 @@ protected:
 		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))
 	AEnemy* FindClosestEnemy(const FVector& CheckOriginPoint, const TArray<AEnemy*>& AlreadyTargetedEnemies) const;
 
+	UFUNCTION(BlueprintCallable, Category = "TeslaProjectile",
+		meta = (ToolTip = "Makes the specified number of niagara lightning VFX"))
+	void MakeLightningVFX(const int NewVFXAmount);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
-		meta = (ToolTip = "Finds a valid enemy to bounce to, then bounces to it"))
-	void CreateLightningVFX(const FVector& StartPosition, const FVector& EndPosition);
+		meta = (ToolTip = "Creates a new lightning VFX and adds it to the array"))
+	UNiagaraComponent* CreateLightningVFX();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
+		meta = (ToolTip = "Uses an existing niagara component to spawn lightning VFX "))
+	void UseLightningVFX(const FVector& StartPosition, const FVector& EndPosition);
+
+	int32 CurrentVFXIndex;
 };
