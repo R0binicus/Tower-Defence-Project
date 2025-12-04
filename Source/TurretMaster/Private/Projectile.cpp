@@ -59,16 +59,17 @@ void AProjectile::BeginPlay()
 
 void AProjectile::Tick(const float DeltaTime)
 {
-	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
-
-	if (ProjectileLifetimeTimer <= 0 && bEnabled)
-	{
-		SetProjectileEnabled(false);
-	}
-
 	if (!bEnabled)
 	{
 		return;
+	}
+
+	// TODO: make this a timer, rather than being in tick
+	ProjectileLifetimeTimer = ProjectileLifetimeTimer - DeltaTime;
+
+	if (ProjectileLifetimeTimer <= 0 )
+	{
+		SetProjectileEnabled(false);
 	}
 
 	UpdateTargetDest(DeltaTime);

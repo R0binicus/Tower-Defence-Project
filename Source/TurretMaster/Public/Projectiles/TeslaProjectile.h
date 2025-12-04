@@ -43,8 +43,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "TeslaProjectile",
 		meta = (ToolTip = "Finds a set number of valid enemies, deals damage to them, and makes lightning VFX appear between them"))
 	void BounceToTargets(const int32 NumberOfTargets);

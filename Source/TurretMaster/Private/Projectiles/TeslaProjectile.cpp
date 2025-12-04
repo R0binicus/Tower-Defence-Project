@@ -34,10 +34,6 @@ void ATeslaProjectile::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ATeslaProjectile::Tick(float DeltaTime)
-{
-}
-
 void ATeslaProjectile::BounceToTargets(const int32 NumberOfTargets)
 {
 	TArray<TObjectPtr<AEnemy>> TargetedEnemies;

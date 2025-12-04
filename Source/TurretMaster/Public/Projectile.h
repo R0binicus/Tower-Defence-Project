@@ -3,10 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProjectileValues.h"
+#include "Enemy.h"
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
-class AEnemy;
 
 /**
  * Projectile base class, which moves in the direction it was
