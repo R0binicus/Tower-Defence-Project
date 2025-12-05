@@ -27,17 +27,20 @@ struct FProjectileValues
 	float TurnMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
-	float HitExplosionRadius;
+	float EffectRadius;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile Values")
 	float PredictedLifetime;
 
-	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), Scale(1.f), TurnMultiplier(1.f), HitExplosionRadius(0.f), PredictedLifetime(2.f)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Values")
+	int32 Bounces;
+
+	FProjectileValues() : Damage(10.f), Speed(1000.f), Lifetime(10.f), Scale(1.f), TurnMultiplier(1.f), EffectRadius(0.f), PredictedLifetime(2.f), Bounces(0)
 	{
 	}
 
-	FProjectileValues(const float InDamage, const float InSpeed, const float InLifetime, const float InScale, const float InTurnMultiplier, const float InHitExplosionRadius = 0.f, const float InPredictedLifetime = 2.f) :
-		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), Scale(InScale), TurnMultiplier(InTurnMultiplier), HitExplosionRadius(InHitExplosionRadius), PredictedLifetime(InPredictedLifetime)
+	FProjectileValues(const float InDamage, const float InSpeed, const float InLifetime, const float InScale, const float InTurnMultiplier, const float InEffectRadius = 0.f, const float InPredictedLifetime = 2.f, const int32 InBounces = 0) :
+		Damage(InDamage), Speed(InSpeed), Lifetime(InLifetime), Scale(InScale), TurnMultiplier(InTurnMultiplier), EffectRadius(InEffectRadius), PredictedLifetime(InPredictedLifetime), Bounces(InBounces)
 	{
 	}
 };

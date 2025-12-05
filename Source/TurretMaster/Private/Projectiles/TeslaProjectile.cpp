@@ -21,12 +21,12 @@ void ATeslaProjectile::SetupProjectile(AEnemy* Enemy, const FProjectileValues& I
 	SetActorScale3D(FVector(ProjectileValues.Scale, ProjectileValues.Scale, ProjectileValues.Scale));
 	SetProjectileEnabled(true);
 
-	if (AllowedTeslaBounces > LightningBeamVFXArray.Num())
+	if (ProjectileValues.Bounces > LightningBeamVFXArray.Num())
 	{
-		MakeLightningVFX(AllowedTeslaBounces - LightningBeamVFXArray.Num());
+		MakeLightningVFX(ProjectileValues.Bounces - LightningBeamVFXArray.Num());
 	}
 
-	BounceToTargets(AllowedTeslaBounces);
+	BounceToTargets(ProjectileValues.Bounces);
 }
 
 void ATeslaProjectile::BeginPlay()
@@ -51,7 +51,7 @@ void ATeslaProjectile::BounceToTargets(const int32 NumberOfTargets)
 	PreviousTargetPostion = LockedTarget.Get()->GetActorLocation();
 	TargetedEnemies.Add(LockedTarget.Get());
 
-	for (size_t i = 0; i < AllowedTeslaBounces; i++)
+	for (size_t i = 0; i < ProjectileValues.Bounces; i++)
 	{
 		TObjectPtr<AEnemy> NextTarget = FindClosestEnemy(PreviousTargetPostion, TargetedEnemies);
 		if (!NextTarget)
@@ -79,7 +79,7 @@ AEnemy* ATeslaProjectile::FindClosestEnemy(const FVector& CheckOriginPoint, cons
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(EnemyCollisionType);
 
-	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), CheckOriginPoint, ProjectileValues.HitExplosionRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), CheckOriginPoint, ProjectileValues.EffectRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
 
 	for (size_t i = 0; i < OutActors.Num(); i++)
 	{

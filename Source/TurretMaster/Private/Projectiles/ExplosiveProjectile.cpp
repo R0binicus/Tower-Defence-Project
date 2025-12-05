@@ -9,7 +9,7 @@ void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(EnemyCollisionType);
 
-	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ProjectileValues.HitExplosionRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), ProjectileValues.EffectRadius, ObjectTypes, nullptr, TArray<AActor*>(), OutActors);
 
 	for (size_t i = 0; i < OutActors.Num(); i++)
 	{

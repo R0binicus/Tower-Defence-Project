@@ -25,10 +25,6 @@ public:
 	virtual void SetupProjectile(AEnemy* Enemy, const FProjectileValues& InProjectileValues) override;
 
 protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
-	int32 AllowedTeslaBounces = 6;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TeslaProjectile")
 	float BounceDamageReductionMultiplier = 0.5f;
 
