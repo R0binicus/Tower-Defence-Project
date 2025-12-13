@@ -14,6 +14,12 @@ void UMainMenuWidget::NativeConstruct()
 	Level01Button->OnClicked.AddDynamic(this, &UMainMenuWidget::OnLevel01Clicked);
 	QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuitClicked);
 
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+	}
+
 	DefaultButton = Level01Button;
 	FocusDefaultButton();
 }
