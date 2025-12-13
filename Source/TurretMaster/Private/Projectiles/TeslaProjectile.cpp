@@ -151,7 +151,7 @@ void ATeslaProjectile::UseLightningVFX(const FVector& StartPosition, const FVect
 		MakeLightningVFX((CurrentVFXIndex + 1) - LightningBeamVFXArray.Num());
 	}
 
-	TObjectPtr<UNiagaraComponent> LightningNiagaraComp = LightningBeamVFXArray[CurrentVFXIndex];
+	const TObjectPtr<UNiagaraComponent> LightningNiagaraComp = LightningBeamVFXArray[CurrentVFXIndex];
 	if (!IsValid(LightningNiagaraComp))
 	{
 		return;
