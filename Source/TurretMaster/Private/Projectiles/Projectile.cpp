@@ -1,4 +1,4 @@
-#include "Projectile.h"
+#include "Projectiles/Projectile.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Engine/EngineTypes.h"
 #include "Damageable.h"

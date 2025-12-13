@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Projectile.h"
+#include "Projectiles/Projectile.h"
 #include "TeslaProjectile.generated.h"
 
 class UNiagaraSystem;

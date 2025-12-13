@@ -4,7 +4,7 @@
 #include "Subsystems/BuildingSubsystem.h"
 #include "Damageable.h"
 #include "Components/SphereComponent.h"
-#include "Projectile.h"
+#include "Projectiles/Projectile.h"
 #include "GameFramework/TowerDefencePlayerController.h"
 #include "Kismet/GameplayStatics.h"
 

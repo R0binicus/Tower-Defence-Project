@@ -1,4 +1,4 @@
-#include "SmartHomingProjectile.h"
+#include "Projectiles/SmartHomingProjectile.h"
 #include "Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 
