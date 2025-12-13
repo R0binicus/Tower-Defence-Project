@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Turret.h"
+#include "Turrets/Turret.h"
 #include "SpawnerTurret.generated.h"
 
 /**

@@ -1,7 +1,7 @@
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "GameFramework/TowerDefenceGameState.h"
-#include "Turret.h"
+#include "Turrets/Turret.h"
 #include "GameFramework/TowerDefencePlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "DataAssets/BuildingDataAsset.h"
