@@ -1,7 +1,7 @@
-#include "HomingProjectile.h"
+#include "Projectiles/HomingProjectile.h"
 #include "Enemies/Enemy.h"
 
-AHomingProjectile::AHomingProjectile() : AProjectile()
+AHomingProjectile::AHomingProjectile()
 {
 	CollisionMesh->SetEnableGravity(false);
 }
