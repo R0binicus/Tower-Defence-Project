@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Buildable.h"
+#include "Interfaces/Buildable.h"
 #include "ProjectileValues.h"
 #include "Turret.generated.h"
 

@@ -1,5 +1,5 @@
 #include "BuildableBlock.h"
-#include "Buildable.h"
+#include "Interfaces/Buildable.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "Subsystems/BuildingSubsystem.h"
 #include "Components/SphereComponent.h"

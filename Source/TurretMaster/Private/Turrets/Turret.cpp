@@ -2,7 +2,7 @@
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Enemies/Enemy.h"
 #include "Subsystems/BuildingSubsystem.h"
-#include "Damageable.h"
+#include "Interfaces/Damageable.h"
 #include "Components/SphereComponent.h"
 #include "Projectiles/Projectile.h"
 #include "GameFramework/TowerDefencePlayerController.h"

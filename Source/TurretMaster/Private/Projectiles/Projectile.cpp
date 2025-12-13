@@ -1,7 +1,7 @@
 #include "Projectiles/Projectile.h"
 #include "PhysicsEngine/PhysicsSettings.h"
 #include "Engine/EngineTypes.h"
-#include "Damageable.h"
+#include "Interfaces/Damageable.h"
 
 AProjectile::AProjectile()
 {

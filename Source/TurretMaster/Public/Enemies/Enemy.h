@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Damageable.h"
+#include "Interfaces/Damageable.h"
 #include "Enemy.generated.h"
 
 class UWidgetComponent;

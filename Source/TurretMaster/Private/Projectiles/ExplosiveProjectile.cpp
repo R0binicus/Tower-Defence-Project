@@ -1,7 +1,7 @@
 #include "Projectiles/ExplosiveProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
-#include "Damageable.h"
+#include "Interfaces/Damageable.h"
 
 void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
