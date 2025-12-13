@@ -1,4 +1,4 @@
-#include "EnemySpawnArea.h"
+#include "GameplayObjects/EnemySpawnArea.h"
 #include "Components/BoxComponent.h"
 #include "Enemies/Enemy.h"
 

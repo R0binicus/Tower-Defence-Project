@@ -1,4 +1,4 @@
-#include "LivesLossArea.h"
+#include "GameplayObjects/LivesLossArea.h"
 #include "Enemies/Enemy.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/TowerDefencePlayerState.h"

@@ -1,4 +1,4 @@
-#include "BuildableBlock.h"
+#include "GameplayObjects/BuildableBlock.h"
 #include "Interfaces/Buildable.h"
 #include "DataAssets/BuildingDataAsset.h"
 #include "Subsystems/BuildingSubsystem.h"

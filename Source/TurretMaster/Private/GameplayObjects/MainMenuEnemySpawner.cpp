@@ -1,4 +1,4 @@
-#include "MainMenuEnemySpawner.h"
+#include "GameplayObjects/MainMenuEnemySpawner.h"
 #include "Components/BoxComponent.h"
 #include "Enemies/Enemy.h"
 

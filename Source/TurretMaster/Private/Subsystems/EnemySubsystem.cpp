@@ -1,6 +1,6 @@
 #include "Subsystems/EnemySubsystem.h"
 #include "Enemies/Enemy.h"
-#include "EnemySpawnArea.h"
+#include "GameplayObjects/EnemySpawnArea.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "WaveDataObject.h"
 #include "Structs/EnemyWaveData.h"
