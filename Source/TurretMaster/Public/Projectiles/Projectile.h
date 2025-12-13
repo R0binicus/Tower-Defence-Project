@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProjectileValues.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;

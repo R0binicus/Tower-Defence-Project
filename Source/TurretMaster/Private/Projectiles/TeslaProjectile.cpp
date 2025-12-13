@@ -2,9 +2,9 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraComponent.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 
-ATeslaProjectile::ATeslaProjectile() : AProjectile()
+ATeslaProjectile::ATeslaProjectile()
 {
 }
 

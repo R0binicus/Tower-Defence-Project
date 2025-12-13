@@ -1,5 +1,5 @@
 #include "Subsystems/EnemySubsystem.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 #include "EnemySpawnArea.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "WaveDataObject.h"

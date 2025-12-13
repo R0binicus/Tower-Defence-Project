@@ -1,5 +1,5 @@
 #include "HomingProjectile.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 
 AHomingProjectile::AHomingProjectile() : AProjectile()
 {

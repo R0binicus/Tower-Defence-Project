@@ -1,5 +1,5 @@
 #include "Projectiles/SmartHomingProjectile.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void ASmartHomingProjectile::UpdateTargetDest_Implementation(const float DeltaTime)

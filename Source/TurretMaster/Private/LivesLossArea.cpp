@@ -1,5 +1,5 @@
 #include "LivesLossArea.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "Kismet/GameplayStatics.h"

@@ -1,6 +1,6 @@
 #include "EnemySpawnArea.h"
 #include "Components/BoxComponent.h"
-#include "Enemy.h"
+#include "Enemies/Enemy.h"
 
 AEnemySpawnArea::AEnemySpawnArea()
 {

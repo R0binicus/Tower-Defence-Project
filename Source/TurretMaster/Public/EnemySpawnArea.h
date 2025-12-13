@@ -15,6 +15,8 @@ class TURRETMASTER_API AEnemySpawnArea : public AActor
 public:	
 	AEnemySpawnArea();
 
+	// TODO: Make a 'Spawnable' interface
+	
 	UFUNCTION(BlueprintCallable, Category = "Enemy Spawn Area",
 		meta = (ToolTip = "Spawns an enemy class at a random point in the SpawnVolumeBox"))
 	AEnemy* SpawnEnemy(TSubclassOf<AEnemy> NewEnemyClass) const;
