@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "EnemyWaveData.h"
+#include "Structs/EnemyWaveData.h"
 #include "TopBarWidget.generated.h"
 
 class UWaveDataObject;

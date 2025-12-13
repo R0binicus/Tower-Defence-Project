@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "EnemyWaveData.h"
+#include "Structs/EnemyWaveData.h"
 #include "EnemySubsystem.generated.h"
 
 class UWaveDataObject;

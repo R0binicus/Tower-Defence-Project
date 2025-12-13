@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ProjectileValues.h"
+#include "Structs/ProjectileValues.h"
 #include "Enemies/Enemy.h"
 #include "Projectile.generated.h"
 

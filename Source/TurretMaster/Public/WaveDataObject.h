@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyWaveData.h"
+#include "Structs/EnemyWaveData.h"
 #include "WaveDataObject.generated.h"
 
 /**

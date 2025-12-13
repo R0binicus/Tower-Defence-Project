@@ -3,7 +3,7 @@
 #include "EnemySpawnArea.h"
 #include "GameFramework/TowerDefencePlayerState.h"
 #include "WaveDataObject.h"
-#include "EnemyWaveData.h"
+#include "Structs/EnemyWaveData.h"
 #include "LimitedRepeatTimer.h"
 #include "Engine/AssetManager.h"
 #include "Engine/StreamableManager.h"
