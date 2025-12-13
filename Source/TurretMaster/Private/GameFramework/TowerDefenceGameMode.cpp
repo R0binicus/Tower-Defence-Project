@@ -1,4 +1,4 @@
-#include "TowerDefenceGameMode.h"
+#include "GameFramework/TowerDefenceGameMode.h"
 #include "GameFramework/TowerDefenceGameInstance.h"
 #include "GameFramework/TowerDefenceGameState.h"
 #include "Subsystems/BuildingSubsystem.h"
