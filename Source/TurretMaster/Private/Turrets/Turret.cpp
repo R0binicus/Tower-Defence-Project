@@ -450,19 +450,19 @@ void ATurret::Shoot(const FVector& TargetPosition)
 
     Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);
 
-    auto FireProjectileDelay = [this, Projectile]()
+    auto FireProjectileDelay = [this, Projectile]
         {
             if (!Projectile)
             {
                 return;
             }
 
-            Projectile->SetupProjectile(CurrentClosestEnemy, ProjectileValues);
+            Projectile->SetupProjectile(this->CurrentClosestEnemy, this->ProjectileValues);
 
             // Reset ProjectileValues if custom projectile speed was changed (changed in ArcTurret)
-            if (ProjectileValues.Speed != ProjectileSpeed)
+            if (this->ProjectileValues.Speed != this->ProjectileSpeed)
             {
-                ProjectileValues.Speed = ProjectileSpeed;
+                this->ProjectileValues.Speed = this->ProjectileSpeed;
             }
         };
 
