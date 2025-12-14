@@ -264,6 +264,8 @@ protected:
 		meta = (ToolTip = "Shoots the enemy"))
 	virtual void Shoot(const FVector& TargetPosition);
 
+	virtual void ShootEnd(TObjectPtr<AProjectile> Projectile);
+
 	// Used to set the values just before bullet creation.
 	// This function was split off Shoot() to make it cleaner,
 	// and to make it easier to override in ArcTurret
