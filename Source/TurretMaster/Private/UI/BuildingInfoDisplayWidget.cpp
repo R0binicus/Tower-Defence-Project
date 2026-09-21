@@ -9,14 +9,14 @@
 void UBuildingInfoDisplayWidget::NativeConstruct()
 {
 	const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-	if (BuildingSubsystem)
+	if (IsValid(BuildingSubsystem))
 	{
 		BuildingSubsystem->OnBuildingHighlighted.AddUniqueDynamic(this, &UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay);
 	}
 
 	PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(GetWorld(), 0));
 
-	if (SellButton)
+	if (IsValid(SellButton))
 	{
 		SellButton->OnClicked.AddDynamic(this, &UBuildingInfoDisplayWidget::SellBuildingPressed);
 	}
@@ -26,13 +26,14 @@ void UBuildingInfoDisplayWidget::NativeConstruct()
 
 void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* BuildingData, ATurret* Turret)
 {
-	if (!BuildingData)
+	if (!IsValid(BuildingData))
 	{
 		HideBuildingDisplay();
 		return;
 	}
 
-	if (!BuildingName || !BuildingDesc || !SellButtonText || !PlayerState)
+	if (!IsValid(BuildingName) || !IsValid(BuildingDesc) || 
+		!IsValid(SellButtonText) || !IsValid(PlayerState))
 	{
 		return;
 	}
@@ -56,20 +57,17 @@ void UBuildingInfoDisplayWidget::UpdateBuildingInfoDisplay(UBuildingDataAsset* B
 
 void UBuildingInfoDisplayWidget::HideBuildingDisplay() const
 {
-	if (!BuildingName || !BuildingDesc || !SellButton)
+	if (IsValid(BuildingName) && IsValid(BuildingDesc) && IsValid(SellButton))
 	{
-		return;
+		BuildingName->SetText(FText());
+		BuildingDesc->SetText(FText());
+		SellButton->SetVisibility(ESlateVisibility::Hidden);
 	}
-
-	BuildingName->SetText(FText());
-	BuildingDesc->SetText(FText());
-
-	SellButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UBuildingInfoDisplayWidget::SellBuildingPressed()
 {
-	if (PlayerState)
+	if (IsValid(PlayerState))
 	{
 		PlayerState->SellBuilding();
 		HideBuildingDisplay();
