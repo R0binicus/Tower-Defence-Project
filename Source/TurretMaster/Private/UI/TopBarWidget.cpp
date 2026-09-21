@@ -12,7 +12,7 @@ void UTopBarWidget::NativeConstruct()
     Super::NativeConstruct();
 
     const TObjectPtr<UWorld> World = GetWorld();
-    if (!World)
+    if (!IsValid(World))
     {
         return;
     }
@@ -20,8 +20,7 @@ void UTopBarWidget::NativeConstruct()
     UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
     const TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
     const TObjectPtr<ATowerDefencePlayerState> PlayerState = Cast<ATowerDefencePlayerState>(UGameplayStatics::GetPlayerState(World, 0));
-
-    if (!GameInstance || !EnemySubsystem || !PlayerState)
+    if (!IsValid(GameInstance) || !IsValid(EnemySubsystem) || !IsValid(PlayerState))
     {
         return;
     }
@@ -49,7 +48,7 @@ void UTopBarWidget::OnLevelDataLoaded(ULevelDataAsset* LevelData)
 
 void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 NewWaveNum)
 {
-    if (!WavesRemainingText) // Do not add NewWaveData null check
+    if (!IsValid(WavesRemainingText)) // Do not add NewWaveData null check
     {
         return;
     }
@@ -57,7 +56,7 @@ void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 New
     const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewWaveNum, TotalWaveNum);
     WavesRemainingText->SetText(FText::FromString(FormattedNum));
 
-    if (!NewWaveData)
+    if (!IsValid(NewWaveData))
     {
         return;
     }
@@ -76,7 +75,7 @@ void UTopBarWidget::NewWaveStarted(UWaveDataObject* NewWaveData, const int32 New
 
 void UTopBarWidget::UpdateLivesText(const int32 NewLives, const int32 OldLives)
 {
-    if (LivesText)
+    if (IsValid(LivesText))
     {
         const FString FormattedNum = FString::Printf(TEXT("%i"), NewLives);
         LivesText->SetText(FText::FromString(FormattedNum));
@@ -85,7 +84,7 @@ void UTopBarWidget::UpdateLivesText(const int32 NewLives, const int32 OldLives)
 
 void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
 {
-    if (MoneyText)
+    if (IsValid(MoneyText))
     {
         const FString FormattedNum = FString::Printf(TEXT("$%i"), NewMoney);
         MoneyText->SetText(FText::FromString(FormattedNum));
@@ -94,7 +93,7 @@ void UTopBarWidget::UpdateMoneyText(const int32 NewMoney, const int32 OldMoney)
 
 void UTopBarWidget::UpdateEnemiesRemainingText(const int32 NewEnemiesRemaining)
 {
-    if (EnemiesRemainingText)
+    if (IsValid(EnemiesRemainingText))
     {
         const FString FormattedNum = FString::Printf(TEXT("%i/%i"), NewEnemiesRemaining, TotalWaveEnemies);
         EnemiesRemainingText->SetText(FText::FromString(FormattedNum));
