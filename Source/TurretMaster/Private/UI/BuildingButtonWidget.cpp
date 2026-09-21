@@ -11,22 +11,18 @@
 void UBuildingButtonWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-
-    if (!Button || !BuildingIcon || !BuildingDataAsset || !CostTextBlock)
+    if (!IsValid(Button) || !IsValid(BuildingIcon) || !IsValid(BuildingDataAsset) || !IsValid(CostTextBlock))
     {
         return;
     }
-
+     
     Button->OnClicked.AddDynamic(this, &UBuildingButtonWidget::OnButtonClicked);
     Button->OnHovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonHovered);
     Button->OnUnhovered.AddDynamic(this, &UBuildingButtonWidget::OnButtonUnhovered);
 
     BuildingIcon->SetBrushFromTexture(BuildingDataAsset->Icon);
-
-
     const FString FormattedNum = FString::Printf(TEXT("$%i"), BuildingDataAsset->Cost);
     CostTextBlock->SetText(FText::FromString(FormattedNum));
-
     BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
 
     const TObjectPtr<ATowerDefencePlayerController> PlayerController = Cast<ATowerDefencePlayerController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -38,22 +34,15 @@ void UBuildingButtonWidget::NativeConstruct()
 
 void UBuildingButtonWidget::OnButtonClicked()
 {
-    if (!BuildingSubsystem || !Button)
+    if (IsValid(BuildingSubsystem) && IsHovered())
     {
-        return;
+        BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
     }
-
-    if (!IsHovered())
-    {
-        return;
-    }
-
-    BuildingSubsystem->SelectedPlaceBuilding(BuildingDataAsset);
 }
 
 void UBuildingButtonWidget::OnButtonHovered()
 {
-    if (BuildingSubsystem)
+    if (IsValid(BuildingSubsystem))
     {
         BuildingSubsystem->OnBuildingHighlighted.Broadcast(BuildingDataAsset, nullptr);
     }
@@ -61,7 +50,7 @@ void UBuildingButtonWidget::OnButtonHovered()
 
 void UBuildingButtonWidget::OnButtonUnhovered()
 {
-    if (BuildingSubsystem)
+    if (IsValid(BuildingSubsystem))
     {
         BuildingSubsystem->OnBuildingHighlighted.Broadcast(nullptr, nullptr);
     }
