@@ -6,7 +6,6 @@
 
 class UBuildingButtonWidget;
 class UBuildingDataAsset;
-class UCanvasPanel;
 
 /**
  * Widget parent, which contains a button widget for each building type
@@ -26,9 +25,4 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "BuildingsWidget")
 	TArray<TObjectPtr<UBuildingButtonWidget>> BuildingWidgetArray;
-
-	// Bind Widget
-
-	UPROPERTY(BlueprintReadOnly, Category = "BuildingsWidget", meta = (BindWidget))
-	TObjectPtr<UCanvasPanel> MainCanvasPanel;
 };
