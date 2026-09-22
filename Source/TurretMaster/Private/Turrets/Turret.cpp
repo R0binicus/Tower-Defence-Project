@@ -420,7 +420,7 @@ bool ATurret::CanShoot() const
 
 void ATurret::Shoot(const FVector& TargetPosition)
 {
-    if (!ProjectileClass || !World || !CurrentClosestEnemy)
+    if (!ProjectileClass || !World || !IsValid(CurrentClosestEnemy))
     {
         return;
     }
@@ -439,7 +439,7 @@ void ATurret::Shoot(const FVector& TargetPosition)
     }
 
     TObjectPtr<AProjectile> Projectile = GetUnusedProjectile();
-    if (!Projectile)
+    if (!IsValid(Projectile))
     {
         Projectile = CreateProjectile();
         if (!Projectile)
@@ -459,7 +459,7 @@ void ATurret::Shoot(const FVector& TargetPosition)
 
 void ATurret::ShootEnd(const TObjectPtr<AProjectile> Projectile)
 {
-    if (!Projectile)
+    if (!IsValid(Projectile))
     {
         return;
     }
