@@ -85,6 +85,11 @@ void AEnemy::Death_Implementation(const bool bByTurret)
 	CurrentHealth = 0;
 	bIsDead = true;
 
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySound2D(this, DeathSound);
+	}
+
 	if (bByTurret)
 	{
 		OnEnemyDeath.Broadcast(ResourcesOnKill);

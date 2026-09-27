@@ -36,6 +36,8 @@ public:
 	void Death_Implementation(const bool bByTurret);
 
 protected:
+	// Components
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
 
@@ -45,6 +47,11 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Enemy")
 	TObjectPtr<APlayerCameraManager> CameraManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	TObjectPtr<USoundBase> DeathSound;
+
+	// Values
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enemy")
 	FVector2D HealthbarScaleMultiplier = FVector2D(0.5, 0.3);
