@@ -26,7 +26,7 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "BuildingSubsystem")
 	FOnBuildingHighlighted OnBuildingHighlighted;
 
-	void StartSubsystem();
+	void StartSubsystem(USoundBase* InButtonClickSound, USoundBase* InErrorSound);
 
 	UFUNCTION(BlueprintCallable, Category = "BuildingSubsystem",
 		meta = (ToolTip = "Returns the point which buildings try to protect"))
@@ -45,6 +45,15 @@ public:
 	void CancelPlaceBuilding() const;
 
 protected:
+	// Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<USoundBase> ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<USoundBase> ErrorSound;
+
+	// Non-Components
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BuildingSubsystem")
 	TObjectPtr<UBuildingDataAsset> CurrentPlaceBuildingSelected = nullptr;
 

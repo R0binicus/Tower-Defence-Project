@@ -7,13 +7,16 @@
 #include "GameFramework/TowerDefenceGameInstance.h"
 #include "PrimaryAssets/LevelDataAsset.h"
 
-void UBuildingSubsystem::StartSubsystem()
+void UBuildingSubsystem::StartSubsystem(USoundBase* InButtonClickSound, USoundBase* InErrorSound)
 {
 	UTowerDefenceGameInstance* GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
 		GameInstance->OnLevelDataLoaded.AddUniqueDynamic(this, &UBuildingSubsystem::LoadProtectPoint);
 	}
+
+	ButtonClickSound = InButtonClickSound;
+	ErrorSound = InErrorSound;
 }
 
 void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
@@ -32,7 +35,16 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 	if (!PlayerState->HasEnoughResources(BuildingData->Cost) || 
 		!PlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
 	{
+		if (ErrorSound)
+		{
+			UGameplayStatics::PlaySound2D(this, ErrorSound);
+		}
 		return;
+	}
+
+	if (ButtonClickSound)
+	{
+		UGameplayStatics::PlaySound2D(this, ButtonClickSound);
 	}
 
 	CurrentPlaceBuildingSelected = BuildingData;

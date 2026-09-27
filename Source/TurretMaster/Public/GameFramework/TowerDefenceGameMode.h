@@ -16,4 +16,12 @@ public:
 	ATowerDefenceGameMode();
 
 	virtual void BeginPlay() override;
+
+protected:
+	// Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<USoundBase> ButtonClickSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<USoundBase> ErrorSound;
 };

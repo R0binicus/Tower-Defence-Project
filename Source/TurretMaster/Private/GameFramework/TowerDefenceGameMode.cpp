@@ -15,15 +15,16 @@ ATowerDefenceGameMode::ATowerDefenceGameMode()
 
 void ATowerDefenceGameMode::BeginPlay()
 {
-	const TObjectPtr<UEnemySubsystem> EnemySubsystem = GetWorld()->GetSubsystem<UEnemySubsystem>();
-	const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = GetWorld()->GetSubsystem<UBuildingSubsystem>();
-	const TObjectPtr<UTowerDefenceGameInstance> GameInstance = Cast<UTowerDefenceGameInstance>(GetWorld()->GetGameInstance());
+	TObjectPtr<UWorld> World = GetWorld();
+	const TObjectPtr<UEnemySubsystem> EnemySubsystem = World->GetSubsystem<UEnemySubsystem>();
+	const TObjectPtr<UBuildingSubsystem> BuildingSubsystem = World->GetSubsystem<UBuildingSubsystem>();
+	const TObjectPtr<UTowerDefenceGameInstance> GameInstance = Cast<UTowerDefenceGameInstance>(World->GetGameInstance());
 	if (!GameInstance || !EnemySubsystem || !BuildingSubsystem)
 	{
 		return;
 	}
 
 	EnemySubsystem->StartSubsystem();
-	BuildingSubsystem->StartSubsystem();
-	GameInstance->LoadDataUsingLevel(GetWorld());
+	BuildingSubsystem->StartSubsystem(ButtonClickSound, ErrorSound);
+	GameInstance->LoadDataUsingLevel(World);
 }
