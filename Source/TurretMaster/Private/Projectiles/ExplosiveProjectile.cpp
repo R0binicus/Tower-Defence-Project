@@ -21,6 +21,11 @@ void AExplosiveProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		IDamageable::Execute_TakeDamage(OutActors[i], ProjectileValues.Damage);
 	}
 
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySound2D(this, HitSound);
+	}
+
 	TObjectPtr<UNiagaraComponent> Explosion = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionVFX, GetActorLocation(), GetActorRotation());
 
 	SetProjectileEnabled(false);
