@@ -54,6 +54,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
 	TObjectPtr<UAnimSequence> TurretShootAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")
+	TObjectPtr<USoundBase> FireSound;
+
 	// 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret")

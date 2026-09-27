@@ -448,6 +448,11 @@ void ATurret::Shoot(const FVector& TargetPosition)
         }
     }
 
+    if (FireSound)
+    {
+        UGameplayStatics::PlaySound2D(this, FireSound);
+    }
+
     Projectile->SetActorLocationAndRotation(BulletSpawnLocation, SpawnRotation);
 
     FTimerDelegate FireProjectileDelay;
