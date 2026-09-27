@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
 	TObjectPtr<UBuildingDataAsset> BuildingDataAsset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable Block")
+	TObjectPtr<USoundBase> TurretPlaceSound;
+
 	UPROPERTY()
 	TObjectPtr<UWorld> World;
 

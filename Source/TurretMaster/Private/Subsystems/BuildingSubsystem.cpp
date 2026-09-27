@@ -29,12 +29,8 @@ void UBuildingSubsystem::SelectedPlaceBuilding(UBuildingDataAsset* BuildingData)
 		return;
 	}
 
-	if (!PlayerState->HasEnoughResources(BuildingData->Cost))
-	{
-		return;
-	}
-
-	if (!PlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
+	if (!PlayerState->HasEnoughResources(BuildingData->Cost) || 
+		!PlayerState->TrySetPlayerState(EPlayerStateEnum::Building))
 	{
 		return;
 	}
@@ -66,10 +62,7 @@ void UBuildingSubsystem::LoadProtectPoint(ULevelDataAsset* LevelData)
 		return;
 	}
 
-	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
-
 	TSoftObjectPtr<AActor> SoftProtectPoint = LevelData->BuildingProtectPoint;
-
 	if (SoftProtectPoint.IsNull())
 	{
 		return; // The data asset probably has an empty entry
@@ -84,7 +77,8 @@ void UBuildingSubsystem::LoadProtectPoint(ULevelDataAsset* LevelData)
 	FStreamableDelegate SetSpawnerArrayDelegate;
 	SetSpawnerArrayDelegate.BindUObject(this, &UBuildingSubsystem::SetProtectPoint, SoftProtectPoint);
 
-	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), SetSpawnerArrayDelegate);
+	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+	StreamableManager.RequestAsyncLoad(SoftProtectPoint.ToSoftObjectPath(), SetSpawnerArrayDelegate);
 }
 
 void UBuildingSubsystem::SetProtectPoint(TSoftObjectPtr<AActor> SoftProtectPoint)

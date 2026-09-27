@@ -25,10 +25,6 @@ ABuildableBlock::ABuildableBlock()
     RangePreviewComponent->SetGenerateOverlapEvents(false);
     RangePreviewComponent->SetupAttachment(TurretHardpoint);
 
-    //BuildingPreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh"));
-    //BuildingPreviewMesh->SetupAttachment(TurretHardpoint);
-    //BuildingPreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
     BuildingPreviewMeshNew = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Building Preview Mesh New"));
     BuildingPreviewMeshNew->SetupAttachment(TurretHardpoint);
     BuildingPreviewMeshNew->SetRelativeRotation(FRotator(0, 270, 0));
@@ -78,6 +74,11 @@ TScriptInterface<IBuildable> ABuildableBlock::CreateBuildableActor(const TSubcla
     }
 
     IBuildable::Execute_SetProtectPoint(BuildingActor, BuildingSubsystem->GetProtectPoint());
+
+    if (TurretPlaceSound)
+    {
+        UGameplayStatics::PlaySound2D(this, TurretPlaceSound);
+    }
 
     return Building;
 }
